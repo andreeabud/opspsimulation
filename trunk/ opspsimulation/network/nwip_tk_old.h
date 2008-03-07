@@ -55,17 +55,7 @@
 #include "ipqueue.h"
 
 
-//  Modifying the network code to add a routing protocol. 
-//
-//  Routing protocol packets with its specific "IP protocol number"
-//  can be handled by making a case in the switch in 
-//  "ProcessPacketForMeFromMac" and calling the routing protocol
-//  routine that handles that packet.
-//
-//  Routing protcols can send events to themselves (such as 
-//  timer timeout events) and can field them by modifying
-//  the by modifying the switch statement in 
-//  "HandleRoutingProtocolEvent". 
+google svn service test!
 
 // 
 // NetworkIpSetRouterFunction routine allows a routing protocol to 
