@@ -1,0 +1,4 @@
+Node:      0, Layer:    AppFtpClient, from 0 to 1 (cid = 1), start = 150007124556, end = 150267091466 ns (closed), bytes sent = 7908 B, bytes recv = 279 B, throughput = 243354 bps
+Node:      1, Layer:    AppFtpServer, from 0 to 1 (cid = 2), start = 150008778557, end = 150270124135 ns (closed) bytes sent = 279 B, bytes recv = 7908 B, throughput = 242070 bps
+Node:      2, Layer: AppTelnetClient, from 2 to 3 (cid = 1), start = 150108197369, end = 160108197369 ns (closed), bytes sent = 11 B, bytes recv = 18 B, throughput = 8 bps
+Node:      3, Layer: AppTelnetServer, from 2 to 3 (cid = 2), start = 150113308867, end = 160110638199 ns (closed), bytes sent = 18 B, bytes recv =  11 B, throughput = 8 bps

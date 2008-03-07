@@ -1,0 +1,415 @@
+Node:      0, Layer:  RoutingFisheye, The number of Intra Scope Updates = 360
+
+Node:      0, Layer:  RoutingFisheye, The number of Inter Scope Updates = 120
+
+Node:      0, Layer:  RoutingFisheye, The number of packets received from UDP = 12744
+
+Node:      0, Layer:  RoutingFisheye, Control OH in bytes = 1147158
+
+Node:      1, Layer:  RoutingFisheye, The number of Intra Scope Updates = 360
+
+Node:      1, Layer:  RoutingFisheye, The number of Inter Scope Updates = 121
+
+Node:      1, Layer:  RoutingFisheye, The number of packets received from UDP = 12704
+
+Node:      1, Layer:  RoutingFisheye, Control OH in bytes = 1149900
+
+Node:      2, Layer:  RoutingFisheye, The number of Intra Scope Updates = 360
+
+Node:      2, Layer:  RoutingFisheye, The number of Inter Scope Updates = 120
+
+Node:      2, Layer:  RoutingFisheye, The number of packets received from UDP = 12304
+
+Node:      2, Layer:  RoutingFisheye, Control OH in bytes = 1089832
+
+Node:      2, Layer:    AppCbrClient, (0) Server address: 28
+Node:      2, Layer:    AppCbrClient, (0) First packet sent at [s]: 20.000000000
+Node:      2, Layer:    AppCbrClient, (0) Last packet sent at [s]: 1798.000000000
+Node:      2, Layer:    AppCbrClient, (0) Session status: Not closed
+Node:      2, Layer:    AppCbrClient, (0) Total number of bytes sent: 356000
+Node:      2, Layer:    AppCbrClient, (0) Total number of packets sent: 890
+Node:      2, Layer:    AppCbrClient, (0) Throughput (bits per second): 1600
+Node:      3, Layer:  RoutingFisheye, The number of Intra Scope Updates = 361
+
+Node:      3, Layer:  RoutingFisheye, The number of Inter Scope Updates = 120
+
+Node:      3, Layer:  RoutingFisheye, The number of packets received from UDP = 12681
+
+Node:      3, Layer:  RoutingFisheye, Control OH in bytes = 1142454
+
+Node:      4, Layer:  RoutingFisheye, The number of Intra Scope Updates = 361
+
+Node:      4, Layer:  RoutingFisheye, The number of Inter Scope Updates = 121
+
+Node:      4, Layer:  RoutingFisheye, The number of packets received from UDP = 12470
+
+Node:      4, Layer:  RoutingFisheye, Control OH in bytes = 1124330
+
+Node:      5, Layer:  RoutingFisheye, The number of Intra Scope Updates = 360
+
+Node:      5, Layer:  RoutingFisheye, The number of Inter Scope Updates = 120
+
+Node:      5, Layer:  RoutingFisheye, The number of packets received from UDP = 12298
+
+Node:      5, Layer:  RoutingFisheye, Control OH in bytes = 1132314
+
+Node:      6, Layer:  RoutingFisheye, The number of Intra Scope Updates = 360
+
+Node:      6, Layer:  RoutingFisheye, The number of Inter Scope Updates = 121
+
+Node:      6, Layer:  RoutingFisheye, The number of packets received from UDP = 12849
+
+Node:      6, Layer:  RoutingFisheye, Control OH in bytes = 1143726
+
+Node:      7, Layer:  RoutingFisheye, The number of Intra Scope Updates = 361
+
+Node:      7, Layer:  RoutingFisheye, The number of Inter Scope Updates = 121
+
+Node:      7, Layer:  RoutingFisheye, The number of packets received from UDP = 14393
+
+Node:      7, Layer:  RoutingFisheye, Control OH in bytes = 1198360
+
+Node:      8, Layer:  RoutingFisheye, The number of Intra Scope Updates = 361
+
+Node:      8, Layer:  RoutingFisheye, The number of Inter Scope Updates = 121
+
+Node:      8, Layer:  RoutingFisheye, The number of packets received from UDP = 12260
+
+Node:      8, Layer:  RoutingFisheye, Control OH in bytes = 1113784
+
+Node:      9, Layer:  RoutingFisheye, The number of Intra Scope Updates = 361
+
+Node:      9, Layer:  RoutingFisheye, The number of Inter Scope Updates = 121
+
+Node:      9, Layer:  RoutingFisheye, The number of packets received from UDP = 11517
+
+Node:      9, Layer:  RoutingFisheye, Control OH in bytes = 1069392
+
+Node:     10, Layer:  RoutingFisheye, The number of Intra Scope Updates = 361
+
+Node:     10, Layer:  RoutingFisheye, The number of Inter Scope Updates = 120
+
+Node:     10, Layer:  RoutingFisheye, The number of packets received from UDP = 13541
+
+Node:     10, Layer:  RoutingFisheye, Control OH in bytes = 1164884
+
+Node:     11, Layer:  RoutingFisheye, The number of Intra Scope Updates = 361
+
+Node:     11, Layer:  RoutingFisheye, The number of Inter Scope Updates = 121
+
+Node:     11, Layer:  RoutingFisheye, The number of packets received from UDP = 13384
+
+Node:     11, Layer:  RoutingFisheye, Control OH in bytes = 1164514
+
+Node:     12, Layer:  RoutingFisheye, The number of Intra Scope Updates = 361
+
+Node:     12, Layer:  RoutingFisheye, The number of Inter Scope Updates = 121
+
+Node:     12, Layer:  RoutingFisheye, The number of packets received from UDP = 11846
+
+Node:     12, Layer:  RoutingFisheye, Control OH in bytes = 1098186
+
+Node:     13, Layer:  RoutingFisheye, The number of Intra Scope Updates = 360
+
+Node:     13, Layer:  RoutingFisheye, The number of Inter Scope Updates = 120
+
+Node:     13, Layer:  RoutingFisheye, The number of packets received from UDP = 13258
+
+Node:     13, Layer:  RoutingFisheye, Control OH in bytes = 1141216
+
+Node:     14, Layer:  RoutingFisheye, The number of Intra Scope Updates = 361
+
+Node:     14, Layer:  RoutingFisheye, The number of Inter Scope Updates = 121
+
+Node:     14, Layer:  RoutingFisheye, The number of packets received from UDP = 12453
+
+Node:     14, Layer:  RoutingFisheye, Control OH in bytes = 1113098
+
+Node:     15, Layer:  RoutingFisheye, The number of Intra Scope Updates = 361
+
+Node:     15, Layer:  RoutingFisheye, The number of Inter Scope Updates = 121
+
+Node:     15, Layer:  RoutingFisheye, The number of packets received from UDP = 12326
+
+Node:     15, Layer:  RoutingFisheye, Control OH in bytes = 1132342
+
+Node:     16, Layer:  RoutingFisheye, The number of Intra Scope Updates = 361
+
+Node:     16, Layer:  RoutingFisheye, The number of Inter Scope Updates = 121
+
+Node:     16, Layer:  RoutingFisheye, The number of packets received from UDP = 12515
+
+Node:     16, Layer:  RoutingFisheye, Control OH in bytes = 1123908
+
+Node:     17, Layer:  RoutingFisheye, The number of Intra Scope Updates = 360
+
+Node:     17, Layer:  RoutingFisheye, The number of Inter Scope Updates = 121
+
+Node:     17, Layer:  RoutingFisheye, The number of packets received from UDP = 12939
+
+Node:     17, Layer:  RoutingFisheye, Control OH in bytes = 1147418
+
+Node:     18, Layer:  RoutingFisheye, The number of Intra Scope Updates = 360
+
+Node:     18, Layer:  RoutingFisheye, The number of Inter Scope Updates = 121
+
+Node:     18, Layer:  RoutingFisheye, The number of packets received from UDP = 12799
+
+Node:     18, Layer:  RoutingFisheye, Control OH in bytes = 1140234
+
+Node:     19, Layer:  RoutingFisheye, The number of Intra Scope Updates = 360
+
+Node:     19, Layer:  RoutingFisheye, The number of Inter Scope Updates = 121
+
+Node:     19, Layer:  RoutingFisheye, The number of packets received from UDP = 12624
+
+Node:     19, Layer:  RoutingFisheye, Control OH in bytes = 1139392
+
+Node:     20, Layer:  RoutingFisheye, The number of Intra Scope Updates = 361
+
+Node:     20, Layer:  RoutingFisheye, The number of Inter Scope Updates = 120
+
+Node:     20, Layer:  RoutingFisheye, The number of packets received from UDP = 12883
+
+Node:     20, Layer:  RoutingFisheye, Control OH in bytes = 1147712
+
+Node:     21, Layer:  RoutingFisheye, The number of Intra Scope Updates = 360
+
+Node:     21, Layer:  RoutingFisheye, The number of Inter Scope Updates = 120
+
+Node:     21, Layer:  RoutingFisheye, The number of packets received from UDP = 10993
+
+Node:     21, Layer:  RoutingFisheye, Control OH in bytes = 1067314
+
+Node:     22, Layer:  RoutingFisheye, The number of Intra Scope Updates = 361
+
+Node:     22, Layer:  RoutingFisheye, The number of Inter Scope Updates = 121
+
+Node:     22, Layer:  RoutingFisheye, The number of packets received from UDP = 11693
+
+Node:     22, Layer:  RoutingFisheye, Control OH in bytes = 1083800
+
+Node:     23, Layer:  RoutingFisheye, The number of Intra Scope Updates = 360
+
+Node:     23, Layer:  RoutingFisheye, The number of Inter Scope Updates = 120
+
+Node:     23, Layer:  RoutingFisheye, The number of packets received from UDP = 12500
+
+Node:     23, Layer:  RoutingFisheye, Control OH in bytes = 1145728
+
+Node:     24, Layer:  RoutingFisheye, The number of Intra Scope Updates = 361
+
+Node:     24, Layer:  RoutingFisheye, The number of Inter Scope Updates = 120
+
+Node:     24, Layer:  RoutingFisheye, The number of packets received from UDP = 11965
+
+Node:     24, Layer:  RoutingFisheye, Control OH in bytes = 1118666
+
+Node:     25, Layer:  RoutingFisheye, The number of Intra Scope Updates = 361
+
+Node:     25, Layer:  RoutingFisheye, The number of Inter Scope Updates = 121
+
+Node:     25, Layer:  RoutingFisheye, The number of packets received from UDP = 11934
+
+Node:     25, Layer:  RoutingFisheye, Control OH in bytes = 1099516
+
+Node:     26, Layer:  RoutingFisheye, The number of Intra Scope Updates = 361
+
+Node:     26, Layer:  RoutingFisheye, The number of Inter Scope Updates = 121
+
+Node:     26, Layer:  RoutingFisheye, The number of packets received from UDP = 10583
+
+Node:     26, Layer:  RoutingFisheye, Control OH in bytes = 1049788
+
+Node:     27, Layer:  RoutingFisheye, The number of Intra Scope Updates = 360
+
+Node:     27, Layer:  RoutingFisheye, The number of Inter Scope Updates = 121
+
+Node:     27, Layer:  RoutingFisheye, The number of packets received from UDP = 13209
+
+Node:     27, Layer:  RoutingFisheye, Control OH in bytes = 1180200
+
+Node:     28, Layer:  RoutingFisheye, The number of Intra Scope Updates = 360
+
+Node:     28, Layer:  RoutingFisheye, The number of Inter Scope Updates = 120
+
+Node:     28, Layer:  RoutingFisheye, The number of packets received from UDP = 12283
+
+Node:     28, Layer:  RoutingFisheye, Control OH in bytes = 1113950
+
+Node:     28, Layer:    AppCbrServer, (0) Client address: 2
+Node:     28, Layer:    AppCbrServer, (0) First packet received at [s]: 46.005695528
+Node:     28, Layer:    AppCbrServer, (0) Last packet received at [s]: 1798.002608909
+Node:     28, Layer:    AppCbrServer, (0) Average end-to-end delay [s]: 0.015572963
+Node:     28, Layer:    AppCbrServer, (0) Session status: Not closed
+Node:     28, Layer:    AppCbrServer, (0) Total number of bytes received: 146400
+Node:     28, Layer:    AppCbrServer, (0) Total number of packets received: 366
+Node:     28, Layer:    AppCbrServer, (0) Throughput (bits per second): 667
+Node:     29, Layer:  RoutingFisheye, The number of Intra Scope Updates = 361
+
+Node:     29, Layer:  RoutingFisheye, The number of Inter Scope Updates = 120
+
+Node:     29, Layer:  RoutingFisheye, The number of packets received from UDP = 12152
+
+Node:     29, Layer:  RoutingFisheye, Control OH in bytes = 1105362
+
+Node:     30, Layer:  RoutingFisheye, The number of Intra Scope Updates = 361
+
+Node:     30, Layer:  RoutingFisheye, The number of Inter Scope Updates = 120
+
+Node:     30, Layer:  RoutingFisheye, The number of packets received from UDP = 12194
+
+Node:     30, Layer:  RoutingFisheye, Control OH in bytes = 1107714
+
+Node:     31, Layer:  RoutingFisheye, The number of Intra Scope Updates = 360
+
+Node:     31, Layer:  RoutingFisheye, The number of Inter Scope Updates = 121
+
+Node:     31, Layer:  RoutingFisheye, The number of packets received from UDP = 11347
+
+Node:     31, Layer:  RoutingFisheye, Control OH in bytes = 1076724
+
+Node:     32, Layer:  RoutingFisheye, The number of Intra Scope Updates = 360
+
+Node:     32, Layer:  RoutingFisheye, The number of Inter Scope Updates = 121
+
+Node:     32, Layer:  RoutingFisheye, The number of packets received from UDP = 12095
+
+Node:     32, Layer:  RoutingFisheye, Control OH in bytes = 1122702
+
+Node:     33, Layer:  RoutingFisheye, The number of Intra Scope Updates = 360
+
+Node:     33, Layer:  RoutingFisheye, The number of Inter Scope Updates = 121
+
+Node:     33, Layer:  RoutingFisheye, The number of packets received from UDP = 12499
+
+Node:     33, Layer:  RoutingFisheye, Control OH in bytes = 1132542
+
+Node:     34, Layer:  RoutingFisheye, The number of Intra Scope Updates = 360
+
+Node:     34, Layer:  RoutingFisheye, The number of Inter Scope Updates = 121
+
+Node:     34, Layer:  RoutingFisheye, The number of packets received from UDP = 11815
+
+Node:     34, Layer:  RoutingFisheye, Control OH in bytes = 1096538
+
+Node:     35, Layer:  RoutingFisheye, The number of Intra Scope Updates = 361
+
+Node:     35, Layer:  RoutingFisheye, The number of Inter Scope Updates = 121
+
+Node:     35, Layer:  RoutingFisheye, The number of packets received from UDP = 10464
+
+Node:     35, Layer:  RoutingFisheye, Control OH in bytes = 1044946
+
+Node:     36, Layer:  RoutingFisheye, The number of Intra Scope Updates = 361
+
+Node:     36, Layer:  RoutingFisheye, The number of Inter Scope Updates = 121
+
+Node:     36, Layer:  RoutingFisheye, The number of packets received from UDP = 12264
+
+Node:     36, Layer:  RoutingFisheye, Control OH in bytes = 1124790
+
+Node:     37, Layer:  RoutingFisheye, The number of Intra Scope Updates = 360
+
+Node:     37, Layer:  RoutingFisheye, The number of Inter Scope Updates = 120
+
+Node:     37, Layer:  RoutingFisheye, The number of packets received from UDP = 12792
+
+Node:     37, Layer:  RoutingFisheye, Control OH in bytes = 1134140
+
+Node:     38, Layer:  RoutingFisheye, The number of Intra Scope Updates = 361
+
+Node:     38, Layer:  RoutingFisheye, The number of Inter Scope Updates = 120
+
+Node:     38, Layer:  RoutingFisheye, The number of packets received from UDP = 12176
+
+Node:     38, Layer:  RoutingFisheye, Control OH in bytes = 1130278
+
+Node:     39, Layer:  RoutingFisheye, The number of Intra Scope Updates = 361
+
+Node:     39, Layer:  RoutingFisheye, The number of Inter Scope Updates = 121
+
+Node:     39, Layer:  RoutingFisheye, The number of packets received from UDP = 10771
+
+Node:     39, Layer:  RoutingFisheye, Control OH in bytes = 1047382
+
+Node:     40, Layer:  RoutingFisheye, The number of Intra Scope Updates = 361
+
+Node:     40, Layer:  RoutingFisheye, The number of Inter Scope Updates = 121
+
+Node:     40, Layer:  RoutingFisheye, The number of packets received from UDP = 11269
+
+Node:     40, Layer:  RoutingFisheye, Control OH in bytes = 1070576
+
+Node:     41, Layer:  RoutingFisheye, The number of Intra Scope Updates = 361
+
+Node:     41, Layer:  RoutingFisheye, The number of Inter Scope Updates = 121
+
+Node:     41, Layer:  RoutingFisheye, The number of packets received from UDP = 12356
+
+Node:     41, Layer:  RoutingFisheye, Control OH in bytes = 1112572
+
+Node:     42, Layer:  RoutingFisheye, The number of Intra Scope Updates = 360
+
+Node:     42, Layer:  RoutingFisheye, The number of Inter Scope Updates = 120
+
+Node:     42, Layer:  RoutingFisheye, The number of packets received from UDP = 12158
+
+Node:     42, Layer:  RoutingFisheye, Control OH in bytes = 1096058
+
+Node:     43, Layer:  RoutingFisheye, The number of Intra Scope Updates = 361
+
+Node:     43, Layer:  RoutingFisheye, The number of Inter Scope Updates = 120
+
+Node:     43, Layer:  RoutingFisheye, The number of packets received from UDP = 11951
+
+Node:     43, Layer:  RoutingFisheye, Control OH in bytes = 1107566
+
+Node:     44, Layer:  RoutingFisheye, The number of Intra Scope Updates = 361
+
+Node:     44, Layer:  RoutingFisheye, The number of Inter Scope Updates = 121
+
+Node:     44, Layer:  RoutingFisheye, The number of packets received from UDP = 12298
+
+Node:     44, Layer:  RoutingFisheye, Control OH in bytes = 1108962
+
+Node:     45, Layer:  RoutingFisheye, The number of Intra Scope Updates = 361
+
+Node:     45, Layer:  RoutingFisheye, The number of Inter Scope Updates = 121
+
+Node:     45, Layer:  RoutingFisheye, The number of packets received from UDP = 13104
+
+Node:     45, Layer:  RoutingFisheye, Control OH in bytes = 1142944
+
+Node:     46, Layer:  RoutingFisheye, The number of Intra Scope Updates = 361
+
+Node:     46, Layer:  RoutingFisheye, The number of Inter Scope Updates = 121
+
+Node:     46, Layer:  RoutingFisheye, The number of packets received from UDP = 12653
+
+Node:     46, Layer:  RoutingFisheye, Control OH in bytes = 1138214
+
+Node:     47, Layer:  RoutingFisheye, The number of Intra Scope Updates = 361
+
+Node:     47, Layer:  RoutingFisheye, The number of Inter Scope Updates = 121
+
+Node:     47, Layer:  RoutingFisheye, The number of packets received from UDP = 12120
+
+Node:     47, Layer:  RoutingFisheye, Control OH in bytes = 1108564
+
+Node:     48, Layer:  RoutingFisheye, The number of Intra Scope Updates = 361
+
+Node:     48, Layer:  RoutingFisheye, The number of Inter Scope Updates = 121
+
+Node:     48, Layer:  RoutingFisheye, The number of packets received from UDP = 12921
+
+Node:     48, Layer:  RoutingFisheye, Control OH in bytes = 1161998
+
+Node:     49, Layer:  RoutingFisheye, The number of Intra Scope Updates = 361
+
+Node:     49, Layer:  RoutingFisheye, The number of Inter Scope Updates = 120
+
+Node:     49, Layer:  RoutingFisheye, The number of packets received from UDP = 13436
+
+Node:     49, Layer:  RoutingFisheye, Control OH in bytes = 1160542
+

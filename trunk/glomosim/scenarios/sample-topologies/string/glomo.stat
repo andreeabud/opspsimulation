@@ -1,0 +1,2 @@
+Node:      0, Layer: AppTelnetClient, from 0 to 5 (cid = 1), start = 16014000, end = 100016014000 ns (closed), bytes sent = 123 B, bytes recv = 3927 B, throughput = 9 bps
+Node:      5, Layer: AppTelnetServer, from 0 to 5 (cid = 2), start = 24089000, end = 100026491002 ns (closed), bytes sent = 3927 B, bytes recv =  123 B, throughput = 9 bps
