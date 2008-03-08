@@ -4967,6 +4967,7 @@ void RoutingAodvInitiateHELLO(GlomoNode *node)
 
 //-----------------------tianke---------------------------begin
 
+#if 0
 /*
  * ETX metric Init
  *
@@ -5201,6 +5202,7 @@ void MetricETXFinalize(GlomoNode *node)
 
 
 }
+#endif
 
 //-----------------------tianke-----------------------------end
 
