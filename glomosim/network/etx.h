@@ -5,10 +5,13 @@
 #include "nwcommon.h"
 #include "main.h"
 
+#define ETX_CONEFFICENT 0.01
+
 #define ETX_DEBUG
 #define MAX_NUM_NEIGHBOR 256
 #define MAX_NUM_PROBE 10
 #define ETX_INIT_VALUE 1.0
+
 
 
 typedef float ETXValue;
@@ -89,6 +92,13 @@ typedef struct
     int size;
 } ETX_ST;
 
+//--------------tianke on 2008-3-16 25:10 0.01------------>
+void MetricETXCalculate(GlomoCoordinates x, GlomoCoordinates y);
+
+
+//<-------------tianke on 2008-3-16 25:10 0.01------------
+
+#if 0
 void MetricETXInit(node);
 
 void MetricEtxInitProbeNumTable(ETX_PNT *etxProbeNumTable);
@@ -111,5 +121,6 @@ void MetricETXFinalize(GlomoNode *node);
 void MetricETXHandleProbe(GlomoNode *node, Message*msg, NODE_ADDR srcAddr);
 
 void MetricETXHandleProbeAck(GlomoNode *node, Message*msg, NODE_ADDR srcAddr);
+#endif
 
 #endif
