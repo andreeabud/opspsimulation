@@ -3583,7 +3583,7 @@ void RoutingAodvDisplayNbrTable(GlomoNode* node)
  * Called when any packet e.g. HELLO, RREQ, RREP, RERR, RREP-ACK,
  * data packet is received from a neighbor that is in the neighbor table
  */
-
+// 收到包后，更新最后一次收包的时间
 void RoutingAodvUpdateLastPacketTime(GlomoNode *node, NODE_ADDR nbrAddr)
 {
 	GlomoNetworkIp* ipLayer = (GlomoNetworkIp *) node->networkData.networkVar;
@@ -4968,6 +4968,13 @@ void RoutingAodvInitiateHELLO(GlomoNode *node)
 
 
 //--------------tianke on 2008-3-16 25:11 0.01------------>
+
+
+/*
+ * Function:       Calculate etx metric from distance of the receive node 
+ *								and send node.
+ *     
+ */
 void MetricETXCalculate(GlomoCoordinates txNodePosition, 
 								GlomoCoordinates rxNodePosition)
 {
@@ -4978,6 +4985,7 @@ void MetricETXCalculate(GlomoCoordinates txNodePosition,
 	etxMetric = distance * ETX_CONEFFICENT;
 
 }
+
 
 
 //<-------------tianke on 2008-3-16 25:11 0.01------------
