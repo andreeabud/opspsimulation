@@ -2367,10 +2367,15 @@ void RoutingAodvHandleHello(GlomoNode *node,Message *msg, NODE_ADDR nbrAddr)
 		 */
       	RoutingAodvUpdateLastHelloTime(node, nbrAddr);
       	RoutingAodvUpdateLastPacketTime(node, nbrAddr);
+	
     } else {
       	RoutingAodvInsertNbrTable(node, nbrAddr);
     }
-  
+
+	//--------------tianke on 2008-3-17 21:51 0.01------------>
+	OPSPUpdateNbrETX(node, nbrAddr);
+	//<-------------tianke on 2008-3-17 21:51 0.01------------
+	  
   	GLOMO_MsgFree(node,msg);
 
 } /* RoutingAodvHandleHello */
@@ -3369,6 +3374,7 @@ BOOL RoutingAodvCheckRouteExistSansNextHop(NODE_ADDR destAddr,
  * 
  * Returns TRUE if any route to the destination is known
  */
+ //检测是否存在到目的节点的路由表项
 BOOL RoutingAodvCheckRouteExist(NODE_ADDR destAddr, AODV_RT *routeTable)
 {
     AODV_RT_Node *current;
@@ -4922,6 +4928,7 @@ void RoutingAodvInitiateRREPACK(GlomoNode *node, Message *msg,
  *
  *  HELLO packet - special type of rrepPkt that is broadcast with TTL = 1
  */
+// HELLO包是RREP包的结构，只是目的地址是广播地址，TTL=1 
 void RoutingAodvInitiateHELLO(GlomoNode *node)
 {
 	GlomoNetworkIp* ipLayer = (GlomoNetworkIp *) node->networkData.networkVar;
@@ -4969,7 +4976,6 @@ void RoutingAodvInitiateHELLO(GlomoNode *node)
 
 //--------------tianke on 2008-3-16 25:11 0.01------------>
 
-
 /*
  * Function:       Calculate etx metric from distance of the receive node 
  *								and send node.
@@ -4986,13 +4992,20 @@ void MetricETXCalculate(GlomoCoordinates txNodePosition,
 
 }
 
-
-
 //<-------------tianke on 2008-3-16 25:11 0.01------------
 
+//--------------tianke on 2008-3-17 22:55 0.01------------>
+void OPSPUpdateNbrETX(node, nbrAddr)
+{
+	RoutingAodvUpdateLastPacketTime(GlomoNode *node, NODE_ADDR nbrAddr);
+	
+	GlomoNetworkIp* ipLayer = (GlomoNetworkIp *) node->networkData.networkVar;
+  	GlomoRoutingAodv* aodv = (GlomoRoutingAodv *) ipLayer->routingProtocol;
+  	AODV_NT nbrTable = aodv->nbrTable;
+  	AODV_NT_Node *current;
+}
 
-
-
+//<-------------tianke on 2008-3-17 22:55 0.01------------
 
 
 
