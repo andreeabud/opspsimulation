@@ -2373,7 +2373,7 @@ void RoutingAodvHandleHello(GlomoNode *node,Message *msg, NODE_ADDR nbrAddr)
     }
 
 	//--------------tianke on 2008-3-17 21:51 0.01------------>
-	OPSPUpdateNbrETX(node, nbrAddr);
+	OPSPUpdateNbrETX(helloPkt.localPositon, node.position, node, nbrAddr);
 	//<-------------tianke on 2008-3-17 21:51 0.01------------
 	  
   	GLOMO_MsgFree(node,msg);
@@ -4652,6 +4652,9 @@ void RoutingAodvInitiateRREP(GlomoNode *node, Message *msg)
 #else
     rrepPkt->ackReqd = FALSE;
 #endif
+		//-------------tianke on 2008-3-18 16:31 0.01------>
+		rrepPkt->localPositon = node.position;
+		//<----------- tianke on 2008-3-18 16:31 0.01--------
 
 	RoutingAodvMarkReplied(rreqPkt->origAddr, rreqPkt->lastAddr,
 									&aodv->routeTable);
@@ -4953,6 +4956,9 @@ void RoutingAodvInitiateHELLO(GlomoNode *node)
   	rrepPkt->hopCount = 0;
   	rrepPkt->nexttolastAddr = node->nodeAddr;
   	rrepPkt->lifetime = ALLOWED_HELLO_LOSS * HELLO_INTERVAL;
+		//-------------tianke on 2008-3-18 16:31 0.01------>
+		rrepPkt->localPositon = node.position;
+		//<----------- tianke on 2008-3-18 16:31 0.01--------
 
   	if(pc_erand(node->seed) <= 0.5)
 		plusMinus = 1;
@@ -4981,28 +4987,62 @@ void RoutingAodvInitiateHELLO(GlomoNode *node)
  *								and send node.
  *     
  */
-void MetricETXCalculate(GlomoCoordinates txNodePosition, 
+ETXValue ETXCalculate(GlomoCoordinates txNodePosition, 
 								GlomoCoordinates rxNodePosition)
 {
 	double distance;
-	double etxMetric;
+	ETXValue etxMetric;
 	
 	distance= sqrt(SQUARE ( txNode.x - rxNode.x) + SQUARE(txNode.y - rxNode.y));
 	etxMetric = distance * ETX_CONEFFICENT;
+
+	return etxMetric;
 
 }
 
 //<-------------tianke on 2008-3-16 25:11 0.01------------
 
 //--------------tianke on 2008-3-17 22:55 0.01------------>
-void OPSPUpdateNbrETX(node, nbrAddr)
+/*更新邻居表中的ETX值*/
+void OPSPUpdateNbrETX(GlomoCoordinates txNodePosition, 
+                                GlomoCoordinates rxNodePosition, 
+                                GlomoNode *node, NODE_ADDR nbrAddr)
 {
-	RoutingAodvUpdateLastPacketTime(GlomoNode *node, NODE_ADDR nbrAddr);
-	
-	GlomoNetworkIp* ipLayer = (GlomoNetworkIp *) node->networkData.networkVar;
+		GlomoNetworkIp* ipLayer = (GlomoNetworkIp *) node->networkData.networkVar;
   	GlomoRoutingAodv* aodv = (GlomoRoutingAodv *) ipLayer->routingProtocol;
   	AODV_NT nbrTable = aodv->nbrTable;
   	AODV_NT_Node *current;
+
+	  double distance;
+	  ETXValue nbretx;
+
+
+  	if (nbrTable.size == 0) {
+		assert(FALSE);
+      	return;
+		/*
+		 * This situation should not occur - the caller of this function must
+		 * ensure that the neighbor exists in the route table before calling
+		 * this function
+		 */
+    }
+			
+	  distance= sqrt(SQUARE(txNodePosition.x - rxNodePosition.x)
+			             + SQUARE(txNodePosition.y - rxNodePosition.y));
+	  nbretx = distance * ETX_CONEFFICENT;
+		
+    for (current = nbrTable.head;
+         current != NULL && current->nbrAddr <= nbrAddr;
+         current = current->next) {
+        if (current->nbrAddr == nbrAddr) {
+	  		    current->etx = nbretx;
+	  		return;
+        }
+    }
+	
+	assert(FALSE);
+    return; //This too should not occur.
+		
 }
 
 //<-------------tianke on 2008-3-17 22:55 0.01------------

@@ -201,6 +201,9 @@ typedef struct
 	 */
     BOOL ackReqd;
     clocktype lifetime;
+		//-------------tianke on 2008-3-18 16:4 0.01------>
+		GlomoCoordinates localPositon;
+		//<----------- tianke on 2008-3-18 16:4 0.01--------
 } AODV_RREP_Packet;
 
 typedef struct
@@ -315,6 +318,9 @@ typedef struct NTE
   NODE_ADDR nbrAddr; //Neighbor from which HELLO packet was received
   clocktype lastHello; //The last time  a HELLO packet was received
   clocktype lastPkt; //The last time ANY packet was received from that neighbor
+  //-------------tianke on 2008-3-18 14:57 0.01------>
+  ETXValue etx; //ETX from that neighbor
+  //<----------- tianke on 2008-3-18 14:57 0.01--------
   struct NTE *next;
 } AODV_NT_Node;
 

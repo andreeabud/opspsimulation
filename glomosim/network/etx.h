@@ -14,7 +14,7 @@
 
 
 
-typedef float ETXValue;
+typedef double ETXValue;
 typedef long PROBE_NUM;
 
 typedef struct EPNTE
