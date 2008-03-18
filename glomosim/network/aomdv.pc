@@ -1565,14 +1565,17 @@ void RoutingAodvInit(
     RoutingAodvInitSeq(node);
     RoutingAodvInitBcastId(node);
 	
-//-----------------------tianke------------------------>
+
+	//--------------tianke on 2008-3-18 22:40 0.01------------>
+	#if 0
 	MetricEtxInitProbeNumTable(&aodv->etxProbeNumTable);
 	MetricEtxInitProbeAckNumTable(&aodv->etxProbeAckNumTable);
 	MetricEtxInitNeighborTable(&aodv->etxNbrTable);
 	MetricEtxInitLinkTable(&aodv->etxLinkTable);
 	MetricEtxInitSegmentTable(&aodv->etxSegmentTable);
 	MetricETXInit(node);
-//<-----------------------tianke------------------------
+	#endif
+	//<-------------tianke on 2008-3-18 22:40 0.01------------
 
     NetworkIpSetPacketDropNotificationFunction(
         node, &RoutingAodvPacketDropNotificationHandler);
@@ -4652,9 +4655,10 @@ void RoutingAodvInitiateRREP(GlomoNode *node, Message *msg)
 #else
     rrepPkt->ackReqd = FALSE;
 #endif
-		//-------------tianke on 2008-3-18 16:31 0.01------>
-		rrepPkt->localPositon = node.position;
-		//<----------- tianke on 2008-3-18 16:31 0.01--------
+  	//-------------tianke on 2008-3-18 16:31 0.01------>
+  	rrepPkt->localPositon = node.position;
+    rrepPkt->etxToDest = 0;
+  	//<----------- tianke on 2008-3-18 16:31 0.01--------
 
 	RoutingAodvMarkReplied(rreqPkt->origAddr, rreqPkt->lastAddr,
 									&aodv->routeTable);
@@ -4674,6 +4678,7 @@ void RoutingAodvInitiateRREP(GlomoNode *node, Message *msg)
  *
  * An intermediate node that knows the route to the destination sends the RREP
  */
+ /*一个中间结点中存在到目的节点的路由时，发送RREP*/
 void RoutingAodvInitiateRREPbyIN(GlomoNode *node, Message *msg)
 {
     GlomoNetworkIp* ipLayer = (GlomoNetworkIp *)node->networkData.networkVar;
@@ -4703,6 +4708,11 @@ void RoutingAodvInitiateRREPbyIN(GlomoNode *node, Message *msg)
     rrepPkt->origAddr = rreqPkt->origAddr;
     rrepPkt->destAddr = rreqPkt->destAddr;
     rrepPkt->destSeq = RoutingAodvGetSeq(rreqPkt->destAddr, &aodv->routeTable);
+	//-------------tianke on 2008-3-18 16:31 0.01------>
+  	rrepPkt->localPositon = node.position;
+
+	rrepPkt->etxToDest = ;
+  	//<----------- tianke on 2008-3-18 16:31 0.01--------
     nextHop = RoutingAodvGetNextHopNotUsedToReply(rreqPkt->destAddr,
 												&aodv->routeTable);
     assert(nextHop != ANY_DEST);
@@ -4820,6 +4830,7 @@ void RoutingAodvRelayRREP(GlomoNode *node, Message *msg, NODE_ADDR srcAddr)
     clocktype existingLifetime;
 	clocktype lifetime;
     int pktSize = sizeof(AODV_RREP_Packet);
+	ETXValue etxNbr;
 
 #ifdef AOMDV_DEBUG_TRACE
 	printf(" In Relay RREP\n");
@@ -4853,6 +4864,11 @@ void RoutingAodvRelayRREP(GlomoNode *node, Message *msg, NODE_ADDR srcAddr)
     newRrep->ackReqd = FALSE;	    
 #endif
     newRrep->lifetime = lifetime;
+
+    //--------------tianke on 2008-3-18 23:31 0.01------------>
+    etxNbr = ETXCalculate(oldRrep.localPositon, node.position);
+    newRrep->etxToDest = oldRrep->etxToDest + etxNbr;
+    //<-------------tianke on 2008-3-18 23:31 0.01------------
     nextHop = RoutingAodvGetNextHopNotReplied(oldRrep->origAddr,
 											&aodv->routeTable);
 
@@ -4956,9 +4972,9 @@ void RoutingAodvInitiateHELLO(GlomoNode *node)
   	rrepPkt->hopCount = 0;
   	rrepPkt->nexttolastAddr = node->nodeAddr;
   	rrepPkt->lifetime = ALLOWED_HELLO_LOSS * HELLO_INTERVAL;
-		//-------------tianke on 2008-3-18 16:31 0.01------>
-		rrepPkt->localPositon = node.position;
-		//<----------- tianke on 2008-3-18 16:31 0.01--------
+  	//-------------tianke on 2008-3-18 16:31 0.01------>
+  	rrepPkt->localPositon = node.position;
+  	//<----------- tianke on 2008-3-18 16:31 0.01--------
 
   	if(pc_erand(node->seed) <= 0.5)
 		plusMinus = 1;
@@ -5008,7 +5024,7 @@ void OPSPUpdateNbrETX(GlomoCoordinates txNodePosition,
                                 GlomoCoordinates rxNodePosition, 
                                 GlomoNode *node, NODE_ADDR nbrAddr)
 {
-		GlomoNetworkIp* ipLayer = (GlomoNetworkIp *) node->networkData.networkVar;
+	GlomoNetworkIp* ipLayer = (GlomoNetworkIp *) node->networkData.networkVar;
   	GlomoRoutingAodv* aodv = (GlomoRoutingAodv *) ipLayer->routingProtocol;
   	AODV_NT nbrTable = aodv->nbrTable;
   	AODV_NT_Node *current;
@@ -5035,7 +5051,7 @@ void OPSPUpdateNbrETX(GlomoCoordinates txNodePosition,
          current != NULL && current->nbrAddr <= nbrAddr;
          current = current->next) {
         if (current->nbrAddr == nbrAddr) {
-	  		    current->etx = nbretx;
+	  		current->etx = nbretx;
 	  		return;
         }
     }

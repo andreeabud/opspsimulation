@@ -201,9 +201,10 @@ typedef struct
 	 */
     BOOL ackReqd;
     clocktype lifetime;
-		//-------------tianke on 2008-3-18 16:4 0.01------>
-		GlomoCoordinates localPositon;
-		//<----------- tianke on 2008-3-18 16:4 0.01--------
+    //-------------tianke on 2008-3-18 16:4 0.01------>
+    GlomoCoordinates localPositon;
+	ETXValue etxToDest;
+    //<----------- tianke on 2008-3-18 16:4 0.01--------
 } AODV_RREP_Packet;
 
 typedef struct
@@ -303,6 +304,9 @@ typedef struct RTE
     int advertisedHopCount;
 	AODV_RTL routeList;
     AODV_PL precursorList;
+	//--------------tianke on 2008-3-18 23:51 0.01------------>
+	ETXValue etxToDest;
+	//<-------------tianke on 2008-3-18 23:51 0.01------------
     struct RTE *next;
 } AODV_RT_Node;
 
