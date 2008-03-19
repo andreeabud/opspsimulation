@@ -2375,9 +2375,10 @@ void RoutingAodvHandleHello(GlomoNode *node,Message *msg, NODE_ADDR nbrAddr)
       	RoutingAodvInsertNbrTable(node, nbrAddr);
     }
 
-	//--------------tianke on 2008-3-17 21:51 0.01------------>
-	OPSPUpdateNbrETX(helloPkt.localPositon, node.position, node, nbrAddr);
-	//<-------------tianke on 2008-3-17 21:51 0.01------------
+	  //--------------tianke on 2008-3-17 21:51 0.01------------>
+    OPSPUpdateNbrETX(helloPkt.localPositon, node.position, node, nbrAddr);		
+		OPSPUpdateTowHopNbrTable();
+	  //<-------------tianke on 2008-3-17 21:51 0.01------------
 	  
   	GLOMO_MsgFree(node,msg);
 

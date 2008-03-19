@@ -317,14 +317,36 @@ typedef struct
     int size;
 } AODV_RT;
 
+//-------------tianke on 2008-3-19 11:1 0.01------>
+//邻居转发率表(from neighbor to destination
+typedef struct NFRE
+{
+    NODE_ADDR destAddr;
+    int destSeq;
+	/* whether the above destination sequence number is valid*/
+    BOOL destSeqValid;
+	  ETXValue etxToDest;
+    struct NFRE *next;
+} AODV_NFR_Node;
+
+
+typedef struct
+{
+    AODV_NFR_Node *head;
+    int size;
+} AODV_NFR;
+//<----------- tianke on 2008-3-19 11:1 0.01--------
+
 typedef struct NTE
 {
   NODE_ADDR nbrAddr; //Neighbor from which HELLO packet was received
   clocktype lastHello; //The last time  a HELLO packet was received
   clocktype lastPkt; //The last time ANY packet was received from that neighbor
-  //-------------tianke on 2008-3-18 14:57 0.01------>
-  ETXValue etx; //ETX from that neighbor
-  //<----------- tianke on 2008-3-18 14:57 0.01--------
+  //v------------tianke on 2008-3-19 13:55 0.01------v
+  GlomoCoordinates position;
+  ETXValue etx; //ETX from that neighbor to local
+  AODV_NFR nfr; //邻居转发率表
+  //^----------- tianke on 2008-3-19 13:55 0.01------^
   struct NTE *next;
 } AODV_NT_Node;
 
@@ -333,6 +355,27 @@ typedef struct
     AODV_NT_Node *head;
     int size;
 } AODV_NT;
+
+
+//v------------tianke on 2008-3-19 14:16 0.01------v
+
+typedef struct TNE
+{
+    NODE_ADDR nbrAddr1;
+		GlomoCoordinates nbrPosition1;
+		NODE_ADDR nbrAddr2;
+		GlomoCoordinates nbrPosition2;
+    ETXValue etx; //ETX from nbr1 to nbr2
+    struct TNE *next;
+} OPSP_TN_Node;
+
+typedef struct
+{
+    OPSP_TN_Node *head;
+    int size;
+} OPSP_TN;
+//^----------- tianke on 2008-3-19 14:16 0.01------^
+
 
 /* 
  * The neighbor table contains ONLY those neighbors from which a HELLO packet
@@ -343,7 +386,7 @@ typedef struct RSE
 {
     NODE_ADDR srcAddr;
     int bcastId;
-	NODE_ADDR nextHop;
+	  NODE_ADDR nextHop;
     struct RSE *next;
 } AODV_RST_Node;
 
@@ -446,17 +489,22 @@ typedef struct glomo_network_aodv_str
 {
   AODV_RT routeTable; //指向路由表第一项的指针
   AODV_NT nbrTable;
+	//v------------tianke on 2008-3-19 14:16 0.01------v
+	OPSP_TN towHopNbrTable;
+	//^----------- tianke on 2008-3-19 14:16 0.01------^
   AODV_RST seenTable;
   AODV_RRT replyTable;
   AODV_BUFFER buffer;
   AODV_SENT sent;
   AODV_Stats stats;
 //--------------tianke on 2008-1-28 11:40 0.01------------>
+  #if 0
   ETX_NT etxNbrTable;
   ETX_LT etxLinkTable;
   ETX_ST etxSegmentTable;
   ETX_PNT etxProbeNumTable;
   ETX_PANT etxProbeAckNumTable;
+  #endif
 //<-------------tianke on 2008-1-28 11:40 0.01------------
   int seqNumber;
   int bcastId;
