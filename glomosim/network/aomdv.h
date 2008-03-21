@@ -232,6 +232,7 @@ typedef struct
        destinationPairArray[AODV_MAX_RERR_DESTINATIONS];
 } AODV_RERR_Packet;
 
+#if 0
 //--------------tianke on 2008-1-28 11:39 0.01------------>
 typedef struct
 {
@@ -251,6 +252,7 @@ typedef struct
 	
 } ETX_PROBE_ACK_Packet;
 //<-------------tianke on 2008-1-28 11:39 0.01------------
+#endif
 
 typedef struct
 {
@@ -294,7 +296,7 @@ typedef struct
 } AODV_RTL;
 
 
-
+//Routing Table
 typedef struct RTE
 {
     NODE_ADDR destAddr;
@@ -317,48 +319,9 @@ typedef struct
     int size;
 } AODV_RT;
 
-//-------------tianke on 2008-3-19 11:1 0.01------>
-//邻居转发率表(from neighbor to destination
-typedef struct NFRE
-{
-    NODE_ADDR destAddr;
-    int destSeq;
-	/* whether the above destination sequence number is valid*/
-    BOOL destSeqValid;
-	  ETXValue etxToDest;
-    struct NFRE *next;
-} AODV_NFR_Node;
-
-
-typedef struct
-{
-    AODV_NFR_Node *head;
-    int size;
-} AODV_NFR;
-//<----------- tianke on 2008-3-19 11:1 0.01--------
-
-typedef struct NTE
-{
-  NODE_ADDR nbrAddr; //Neighbor from which HELLO packet was received
-  clocktype lastHello; //The last time  a HELLO packet was received
-  clocktype lastPkt; //The last time ANY packet was received from that neighbor
-  //v------------tianke on 2008-3-19 13:55 0.01------v
-  GlomoCoordinates position;
-  ETXValue etx; //ETX from that neighbor to local
-  AODV_NFR nfr; //邻居转发率表
-  //^----------- tianke on 2008-3-19 13:55 0.01------^
-  struct NTE *next;
-} AODV_NT_Node;
-
-typedef struct
-{
-    AODV_NT_Node *head;
-    int size;
-} AODV_NT;
-
-
+#if 0
 //v------------tianke on 2008-3-19 14:16 0.01------v
-
+// Tow-hop Neighbors ETX Table entry 每次收到HELLO消息后，更新NB
 typedef struct TNE
 {
     NODE_ADDR nbrAddr1;
@@ -375,7 +338,47 @@ typedef struct
     int size;
 } OPSP_TN;
 //^----------- tianke on 2008-3-19 14:16 0.01------^
+#endif
 
+//-------------tianke on 2008-3-19 11:1 0.01------>
+//Neighbor Forwarding Rate Table 邻居转发率表(from neighbor to destination)
+typedef struct NFRTE
+{
+    NODE_ADDR destAddr;
+    int destSeq;
+	/* whether the above destination sequence number is valid*/
+    BOOL destSeqValid;
+	  ETXValue etxToDest; //from local to dest
+    struct NFRTE *next;
+} OPSP_NFRT_Node;
+
+
+typedef struct
+{
+    OPSP_NFRT_Node *head;
+    int size;
+} OPSP_NFRT;
+//<----------- tianke on 2008-3-19 11:1 0.01--------
+
+//Neighbors Table
+typedef struct NTE
+{
+  NODE_ADDR nbrAddr; //Neighbor from which HELLO packet was received
+  clocktype lastHello; //The last time  a HELLO packet was received
+  clocktype lastPkt; //The last time ANY packet was received from that neighbor
+  //v------------tianke on 2008-3-19 13:55 0.01------v
+  GlomoCoordinates position; // position of the neighbor
+  ETXValue etx; // ETX from that neighbor to local
+  OPSP_NFRT nfrt; // neighbor forwarding rate table  
+  //^----------- tianke on 2008-3-19 13:55 0.01------^
+  struct NTE *next;
+} AODV_NT_Node;
+
+typedef struct
+{
+    AODV_NT_Node *head;
+    int size;
+} AODV_NT;
 
 /* 
  * The neighbor table contains ONLY those neighbors from which a HELLO packet
@@ -491,21 +494,22 @@ typedef struct glomo_network_aodv_str
   AODV_NT nbrTable;
 	//v------------tianke on 2008-3-19 14:16 0.01------v
 	OPSP_TN towHopNbrTable;
+	OPSP_NFRT nbrFowardRateTable;
 	//^----------- tianke on 2008-3-19 14:16 0.01------^
   AODV_RST seenTable;
   AODV_RRT replyTable;
   AODV_BUFFER buffer;
   AODV_SENT sent;
   AODV_Stats stats;
+#if 0
 //--------------tianke on 2008-1-28 11:40 0.01------------>
-  #if 0
   ETX_NT etxNbrTable;
   ETX_LT etxLinkTable;
   ETX_ST etxSegmentTable;
   ETX_PNT etxProbeNumTable;
   ETX_PANT etxProbeAckNumTable;
-  #endif
 //<-------------tianke on 2008-1-28 11:40 0.01------------
+#endif
   int seqNumber;
   int bcastId;
   clocktype lastbcast;

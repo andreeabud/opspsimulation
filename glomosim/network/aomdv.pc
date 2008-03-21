@@ -791,6 +791,7 @@ RoutingAodvInsertSeenTable(
  *
  * Insert a packet into the buffer if no route is available
  */
+ //如果没有路由可用先把包存入缓存。
 static 
 void RoutingAodvInsertBuffer(
     Message* msg,
@@ -5064,6 +5065,55 @@ void OPSPUpdateNbrETX(GlomoCoordinates txNodePosition,
 
 //<-------------tianke on 2008-3-17 22:55 0.01------------
 
+
+//v----------------------------tianke on 2008-3-21 15:29 0.01--------------------------v
+void RoutingAodvInsertNfrTable(GlomoNode *node, NODE_ADDR nbrAddr)
+{
+
+	GlomoNetworkIp* ipLayer = (GlomoNetworkIp *) node->networkData.networkVar;
+  	GlomoRoutingAodv* aodv = (GlomoRoutingAodv *) ipLayer->routingProtocol;
+  	OPSP_NFRT *nbrFowardRateTable = &aodv->nbrFowardRateTable;
+  	OPSP_NFRT_Node* current;
+  	OPSP_NFRT_Node* previous;
+  	char clockdisplay[GLOMO_MAX_STRING_LENGTH];
+  
+  	OPSP_NFRT_Node* newNode = 
+    	(OPSP_NFRT_Node *)checked_pc_malloc(sizeof(OPSP_NFRT_Node));
+    
+    newNode->destAddr= nbrAddr;
+    newNode->destSeq= ---;
+    newNode->destSeqValid= ---;
+		newNode->etxToDest=---;
+    newNode->next = NULL;
+    
+    ++(nbrFowardRateTable->size);
+    
+    // Find Insertion point.  Insert after all address matches.
+    
+    previous = NULL;
+    current = nbrFowardRateTable->head;
+    while ((current != NULL) && (current->nbrAddr <= nbrAddr)) {
+        previous = current;
+        current = current->next;
+    }
+    
+
+    if (previous == NULL) {
+		newNode->next = nbrFowardRateTable->head;
+		nbrFowardRateTable->head = newNode;
+    } else {
+		newNode->next = previous->next;
+		previous->next = newNode;
+    }//if//
+   
+    RoutingAodvSetTimer(node, MSG_AODV_CheckPacketsRecd, nbrAddr,
+							(clocktype)(ALLOWED_HELLO_LOSS * HELLO_INTERVAL));
+
+    RoutingAodvSetTimer(node, MSG_AODV_CheckIfHelloed, nbrAddr,
+												RoutingAodvGetDeletePeriod());
+
+} /* RoutingAodvInsertNbrTable */
+//^--------------------------- tianke on 2008-3-21 15:29 0.01--------------------------^
 
 
 
