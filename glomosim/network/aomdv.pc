@@ -198,6 +198,7 @@ void RoutingAodvDisplayRouteTable(GlomoNode *node)
  *
  * Insert/Update an entry into the route table
  */
+ //对路由表项做修改和插入
 BOOL RoutingAodvReplaceInsertRouteTable(
 					GlomoNode *node,
 					NODE_ADDR destAddr,
@@ -471,6 +472,7 @@ BOOL RoutingAodvReplaceInsertRouteTable(
  *
  * Update an entry into the route table
  */
+ //更新路由表项
 void RoutingAodvReplaceRouteTable(
 					GlomoNode *node,
 					NODE_ADDR destAddr,
@@ -537,6 +539,9 @@ void RoutingAodvReplaceRouteTable(
 		
 		theNodeEntry				= theNode->routeList.head;
 		theNodeEntry->hopCount		= hopCount;
+		//--------------tianke on 2008-3-23 16:44 0.01------------>
+		theNodeEntry->etxToDest     = ###;
+		//<-------------tianke on 2008-3-23 16:44 0.01------------
       	theNodeEntry->nextHop		= nextHop;
       	theNodeEntry->nexttolastHop	= nexttolastHop;
 		theNodeEntry->lifetime		= lifetime;
@@ -2582,6 +2587,20 @@ void RoutingAodvInitNbrTable(AODV_NT *nbrTable)
     nbrTable->size = 0;
 
 } /* RoutingAodvInitNbrTable */
+
+//--------------tianke on 2008-3-23 15:15 0.01------------>
+/*
+ * RoutingAodvInitNfrTable
+ *
+ * Initialize the neighbor Forward Rate table
+ */
+void RoutingAodvInitNfrTable(OPSP_NFRT *nfrTable)
+{
+    nfrTable->head = NULL;
+    nfrTable->size = 0;
+
+} /* RoutingAodvInitNfrTable */
+//<-------------tianke on 2008-3-23 15:15 0.01------------
 
 /*
  * RoutingAodvInitSeenTable
@@ -5069,7 +5088,6 @@ void OPSPUpdateNbrETX(GlomoCoordinates txNodePosition,
 //v----------------------------tianke on 2008-3-21 15:29 0.01--------------------------v
 void RoutingAodvInsertNfrTable(GlomoNode *node, NODE_ADDR nbrAddr)
 {
-
 	GlomoNetworkIp* ipLayer = (GlomoNetworkIp *) node->networkData.networkVar;
   	GlomoRoutingAodv* aodv = (GlomoRoutingAodv *) ipLayer->routingProtocol;
   	OPSP_NFRT *nbrFowardRateTable = &aodv->nbrFowardRateTable;

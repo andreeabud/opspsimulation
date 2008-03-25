@@ -273,9 +273,13 @@ typedef struct
 } AODV_PL;
 
 
+// Routing Table List Entry
 typedef struct RTLE
 {
-	int hopCount;
+	int hopCount;	
+	//--------------tianke on 2008-3-18 23:51 0.01------------>
+	ETXValue etxToDest; // from local to Dest
+	//<-------------tianke on 2008-3-18 23:51 0.01------------
 	NODE_ADDR nextHop;
 	NODE_ADDR nexttolastHop;
 	clocktype lifetime;
@@ -306,9 +310,6 @@ typedef struct RTE
     int advertisedHopCount;
 	AODV_RTL routeList;
     AODV_PL precursorList;
-	//--------------tianke on 2008-3-18 23:51 0.01------------>
-	ETXValue etxToDest;
-	//<-------------tianke on 2008-3-18 23:51 0.01------------
     struct RTE *next;
 } AODV_RT_Node;
 
