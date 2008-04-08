@@ -2382,8 +2382,7 @@ void RoutingAodvHandleHello(GlomoNode *node,Message *msg, NODE_ADDR nbrAddr)
     }
 
 	  //--------------tianke on 2008-3-17 21:51 0.01------------>
-    OPSPUpdateNbrETX(helloPkt.localPositon, node.position, node, nbrAddr);		
-		OPSPUpdateTowHopNbrTable();
+    OPSPUpdateNbrETX(helloPkt->localPositon, node->position, node, nbrAddr);
 	  //<-------------tianke on 2008-3-17 21:51 0.01------------
 	  
   	GLOMO_MsgFree(node,msg);
@@ -2720,6 +2719,7 @@ void RoutingAodvInitBcastId(GlomoNode *node)
 
 } /* RoutingAodvInitBcastId */
 
+#if 0
 //----------------------------tianke--------------------->
 void MetricEtxInitProbeNumTable(ETX_PNT *etxProbeNumTable)
 {
@@ -2757,6 +2757,7 @@ void MetricEtxInitSegmentTable(ETX_ST *etxSegmentTable)
 }
 
 //<--------------------------tianke-----------------------
+#endif
 
 /*
  * RoutingAodvGetNextHopDataNotSent
@@ -3959,6 +3960,8 @@ void RoutingAodvHandleProtocolPacket(GlomoNode *node, Message *msg,
             break;
         } /* RERR */
 
+	#if 0
+	//--------------tianke on 2008-4-8 23:20 0.01------------>
 	case ETX_PROBE:
 	{
 		MetricETXHandleProbe(node, msg, srcAddr);
@@ -3971,6 +3974,8 @@ void RoutingAodvHandleProtocolPacket(GlomoNode *node, Message *msg,
 		break;
 	}
 	
+	//<-------------tianke on 2008-4-8 23:20 0.01------------
+	#endif
         default:
            assert(FALSE);
 		   abort(); 
@@ -4104,10 +4109,10 @@ void RoutingAodvHandleProtocolEvent(GlomoNode *node, Message *msg)
     	}
 		
 
+   		#if 0
    		//--------------tianke on 2007-12-13 25:4 0.01------------>
    		case MSG_ETX_PROBE: 
     	{
-			#if 0
 			if((aodv->lastbcast + HELLO_INTERVAL <= simclock())&&
 				(RoutingAodvIfMePartOfActiveRoute(node))) {
 				//A broadcast was not sent in the last HELLO_INTERVAL
@@ -4116,12 +4121,12 @@ void RoutingAodvHandleProtocolEvent(GlomoNode *node, Message *msg)
 	  			RoutingAodvSetTimer(node, MSG_ETX_PROBE, ANY_DEST,
 									(clocktype)HELLO_INTERVAL);
 			}
-			#endif
 			MetricETXInit(node);
 			GLOMO_MsgFree(node,msg);
 			break;     
 		}
    		//<-------------tianke on 2007-12-13 25:4 0.01------------
+   		#endif
 
 		
     	default:
@@ -4677,7 +4682,7 @@ void RoutingAodvInitiateRREP(GlomoNode *node, Message *msg)
     rrepPkt->ackReqd = FALSE;
 #endif
   	//-------------tianke on 2008-3-18 16:31 0.01------>
-  	rrepPkt->localPositon = node.position;
+  	rrepPkt->localPositon = node->position;
     rrepPkt->etxToDest = 0;
   	//<----------- tianke on 2008-3-18 16:31 0.01--------
 
@@ -4730,9 +4735,9 @@ void RoutingAodvInitiateRREPbyIN(GlomoNode *node, Message *msg)
     rrepPkt->destAddr = rreqPkt->destAddr;
     rrepPkt->destSeq = RoutingAodvGetSeq(rreqPkt->destAddr, &aodv->routeTable);
 	//-------------tianke on 2008-3-18 16:31 0.01------>
-  	rrepPkt->localPositon = node.position;
+  	rrepPkt->localPositon = node->position;
 
-	rrepPkt->etxToDest = ;
+	rrepPkt->etxToDest = 0;
   	//<----------- tianke on 2008-3-18 16:31 0.01--------
     nextHop = RoutingAodvGetNextHopNotUsedToReply(rreqPkt->destAddr,
 												&aodv->routeTable);
@@ -4887,7 +4892,7 @@ void RoutingAodvRelayRREP(GlomoNode *node, Message *msg, NODE_ADDR srcAddr)
     newRrep->lifetime = lifetime;
 
     //--------------tianke on 2008-3-18 23:31 0.01------------>
-    etxNbr = ETXCalculate(oldRrep.localPositon, node.position);
+    etxNbr = ETXCalculate(oldRrep->localPositon, node->position);
     newRrep->etxToDest = oldRrep->etxToDest + etxNbr;
     //<-------------tianke on 2008-3-18 23:31 0.01------------
     nextHop = RoutingAodvGetNextHopNotReplied(oldRrep->origAddr,
@@ -4994,7 +4999,7 @@ void RoutingAodvInitiateHELLO(GlomoNode *node)
   	rrepPkt->nexttolastAddr = node->nodeAddr;
   	rrepPkt->lifetime = ALLOWED_HELLO_LOSS * HELLO_INTERVAL;
   	//-------------tianke on 2008-3-18 16:31 0.01------>
-  	rrepPkt->localPositon = node.position;
+  	rrepPkt->localPositon = node->position;
   	//<----------- tianke on 2008-3-18 16:31 0.01--------
 
   	if(pc_erand(node->seed) <= 0.5)
@@ -5030,7 +5035,8 @@ ETXValue ETXCalculate(GlomoCoordinates txNodePosition,
 	double distance;
 	ETXValue etxMetric;
 	
-	distance= sqrt(SQUARE ( txNode.x - rxNode.x) + SQUARE(txNode.y - rxNode.y));
+	distance= sqrt(SQUARE ( txNodePosition.x - rxNodePosition.x)
+					+ SQUARE(txNodePosition.y - rxNodePosition.y));
 	etxMetric = distance * ETX_CONEFFICENT;
 
 	return etxMetric;
@@ -5086,6 +5092,8 @@ void OPSPUpdateNbrETX(GlomoCoordinates txNodePosition,
 
 
 //v----------------------------tianke on 2008-3-21 15:29 0.01--------------------------v
+// Insert neighbor forwarding rate table when receive a RREP and RRER
+
 void RoutingAodvInsertNfrTable(GlomoNode *node, NODE_ADDR nbrAddr)
 {
 	GlomoNetworkIp* ipLayer = (GlomoNetworkIp *) node->networkData.networkVar;
@@ -5099,10 +5107,12 @@ void RoutingAodvInsertNfrTable(GlomoNode *node, NODE_ADDR nbrAddr)
     	(OPSP_NFRT_Node *)checked_pc_malloc(sizeof(OPSP_NFRT_Node));
     
     newNode->destAddr= nbrAddr;
+    //--------------tianke on 2008-4-8 23:37 0.01------------> !!!
     newNode->destSeq= ---;
     newNode->destSeqValid= ---;
-		newNode->etxToDest=---;
+	newNode->etxToDest=---;
     newNode->next = NULL;
+    //<-------------tianke on 2008-4-8 23:37 0.01------------
     
     ++(nbrFowardRateTable->size);
     

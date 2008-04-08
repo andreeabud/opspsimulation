@@ -69,7 +69,7 @@
 //----------------------------------tianke--------------------begin
 #include "aomdv.h"
 //#include "aodv.h"
-#include "etx.h"
+//#include "etx.h"
 //----------------------------------tianke-----------------------end
 #include "dsr.h"
 #include "odmrp.h"

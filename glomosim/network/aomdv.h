@@ -56,7 +56,7 @@
 #include "ip.h"
 #include "main.h"
 #include "nwcommon.h"
-#include "etx.h"
+/*#include "etx.h"*/
 
 #define NODE_TRAVERSAL_TIME			40 * MILLI_SECOND
 
@@ -143,7 +143,7 @@
 
 #define noTIMER_CHECKS
 
-
+typedef double ETXValue;
   
  
 /* Packet Types */
@@ -320,7 +320,6 @@ typedef struct
     int size;
 } AODV_RT;
 
-#if 0
 //v------------tianke on 2008-3-19 14:16 0.01------v
 // Tow-hop Neighbors ETX Table entry 每次收到HELLO消息后，更新NB
 typedef struct TNE
@@ -339,7 +338,6 @@ typedef struct
     int size;
 } OPSP_TN;
 //^----------- tianke on 2008-3-19 14:16 0.01------^
-#endif
 
 //-------------tianke on 2008-3-19 11:1 0.01------>
 //Neighbor Forwarding Rate Table 邻居转发率表(from neighbor to destination)
@@ -751,5 +749,13 @@ clocktype RoutingAodvGetMinimalLifetime(int hopCount);
 clocktype RoutingAodvGetDeletePeriod(void);
 
 clocktype RoutingAodvGetMyRouteTimeout(GlomoNode *node);
+
+
+void OPSPUpdateNbrETX(GlomoCoordinates txNodePosition, 
+                                GlomoCoordinates rxNodePosition, 
+                                GlomoNode *node, NODE_ADDR nbrAddr);
+
+ETXValue ETXCalculate(GlomoCoordinates txNodePosition, 
+								GlomoCoordinates rxNodePosition);
 
 #endif /* _AOMDV_H_ */
