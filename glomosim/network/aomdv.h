@@ -202,8 +202,8 @@ typedef struct
     BOOL ackReqd;
     clocktype lifetime;
     //-------------tianke on 2008-3-18 16:4 0.01------>
-    GlomoCoordinates localPositon;
-	ETXValue etxToDest;
+    GlomoCoordinates Positon;
+	ETXValue etxToDest; //from sender to destination
     //<----------- tianke on 2008-3-18 16:4 0.01--------
 } AODV_RREP_Packet;
 
@@ -320,6 +320,7 @@ typedef struct
     int size;
 } AODV_RT;
 
+#if 0
 //v------------tianke on 2008-3-19 14:16 0.01------v
 // Tow-hop Neighbors ETX Table entry 每次收到HELLO消息后，更新NB
 typedef struct TNE
@@ -338,16 +339,18 @@ typedef struct
     int size;
 } OPSP_TN;
 //^----------- tianke on 2008-3-19 14:16 0.01------^
+#endif
 
 //-------------tianke on 2008-3-19 11:1 0.01------>
 //Neighbor Forwarding Rate Table 邻居转发率表(from neighbor to destination)
 typedef struct NFRTE
 {
-    NODE_ADDR destAddr;
+    NODE_ADDR nbrAddr;
+		NODE_ADDR destAddr;
     int destSeq;
 	/* whether the above destination sequence number is valid*/
     BOOL destSeqValid;
-	  ETXValue etxToDest; //from local to dest
+	  ETXValue etxToDest; //from the neighbor to dest
     struct NFRTE *next;
 } OPSP_NFRT_Node;
 
