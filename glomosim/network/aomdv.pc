@@ -203,6 +203,8 @@ BOOL RoutingAodvReplaceInsertRouteTable(
 					GlomoNode *node,
 					NODE_ADDR destAddr,
 					int destSeq,
+					GlomoPartition Positon, 
+					ETXValue etxToDest, 
 					BOOL destSeqValid,
 					BOOL valid,
 					int hopCount,
@@ -225,6 +227,9 @@ BOOL RoutingAodvReplaceInsertRouteTable(
 	AODV_RTL_Node *currentEntry;
 	AODV_RTL_Node *previousEntry;
 
+	ETXValue etxNbr;
+
+
 	int routeCount = 0;
 
 #ifdef TIMER_CHECKS
@@ -246,6 +251,7 @@ BOOL RoutingAodvReplaceInsertRouteTable(
 	}
 
     if ((current == NULL) || (current->destAddr != destAddr)) { 
+			//insert route table entry
 		++(routeTable->size);
       
 	    theNode = (AODV_RT_Node *)checked_pc_malloc(sizeof(AODV_RT_Node));
@@ -261,6 +267,10 @@ BOOL RoutingAodvReplaceInsertRouteTable(
 		
 		theNodeEntry				= theNode->routeList.head;
 		theNodeEntry->hopCount		= hopCount;
+		//v----------------------------tianke on 2008-4-11 15:35 0.01--------------------------v
+		etxNbr = ETXCalculate(Positon, node->position);
+		theNodeEntry->etxToDest   = etxToDest + etxNbr; 
+		//^--------------------------- tianke on 2008-4-11 15:35 0.01--------------------------^
       	theNodeEntry->nextHop		= nextHop;
       	theNodeEntry->nexttolastHop	= nexttolastHop;
 		theNodeEntry->lifetime		= lifetime;
@@ -297,7 +307,11 @@ BOOL RoutingAodvReplaceInsertRouteTable(
     	}
 
 		return(TRUE);
-    } else {
+    } 
+		
+		// replace route table entry
+		else 
+		{
 
     	assert(current->destAddr == destAddr);
 	    assert(valid == TRUE);
@@ -338,6 +352,10 @@ BOOL RoutingAodvReplaceInsertRouteTable(
 				/* reuse the node allocated for first route */
 				theNodeEntry 				= current->routeList.head;
 				theNodeEntry->hopCount		= hopCount;
+				//v----------------------------tianke on 2008-4-11 15:35 0.01--------------------------v
+				etxNbr = ETXCalculate(Positon, node->position);
+				theNodeEntry->etxToDest   = etxToDest + etxNbr; 
+				//^--------------------------- tianke on 2008-4-11 15:35 0.01--------------------------^
 				theNodeEntry->nextHop 		= nextHop;
 				theNodeEntry->nexttolastHop	= nexttolastHop;
 				theNodeEntry->lifetime		= lifetime;
@@ -425,6 +443,10 @@ BOOL RoutingAodvReplaceInsertRouteTable(
 						++(current->routeList.size);
 
 						theNodeEntry->hopCount		= hopCount;
+						//v----------------------------tianke on 2008-4-11 15:35 0.01--------------------------v
+						etxNbr = ETXCalculate(Positon, node->position);
+						theNodeEntry->etxToDest   = etxToDest + etxNbr; 
+						//^--------------------------- tianke on 2008-4-11 15:35 0.01--------------------------^
 						theNodeEntry->nextHop 		= nextHop;
 						theNodeEntry->nexttolastHop	= nexttolastHop;
 						theNodeEntry->lifetime		= lifetime;
@@ -477,6 +499,8 @@ void RoutingAodvReplaceRouteTable(
 					GlomoNode *node,
 					NODE_ADDR destAddr,
 					int destSeq,
+					GlomoPartition Positon, 
+					ETXValue etxToDest, 
 					BOOL destSeqValid,
 					BOOL valid,
 					int hopCount,
@@ -498,6 +522,8 @@ void RoutingAodvReplaceRouteTable(
 	AODV_RTL_Node *theNodeEntry;
 	AODV_RTL_Node *currentEntry;
 	AODV_RTL_Node *previousEntry;
+
+	ETXValue etxNbr;
 
 #ifdef TIMER_CHECKS
 	char timeInSeconds[GLOMO_MAX_STRING_LENGTH];
@@ -539,9 +565,12 @@ void RoutingAodvReplaceRouteTable(
 		
 		theNodeEntry				= theNode->routeList.head;
 		theNodeEntry->hopCount		= hopCount;
-		//--------------tianke on 2008-3-23 16:44 0.01------------>
-		theNodeEntry->etxToDest     = ###;
-		//<-------------tianke on 2008-3-23 16:44 0.01------------
+		
+				//v----------------------------tianke on 2008-4-11 15:35 0.01--------------------------v
+				etxNbr = ETXCalculate(Positon, node->position);
+				theNodeEntry->etxToDest   = etxToDest + etxNbr; 
+				//^--------------------------- tianke on 2008-4-11 15:35 0.01--------------------------^
+				
       	theNodeEntry->nextHop		= nextHop;
       	theNodeEntry->nexttolastHop	= nexttolastHop;
 		theNodeEntry->lifetime		= lifetime;
@@ -609,6 +638,10 @@ void RoutingAodvReplaceRouteTable(
 		/* reuse the node allocated for first route */
 		theNodeEntry 				= current->routeList.head;
 		theNodeEntry->hopCount		= hopCount;
+				//v----------------------------tianke on 2008-4-11 15:35 0.01--------------------------v
+				etxNbr = ETXCalculate(Positon, node->position);
+				theNodeEntry->etxToDest   = etxToDest + etxNbr; 
+				//^--------------------------- tianke on 2008-4-11 15:35 0.01--------------------------^
 		theNodeEntry->nextHop 		= nextHop;
 		theNodeEntry->nexttolastHop	= nexttolastHop;
 		theNodeEntry->lifetime		= lifetime;
@@ -2177,7 +2210,9 @@ void RoutingAodvHandleReply(GlomoNode *node, Message *msg, NODE_ADDR srcAddr,
 #endif // AOMDV_DEBUG_TRACE //
 
       	RoutingAodvReplaceRouteTable(node, rrepPkt->destAddr,
-			rrepPkt->destSeq, TRUE, TRUE, rrepPkt->hopCount, srcAddr,
+			rrepPkt->destSeq, 
+			rrepPkt->Positon, rrepPkt->etxToDest, //tianke
+			TRUE, TRUE, rrepPkt->hopCount, srcAddr,
 			rrepPkt->nexttolastAddr, simclock() + lifetime,
 			FALSE, FALSE, FALSE);
 		causedNewRoute = TRUE;
@@ -2223,7 +2258,9 @@ void RoutingAodvHandleReply(GlomoNode *node, Message *msg, NODE_ADDR srcAddr,
 			printf("Route Table - Handle reply - invalid seq \n");
 #endif // AOMDV_DEBUG_TRACE //
 	  		RoutingAodvReplaceRouteTable(node,
-				rrepPkt->destAddr, rrepPkt->destSeq, TRUE, TRUE,
+				rrepPkt->destAddr, rrepPkt->destSeq, 
+				rrepPkt->Positon, rrepPkt->etxToDest, //tianke
+				TRUE, TRUE,
 				rrepPkt->hopCount, srcAddr, rrepPkt->nexttolastAddr,
 				simclock()+ lifetime, FALSE, FALSE, FALSE);
 			causedNewRoute = TRUE;
@@ -2234,7 +2271,9 @@ void RoutingAodvHandleReply(GlomoNode *node, Message *msg, NODE_ADDR srcAddr,
 #endif // AOMDV_DEBUG_TRACE //
 
 	  		causedNewRoute = RoutingAodvReplaceInsertRouteTable(node,
-				rrepPkt->destAddr, rrepPkt->destSeq, TRUE, TRUE,
+				rrepPkt->destAddr, rrepPkt->destSeq, 
+				rrepPkt->Positon, rrepPkt->etxToDest,  //tianke
+				TRUE, TRUE,
 				rrepPkt->hopCount, srcAddr, rrepPkt->nexttolastAddr,
 				simclock() + lifetime, FALSE, FALSE, FALSE);
 		}
@@ -4895,6 +4934,7 @@ void RoutingAodvRelayRREP(GlomoNode *node, Message *msg, NODE_ADDR srcAddr)
     //--------------tianke on 2008-3-18 23:31 0.01------------>
     etxNbr = ETXCalculate(oldRrep->Positon, node->position);
     newRrep->etxToDest = oldRrep->etxToDest + etxNbr;
+		
     //<-------------tianke on 2008-3-18 23:31 0.01------------
     nextHop = RoutingAodvGetNextHopNotReplied(oldRrep->origAddr,
 											&aodv->routeTable);
@@ -4915,7 +4955,7 @@ void RoutingAodvRelayRREP(GlomoNode *node, Message *msg, NODE_ADDR srcAddr)
     	assert(nextHop != ANY_DEST);
 
 	    RoutingAodvAddPrecursor(nextHop, newRrep->destAddr, &aodv->routeTable);
-    	RoutingAodvAddPrecursor(nextHop, srcAddr, &aodv->routeTable);
+    	RoutingAodvAddPrecursor(nextHop, srcAddr, &aodv->routeTable); // modify
 	}
 
     existingLifetime = RoutingAodvGetLifetime(newRrep->origAddr, nextHop,
@@ -5105,12 +5145,13 @@ void OPSPInsertNfrTable(GlomoNode *node, NODE_ADDR nbrAddr, NODE_ADDR destAddr, 
   
   	OPSP_NFRT_Node* newNode = 
     	(OPSP_NFRT_Node *)checked_pc_malloc(sizeof(OPSP_NFRT_Node));
+		
+    // find the neighbor entry
     
-		newNode->nbrAddr = ;
-		newNode->destAddr = nbrAddr;
+		newNode->destAddr = destAddr;
     newNode->destSeq = ---;
     newNode->destSeqValid = ---;
-		newNode->etxToDest = ---;
+		newNode->etxToDest = etxToDest;
     newNode->next = NULL;
     
     ++(nbrFowardRateTable->size);

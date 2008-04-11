@@ -345,7 +345,6 @@ typedef struct
 //Neighbor Forwarding Rate Table 邻居转发率表(from neighbor to destination)
 typedef struct NFRTE
 {
-    NODE_ADDR nbrAddr;
 		NODE_ADDR destAddr;
     int destSeq;
 	/* whether the above destination sequence number is valid*/
