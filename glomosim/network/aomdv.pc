@@ -268,8 +268,11 @@ BOOL RoutingAodvReplaceInsertRouteTable(
 		theNodeEntry				= theNode->routeList.head;
 		theNodeEntry->hopCount		= hopCount;
 		//v----------------------------tianke on 2008-4-11 15:35 0.01--------------------------v
-		etxNbr = ETXCalculate(Positon, node->position);
-		theNodeEntry->etxToDest   = etxToDest + etxNbr; 
+		// 收到hello & RREQ 时不更新路由表中的Position & etxToDest
+		if ((Position != -1) && (etxToDest != -1)) {
+			etxNbr = ETXCalculate(Position, node->position);
+			theNodeEntry->etxToDest   = etxToDest + etxNbr; 
+		}
 		//^--------------------------- tianke on 2008-4-11 15:35 0.01--------------------------^
       	theNodeEntry->nextHop		= nextHop;
       	theNodeEntry->nexttolastHop	= nexttolastHop;
@@ -353,8 +356,11 @@ BOOL RoutingAodvReplaceInsertRouteTable(
 				theNodeEntry 				= current->routeList.head;
 				theNodeEntry->hopCount		= hopCount;
 				//v----------------------------tianke on 2008-4-11 15:35 0.01--------------------------v
-				etxNbr = ETXCalculate(Positon, node->position);
-				theNodeEntry->etxToDest   = etxToDest + etxNbr; 
+				// 收到hello & RREQ 时不更新路由表中的Position & etxToDest
+				if ((Position != -1) && (etxToDest != -1)) {
+					etxNbr = ETXCalculate(Position, node->position);
+					theNodeEntry->etxToDest   = etxToDest + etxNbr; 
+				}
 				//^--------------------------- tianke on 2008-4-11 15:35 0.01--------------------------^
 				theNodeEntry->nextHop 		= nextHop;
 				theNodeEntry->nexttolastHop	= nexttolastHop;
@@ -444,9 +450,12 @@ BOOL RoutingAodvReplaceInsertRouteTable(
 
 						theNodeEntry->hopCount		= hopCount;
 						//v----------------------------tianke on 2008-4-11 15:35 0.01--------------------------v
-						etxNbr = ETXCalculate(Positon, node->position);
-						theNodeEntry->etxToDest   = etxToDest + etxNbr; 
-						//^--------------------------- tianke on 2008-4-11 15:35 0.01--------------------------^
+						// 收到hello & RREQ 时不更新路由表中的Position & etxToDest
+						if ((Position != -1) && (etxToDest != -1)) {
+							etxNbr = ETXCalculate(Position, node->position);
+							theNodeEntry->etxToDest   = etxToDest + etxNbr; 
+						}
+						//^-------------------------- tianke on 2008-4-11 15:35 0.01--------------------------^
 						theNodeEntry->nextHop 		= nextHop;
 						theNodeEntry->nexttolastHop	= nexttolastHop;
 						theNodeEntry->lifetime		= lifetime;
@@ -499,7 +508,7 @@ void RoutingAodvReplaceRouteTable(
 					GlomoNode *node,
 					NODE_ADDR destAddr,
 					int destSeq,
-					GlomoPartition Positon, 
+					GlomoPartition Position, 
 					ETXValue etxToDest, 
 					BOOL destSeqValid,
 					BOOL valid,
@@ -566,10 +575,13 @@ void RoutingAodvReplaceRouteTable(
 		theNodeEntry				= theNode->routeList.head;
 		theNodeEntry->hopCount		= hopCount;
 		
-				//v----------------------------tianke on 2008-4-11 15:35 0.01--------------------------v
-				etxNbr = ETXCalculate(Positon, node->position);
-				theNodeEntry->etxToDest   = etxToDest + etxNbr; 
-				//^--------------------------- tianke on 2008-4-11 15:35 0.01--------------------------^
+		//v----------------------------tianke on 2008-4-11 15:35 0.01--------------------------v
+		// 收到hello & RREQ 时不更新路由表中的Position & etxToDest
+		if ((Position != -1) && (etxToDest != -1)) {
+			etxNbr = ETXCalculate(Position, node->position);
+			theNodeEntry->etxToDest   = etxToDest + etxNbr; 
+		}
+		//^--------------------------- tianke on 2008-4-11 15:35 0.01--------------------------^
 				
       	theNodeEntry->nextHop		= nextHop;
       	theNodeEntry->nexttolastHop	= nexttolastHop;
@@ -638,10 +650,13 @@ void RoutingAodvReplaceRouteTable(
 		/* reuse the node allocated for first route */
 		theNodeEntry 				= current->routeList.head;
 		theNodeEntry->hopCount		= hopCount;
-				//v----------------------------tianke on 2008-4-11 15:35 0.01--------------------------v
-				etxNbr = ETXCalculate(Positon, node->position);
-				theNodeEntry->etxToDest   = etxToDest + etxNbr; 
-				//^--------------------------- tianke on 2008-4-11 15:35 0.01--------------------------^
+		//v----------------------------tianke on 2008-4-11 15:35 0.01--------------------------v
+		// 收到hello & RREQ 时不更新路由表中的Position & etxToDest
+		if ((Position != -1) && (etxToDest != -1)) {
+			etxNbr = ETXCalculate(Position, node->position);
+			theNodeEntry->etxToDest   = etxToDest + etxNbr; 
+		}
+		//^--------------------------- tianke on 2008-4-11 15:35 0.01--------------------------^
 		theNodeEntry->nextHop 		= nextHop;
 		theNodeEntry->nexttolastHop	= nexttolastHop;
 		theNodeEntry->lifetime		= lifetime;
@@ -1931,8 +1946,9 @@ void RoutingAodvHandleRequest(GlomoNode *node, Message *msg, int ttl)
     
 	/* Adding the route to the neighbour first */
 	
-	RoutingAodvReplaceRouteTable(node, rreqPkt->lastAddr, -1, FALSE,
-		TRUE, 1, rreqPkt->lastAddr, node->nodeAddr,
+	RoutingAodvReplaceRouteTable(node, rreqPkt->lastAddr, -1, 
+		-1, -1, //tianke
+		FALSE, TRUE, 1, rreqPkt->lastAddr, node->nodeAddr,
 		simclock()+(clocktype)ACTIVE_ROUTE_TIMEOUT, FALSE, FALSE, FALSE);
 
 	reqSeen = FALSE;
@@ -1980,8 +1996,9 @@ void RoutingAodvHandleRequest(GlomoNode *node, Message *msg, int ttl)
 		printf("Route Table - Handle request - no route\n");
 #endif // AOMDV_DEBUG_TRACE //
 
-		RoutingAodvReplaceRouteTable(node, rreqPkt->origAddr,
-			rreqPkt->origSeq, TRUE, TRUE, rreqPkt->hopCount,
+		RoutingAodvReplaceRouteTable(node, rreqPkt->origAddr, rreqPkt->origSeq, 
+			-1, -1, //tianke
+			TRUE, TRUE, rreqPkt->hopCount,
 			rreqPkt->lastAddr, rreqPkt->nexttolastAddr, lifetime,
 			FALSE, FALSE, FALSE);
 		revRouteFormed = TRUE;
@@ -2009,7 +2026,9 @@ void RoutingAodvHandleRequest(GlomoNode *node, Message *msg, int ttl)
 #endif // AOMDV_DEBUG_TRACE //
 
  		revRouteFormed = RoutingAodvReplaceInsertRouteTable(node,
-		rreqPkt->origAddr, max(seq, rreqPkt->origSeq), TRUE, TRUE,
+		rreqPkt->origAddr, max(seq, rreqPkt->origSeq), 
+		-1, -1, //tianke
+		TRUE, TRUE,
 		rreqPkt->hopCount, rreqPkt->lastAddr, rreqPkt->nexttolastAddr,
 		lifetime, FALSE, FALSE, FALSE);
     }
@@ -2186,7 +2205,9 @@ void RoutingAodvHandleReply(GlomoNode *node, Message *msg, NODE_ADDR srcAddr,
 	printf("route table lifetime(secs) = %15s\n", timeInSeconds);
 #endif // TIMER_CHECKS //
 
-    RoutingAodvReplaceRouteTable(node, srcAddr, -1, FALSE, TRUE, 1,
+    RoutingAodvReplaceRouteTable(node, srcAddr, -1, 
+		-1, -1, //tianke
+		FALSE, TRUE, 1,
 		srcAddr, node->nodeAddr, simclock() + lifetime, FALSE,
 		FALSE, FALSE);
     
@@ -2209,8 +2230,7 @@ void RoutingAodvHandleReply(GlomoNode *node, Message *msg, NODE_ADDR srcAddr,
 		printf("Route Table - Handle reply - no route\n");
 #endif // AOMDV_DEBUG_TRACE //
 
-      	RoutingAodvReplaceRouteTable(node, rrepPkt->destAddr,
-			rrepPkt->destSeq, 
+      	RoutingAodvReplaceRouteTable(node, rrepPkt->destAddr, rrepPkt->destSeq, 
 			rrepPkt->Positon, rrepPkt->etxToDest, //tianke
 			TRUE, TRUE, rrepPkt->hopCount, srcAddr,
 			rrepPkt->nexttolastAddr, simclock() + lifetime,
@@ -2257,8 +2277,7 @@ void RoutingAodvHandleReply(GlomoNode *node, Message *msg, NODE_ADDR srcAddr,
 #ifdef AOMDV_DEBUG_TRACE
 			printf("Route Table - Handle reply - invalid seq \n");
 #endif // AOMDV_DEBUG_TRACE //
-	  		RoutingAodvReplaceRouteTable(node,
-				rrepPkt->destAddr, rrepPkt->destSeq, 
+	  		RoutingAodvReplaceRouteTable(node, rrepPkt->destAddr, rrepPkt->destSeq, 
 				rrepPkt->Positon, rrepPkt->etxToDest, //tianke
 				TRUE, TRUE,
 				rrepPkt->hopCount, srcAddr, rrepPkt->nexttolastAddr,
@@ -2395,8 +2414,10 @@ void RoutingAodvHandleHello(GlomoNode *node,Message *msg, NODE_ADDR nbrAddr)
 		printf("Route Table -  Handle Hello - route exist\n");
 #endif // AOMDV_DEBUG_TRACE //
 
-      	RoutingAodvReplaceRouteTable(node, nbrAddr, helloPkt->destSeq, TRUE,
-		TRUE, 1, nbrAddr, node->nodeAddr, oldlifetime, FALSE, FALSE, FALSE);
+      	RoutingAodvReplaceRouteTable(node, nbrAddr, helloPkt->destSeq, 
+			-1, -1, //tianke
+			TRUE, TRUE, 1, nbrAddr, 
+			node->nodeAddr, oldlifetime, FALSE, FALSE, FALSE);
     } else {
       	//Entry present, but it is invalid or entry not present altogether
 
@@ -2404,9 +2425,10 @@ void RoutingAodvHandleHello(GlomoNode *node,Message *msg, NODE_ADDR nbrAddr)
 		printf("Route Table -  Handle Hello - no route exist\n");
 #endif // AOMDV_DEBUG_TRACE //
 
-      	RoutingAodvReplaceRouteTable(node, nbrAddr, helloPkt->destSeq, TRUE,
-	  	TRUE, 1, nbrAddr, node->nodeAddr, simclock() + (ALLOWED_HELLO_LOSS *
-	  	HELLO_INTERVAL), FALSE, FALSE, FALSE);
+      	RoutingAodvReplaceRouteTable(node, nbrAddr, helloPkt->destSeq, 
+      	helloPkt->Positon, -1, //tianke 
+      	TRUE, TRUE, 1, nbrAddr, node->nodeAddr, 
+      	simclock() + (ALLOWED_HELLO_LOSS * HELLO_INTERVAL), FALSE, FALSE, FALSE);
     }
 
   	if(RoutingAodvCheckNbrExist(node, nbrAddr)) {
@@ -4775,9 +4797,8 @@ void RoutingAodvInitiateRREPbyIN(GlomoNode *node, Message *msg)
     rrepPkt->destAddr = rreqPkt->destAddr;
     rrepPkt->destSeq = RoutingAodvGetSeq(rreqPkt->destAddr, &aodv->routeTable);
 	//-------------tianke on 2008-3-18 16:31 0.01------>
-  	rrepPkt->localPositon = node->position;
-
-	rrepPkt->etxToDest = 0;
+  	rrepPkt->Positon = node->position;
+	rrepPkt->etxToDest = ---;
   	//<----------- tianke on 2008-3-18 16:31 0.01--------
     nextHop = RoutingAodvGetNextHopNotUsedToReply(rreqPkt->destAddr,
 												&aodv->routeTable);
@@ -4933,8 +4954,7 @@ void RoutingAodvRelayRREP(GlomoNode *node, Message *msg, NODE_ADDR srcAddr)
 
     //--------------tianke on 2008-3-18 23:31 0.01------------>
     etxNbr = ETXCalculate(oldRrep->Positon, node->position);
-    newRrep->etxToDest = oldRrep->etxToDest + etxNbr;
-		
+    newRrep->etxToDest = oldRrep->etxToDest + etxNbr;		
     //<-------------tianke on 2008-3-18 23:31 0.01------------
     nextHop = RoutingAodvGetNextHopNotReplied(oldRrep->origAddr,
 											&aodv->routeTable);
@@ -5040,7 +5060,7 @@ void RoutingAodvInitiateHELLO(GlomoNode *node)
   	rrepPkt->nexttolastAddr = node->nodeAddr;
   	rrepPkt->lifetime = ALLOWED_HELLO_LOSS * HELLO_INTERVAL;
   	//-------------tianke on 2008-3-18 16:31 0.01------>
-  	rrepPkt->localPositon = node->position;
+  	rrepPkt->Positon = node->position;
   	//<----------- tianke on 2008-3-18 16:31 0.01--------
 
   	if(pc_erand(node->seed) <= 0.5)
