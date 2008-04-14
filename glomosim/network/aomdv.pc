@@ -203,7 +203,7 @@ BOOL RoutingAodvReplaceInsertRouteTable(
 					GlomoNode *node,
 					NODE_ADDR destAddr,
 					int destSeq,
-					GlomoPartition Positon, 
+					GlomoPartition Position, 
 					ETXValue etxToDest, 
 					BOOL destSeqValid,
 					BOOL valid,
@@ -268,10 +268,10 @@ BOOL RoutingAodvReplaceInsertRouteTable(
 		theNodeEntry				= theNode->routeList.head;
 		theNodeEntry->hopCount		= hopCount;
 		//v----------------------------tianke on 2008-4-11 15:35 0.01--------------------------v
-		// 收到hello & RREQ 时不更新路由表中的Position & etxToDest
+		// 收到hello&RREQ时不更新路由表中的Position & etxToDest
 		if ((Position != -1) && (etxToDest != -1)) {
-			etxNbr = ETXCalculate(Position, node->position);
-			theNodeEntry->etxToDest   = etxToDest + etxNbr; 
+			//etxNbr = ETXCalculate(Position, node->position);
+			theNodeEntry->etxToDest = etxToDest; 
 		}
 		//^--------------------------- tianke on 2008-4-11 15:35 0.01--------------------------^
       	theNodeEntry->nextHop		= nextHop;
@@ -358,8 +358,8 @@ BOOL RoutingAodvReplaceInsertRouteTable(
 				//v----------------------------tianke on 2008-4-11 15:35 0.01--------------------------v
 				// 收到hello & RREQ 时不更新路由表中的Position & etxToDest
 				if ((Position != -1) && (etxToDest != -1)) {
-					etxNbr = ETXCalculate(Position, node->position);
-					theNodeEntry->etxToDest   = etxToDest + etxNbr; 
+					//etxNbr = ETXCalculate(Position, node->position);
+					theNodeEntry->etxToDest   = etxToDest; 
 				}
 				//^--------------------------- tianke on 2008-4-11 15:35 0.01--------------------------^
 				theNodeEntry->nextHop 		= nextHop;
@@ -452,8 +452,8 @@ BOOL RoutingAodvReplaceInsertRouteTable(
 						//v----------------------------tianke on 2008-4-11 15:35 0.01--------------------------v
 						// 收到hello & RREQ 时不更新路由表中的Position & etxToDest
 						if ((Position != -1) && (etxToDest != -1)) {
-							etxNbr = ETXCalculate(Position, node->position);
-							theNodeEntry->etxToDest   = etxToDest + etxNbr; 
+							//etxNbr = ETXCalculate(Position, node->position);
+							theNodeEntry->etxToDest   = etxToDest; 
 						}
 						//^-------------------------- tianke on 2008-4-11 15:35 0.01--------------------------^
 						theNodeEntry->nextHop 		= nextHop;
@@ -578,8 +578,8 @@ void RoutingAodvReplaceRouteTable(
 		//v----------------------------tianke on 2008-4-11 15:35 0.01--------------------------v
 		// 收到hello & RREQ 时不更新路由表中的Position & etxToDest
 		if ((Position != -1) && (etxToDest != -1)) {
-			etxNbr = ETXCalculate(Position, node->position);
-			theNodeEntry->etxToDest   = etxToDest + etxNbr; 
+			//etxNbr = ETXCalculate(Position, node->position);
+			theNodeEntry->etxToDest   = etxToDest; 
 		}
 		//^--------------------------- tianke on 2008-4-11 15:35 0.01--------------------------^
 				
@@ -653,8 +653,8 @@ void RoutingAodvReplaceRouteTable(
 		//v----------------------------tianke on 2008-4-11 15:35 0.01--------------------------v
 		// 收到hello & RREQ 时不更新路由表中的Position & etxToDest
 		if ((Position != -1) && (etxToDest != -1)) {
-			etxNbr = ETXCalculate(Position, node->position);
-			theNodeEntry->etxToDest   = etxToDest + etxNbr; 
+			//etxNbr = ETXCalculate(Position, node->position);
+			theNodeEntry->etxToDest   = etxToDest; 
 		}
 		//^--------------------------- tianke on 2008-4-11 15:35 0.01--------------------------^
 		theNodeEntry->nextHop 		= nextHop;
@@ -2415,9 +2415,9 @@ void RoutingAodvHandleHello(GlomoNode *node,Message *msg, NODE_ADDR nbrAddr)
 #endif // AOMDV_DEBUG_TRACE //
 
       	RoutingAodvReplaceRouteTable(node, nbrAddr, helloPkt->destSeq, 
-			-1, -1, //tianke
-			TRUE, TRUE, 1, nbrAddr, 
-			node->nodeAddr, oldlifetime, FALSE, FALSE, FALSE);
+																			-1, -1, //tianke
+																			TRUE, TRUE, 1, nbrAddr, 
+																			node->nodeAddr, oldlifetime, FALSE, FALSE, FALSE);
     } else {
       	//Entry present, but it is invalid or entry not present altogether
 
@@ -2444,7 +2444,7 @@ void RoutingAodvHandleHello(GlomoNode *node,Message *msg, NODE_ADDR nbrAddr)
     }
 
 	  //--------------tianke on 2008-3-17 21:51 0.01------------>
-    OPSPUpdateNbrETX(helloPkt->localPositon, node->position, node, nbrAddr);
+    OpspUpdateNbrETX(helloPkt->Positon, node, nbrAddr);
 	  //<-------------tianke on 2008-3-17 21:51 0.01------------
 	  
   	GLOMO_MsgFree(node,msg);
@@ -2781,45 +2781,6 @@ void RoutingAodvInitBcastId(GlomoNode *node)
 
 } /* RoutingAodvInitBcastId */
 
-#if 0
-//----------------------------tianke--------------------->
-void MetricEtxInitProbeNumTable(ETX_PNT *etxProbeNumTable)
-{
-    etxProbeNumTable->head = NULL;
-    etxProbeNumTable->size = 0;
-
-} 
-
-void MetricEtxInitProbeAckNumTable(ETX_PANT *etxProbeAckNumTable)
-{
-    etxProbeAckNumTable->head = NULL;
-    etxProbeAckNumTable->size = 0;
-
-} 
-
-void MetricEtxInitNeighborTable(ETX_NT *etxNbrTable)
-{
-    etxNbrTable->head = NULL;
-    etxNbrTable->size = 0;
-
-}
-
-void MetricEtxInitLinkTable(ETX_LT *etxLinkTable)
-{
-    etxLinkTable->head = NULL;
-    etxLinkTable->size = 0;
-
-}
-
-void MetricEtxInitSegmentTable(ETX_ST *etxSegmentTable)
-{
-    etxSegmentTable->head = NULL;
-    etxSegmentTable->size = 0;
-
-}
-
-//<--------------------------tianke-----------------------
-#endif
 
 /*
  * RoutingAodvGetNextHopDataNotSent
@@ -3992,8 +3953,13 @@ void RoutingAodvHandleProtocolPacket(GlomoNode *node, Message *msg,
 	      		RoutingAodvHandleHello(node,msg,srcAddr);
 	    	} else {
 	       		aodv->lastpkt = simclock();
-	      		RoutingAodvHandleReply(node, msg, srcAddr, destAddr);
-	      		if (RoutingAodvCheckNbrExist(node, srcAddr)) {
+						if (destAddr == node->nodeAddr){
+	      			RoutingAodvHandleReply(node, msg, srcAddr, destAddr);
+						}
+						else{ 
+							OpspHandleOverhearRREP(node, msg, srcAddr, destAddr);
+						}
+	      	if (RoutingAodvCheckNbrExist(node, srcAddr)) {
 					//this neighbor did HELLO in the past DELETE_PERIOD
 				  RoutingAodvUpdateLastPacketTime(node, srcAddr);
 				}
@@ -4762,7 +4728,8 @@ void RoutingAodvInitiateRREP(GlomoNode *node, Message *msg)
 
 
 /*
- * RoutingAodvInitiateRREPbyIN
+ * RoutingAodvInitiateRREPbyIN 
+ * by Intermedia Node
  *
  * An intermediate node that knows the route to the destination sends the RREP
  */
@@ -4777,6 +4744,7 @@ void RoutingAodvInitiateRREPbyIN(GlomoNode *node, Message *msg)
     char *pktPtr;
     int pktSize = sizeof(AODV_RREP_Packet);
     int nextHop;
+		ETXValue nbrEtx;
 
 	char timeInSeconds[GLOMO_MAX_STRING_LENGTH];
 	
@@ -4796,13 +4764,13 @@ void RoutingAodvInitiateRREPbyIN(GlomoNode *node, Message *msg)
     rrepPkt->origAddr = rreqPkt->origAddr;
     rrepPkt->destAddr = rreqPkt->destAddr;
     rrepPkt->destSeq = RoutingAodvGetSeq(rreqPkt->destAddr, &aodv->routeTable);
-	//-------------tianke on 2008-3-18 16:31 0.01------>
+		//-------------tianke on 2008-3-18 16:31 0.01------>
   	rrepPkt->Positon = node->position;
-	rrepPkt->etxToDest = ---;
+		rrepPkt->etxToDest =  OpspGetEtxToDest(rreqPkt->destAddr, &aodv->routeTable);
   	//<----------- tianke on 2008-3-18 16:31 0.01--------
     nextHop = RoutingAodvGetNextHopNotUsedToReply(rreqPkt->destAddr,
 												&aodv->routeTable);
-    assert(nextHop != ANY_DEST);
+    assert(nextHop != ANY_DEST);		
 
 	/*
 	 * The routes to the originator and destination are updated
@@ -5106,9 +5074,43 @@ ETXValue ETXCalculate(GlomoCoordinates txNodePosition,
 
 //<-------------tianke on 2008-3-16 25:11 0.01------------
 
+
+ void OpspUpdateNbrETX(GlomoCoordinates nbrPosition, GlomoNode node, NODE_ADDR nbrAddr)
+{
+	GlomoNetworkIp* ipLayer = (GlomoNetworkIp *) node->networkData.networkVar;
+	GlomoRoutingAodv* aodv = (GlomoRoutingAodv *) ipLayer->routingProtocol;
+	AODV_NT nbrTable = aodv->nbrTable;
+	AODV_NT_Node *current;
+
+  	if (nbrTable.size == 0) {
+		assert(FALSE);
+      	return;
+		/* 
+		 * This situation should not occur - the caller of this function
+		 * must ensure that the neighbor exists in the route table before
+		 * calling this function
+		 */
+    }
+
+    for (current = nbrTable.head;
+         (current != NULL) && (current->nbrAddr <= nbrAddr);
+         current = current->next) {
+        if (current->nbrAddr == nbrAddr) {
+	  			current->etx = ETXCalculate(node->position, nbrPosition)
+	  			return;
+        }
+    }
+
+	assert(FALSE);
+    return; //This too should not occur.
+
+} 
+
+}
+
 //--------------tianke on 2008-3-17 22:55 0.01------------>
 /*更新邻居表中的ETX值*/
-void OPSPUpdateNbrTableETX(GlomoCoordinates txNodePosition, 
+void OpspUpdateNbrTableETX(GlomoCoordinates txNodePosition, 
                                 GlomoCoordinates rxNodePosition, 
                                 GlomoNode *node, NODE_ADDR nbrAddr)
 {
@@ -5154,7 +5156,7 @@ void OPSPUpdateNbrTableETX(GlomoCoordinates txNodePosition,
 
 //v----------------------------tianke on 2008-3-21 15:29 0.01--------------------------v
 // Insert neighbor forwarding rate table when receive a RREP and RRER
-void OPSPInsertNfrTable(GlomoNode *node, NODE_ADDR nbrAddr, NODE_ADDR destAddr, ETXValue etxToDest)
+void OpspInsertNfrTable(GlomoNode *node, NODE_ADDR nbrAddr, NODE_ADDR destAddr, ETXValue etxToDest)
 {
 	GlomoNetworkIp* ipLayer = (GlomoNetworkIp *) node->networkData.networkVar;
   	GlomoRoutingAodv* aodv = (GlomoRoutingAodv *) ipLayer->routingProtocol;
@@ -5204,260 +5206,87 @@ void OPSPInsertNfrTable(GlomoNode *node, NODE_ADDR nbrAddr, NODE_ADDR destAddr, 
 //^--------------------------- tianke on 2008-3-21 15:29 0.01--------------------------^
 
 
+//v----------------------------tianke on 2008-4-14 15:12 0.01--------------------------v
+//在routeListTable中找到etxToDest的最小值
+ETXValue OpspGetEtxToDest(NODE_ADDR destAddr, AODV_RT *routeTable, GlomoCoordinates nodePosition)
+{
+  AODV_RT_Node *current;
+  AODV_RTL_Node *currentEntry;
+	ETXValue nbrEtxToDest;
+  ETXValue returnEtxToDest;
+	ETXValue lestEtxToDest;
+	ETXValue nbrEtx;
 
-void OPSPHandleOverhearRREP(GlomoNode *node, Message *msg, NODE_ADDR srcAddr,
+  #ifdef OPSP_DEBUG_TRACE
+    printf("in get lest etx to dest \n");
+  #endif
+
+  returnEtxToDest = -1;
+
+  /* Get the EtxToDest in a round robin fashion */
+  for (current = routeTable->head;
+				current != NULL && current->destAddr <= destAddr; 
+				current = current->next)
+  {
+
+    if (current->destAddr == destAddr)
+    {
+      returnEtxToDest = -1;
+			lestEtxToDest = MAX_ETX;
+      currentEntry = current->routeList.head;
+      assert(currentEntry != NULL);
+
+      while (currentEntry != NULL)
+      {
+        if ((currentEntry->valid == TRUE) && (currentEntry->usedToReply == FALSE))
+        {
+          nbrEtxToDest = currentEntry->etxToDest;
+					nbrEtx = ETXCalculate(nodePosition, currentEntry->nextHopPosition);
+					if ((nbrEtxToDest + nbrEtx) < lestEtxToDest){
+						returnEtxToDest = nbrEtxToDest + nbrEtx;
+					}										
+        }
+        currentEntry = currentEntry->next;
+      }
+      return (returnEtxToDest);
+    }
+  }
+  return (returnEtxToDest);
+}
+//^--------------------------- tianke on 2008-4-14 15:12 0.01--------------------------^
+
+
+
+void OpspHandleOverhearRREP(GlomoNode *node, Message *msg, NODE_ADDR srcAddr,
 						NODE_ADDR destAddr)
 {
+		GlomoNetworkIp* ipLayer = (GlomoNetworkIp *) node->networkData.networkVar;
+    GlomoRoutingAodv* aodv = (GlomoRoutingAodv *) ipLayer->routingProtocol;
+    AODV_RREP_Packet *rrepPkt = (AODV_RREP_Packet *)GLOMO_MsgReturnPacket(msg);
+		char timeInSeconds[GLOMO_MAX_STRING_LENGTH];
+		clocktype lifetime;
+		AODV_NT nbrTable = aodv->nbrTable;
+		AODV_NT_Node *current;
+		
+	assert(destAddr != node->nodeAddr);
 
-}
-
-
-
-
-
-
-
-
-
-
-//-----------------------tianke---------------------------begin
-
-#if 0
-/*
- * ETX metric Init
- *
- * Initialization function for ETX metric
- * ETX packet - broadcast with ACK,  TTL = 1
- */
-
-void MetricETXInit(GlomoNode *node) 
-{
-	GlomoNetworkIp* ipLayer = (GlomoNetworkIp *) node->networkData.networkVar;
-  	GlomoRoutingAodv* aodv = (GlomoRoutingAodv *) ipLayer->routingProtocol;
-  	int pktSize = sizeof(ETX_PROBE_Packet);
-  	Message *newMsg;
-  	char *pktPtr;
-  	ETX_PROBE_Packet *etxPrbPkt;
-  	clocktype delay;
-  	int plusMinus;
-	
-	#ifdef ETX_DEBUG
-	//-------------tianke on 2007-12-13 17:2 0.01------>
-	printf("the MetricETXInit fuction is called~~~~~~~~~~~~~~~~~~~~~\n");
-	//<----------- tianke on 2007-12-13 17:2 0.01--------
-	#endif
-
-	newMsg = GLOMO_MsgAlloc(node, GLOMO_MAC_LAYER, 0, MSG_MAC_FromNetwork);
-  	GLOMO_MsgPacketAlloc(node, newMsg, pktSize);
-  	pktPtr = (char *) GLOMO_MsgReturnPacket(newMsg);
-  	etxPrbPkt = (ETX_PROBE_Packet *) pktPtr;
-  	etxPrbPkt->pktType = ETX_PROBE;
-	etxPrbPkt->probeNum =aodv->stats.numEtxProbeSent;
-  	etxPrbPkt->lifetime = ALLOWED_ETX_PROBE_LOSS * ETX_PROBE_INTERVAL;
-
-	if(pc_erand(node->seed) <= 0.5)
-		plusMinus = 1;
-	else
-		plusMinus = -1;
-
-	// this is the delay for the next HELLO message
-  	delay = pc_erand(node->seed) * BROADCAST_JITTER;
-	
-  	NetworkIpSendRawGlomoMessage(node, newMsg, ANY_DEST, CONTROL,
-  							IPPROTO_AOMDV, 1); // 1: ttl
-  	RoutingAodvSetTimer(node, MSG_ETX_PROBE, ANY_DEST,
-  					(clocktype)ETX_PROBE_INTERVAL + plusMinus * delay); //延时发送消息
-
-  	aodv->stats.numEtxProbeSent++;
-
-	#ifdef ETX_DEBUG
-	printf("numEtxProbeSent:  %d \n  node address: %d \n",
-				aodv->stats.numEtxProbeSent, node->nodeAddr);
-	#endif
-}
-
-void MetricETXHandleProbe(GlomoNode *node, Message*msg, NODE_ADDR nbrAddr)
-{
-	GlomoNetworkIp* ipLayer = (GlomoNetworkIp *) node->networkData.networkVar;
-  	GlomoRoutingAodv* aodv = (GlomoRoutingAodv *) ipLayer->routingProtocol;
-  	ETX_PROBE_Packet* etxPrbPkt =  (ETX_PROBE_Packet*)GLOMO_MsgReturnPacket(msg);
-  	int pktSize;
-	PROBE_NUM probeNum = etxPrbPkt->probeNum;
-	ETXValue etx;
-	Message *newMsg;
-  	char *pktPtr;
-  	ETX_PROBE_ACK_Packet *etxPrbAckPkt;
-
-	if(!MetricEtxCheckEtxnbrExist(node, nbrAddr)) {
-		MetricEtxInsertEtxProbeNumTable(node, nbrAddr, probeNum);
-		MetricEtxInsertEtxnbrTable(node, nbrAddr);
-	}
-
-	etx = MetricEtxUpdateEtxProbeNumTable(node, nbrAddr, probeNum);
-	MetricEtxUpdateEtxnbrtable(node, nbrAddr, etx);
-
-	newMsg = GLOMO_MsgAlloc(node, GLOMO_MAC_LAYER, 0, MSG_MAC_FromNetwork);
-	pktSize = sizeof(ETX_PROBE_ACK_Packet);
-  	GLOMO_MsgPacketAlloc(node, newMsg, pktSize);
-  	pktPtr = (char *) GLOMO_MsgReturnPacket(newMsg);
-  	etxPrbAckPkt = (ETX_PROBE_ACK_Packet*) pktPtr;//为什么不把上面两句合为一句，不用pakPtr转?
-  	etxPrbAckPkt->pktType = ETX_PROBE_ACK;
-	etxPrbAckPkt->origAddr = nbrAddr;
-	etxPrbAckPkt->etx = etx;
-	etxPrbAckPkt->probeNum =aodv->stats.numEtxProbeSent;
-  	etxPrbAckPkt->lifetime = ALLOWED_ETX_PROBE_LOSS * ETX_PROBE_INTERVAL;
-	
-  	NetworkIpSendRawGlomoMessage(node, newMsg, nbrAddr, CONTROL,
-  							IPPROTO_AOMDV, 1); // 1: ttl
-
-  	aodv->stats.numEtxProbeSent++;
-	
-	#ifdef ETX_DEBUG
-	printf("the MetricETXHandlePROBE fuction is called~~~~~~~~~~~~~~~~~~~~~\n");
-	#endif
-
-	GLOMO_MsgFree(node, msg)
-}
-
-void MetricETXHandleProbeAck(GlomoNode *node, Message*msg, NODE_ADDR srcAddr)
-{
-	#ifdef ETX_DEBUG
-	printf("the MetricETXHandleProbeAck fuction is called~~~~~~~~~~~~~~~~~~~~~");
-	#endif
-}
-
-BOOL MetricEtxCheckEtxnbrExist(GlomoNode *node, NODE_ADDR nbrAddr)
-{
-	GlomoNetworkIp* ipLayer = (GlomoNetworkIp *) node->networkData.networkVar;
-	GlomoRoutingAodv* aodv = (GlomoRoutingAodv *) ipLayer->routingProtocol;
-	ETX_NT etxNbrTable = aodv->etxNbrTable;
-	ETX_NT_Node *current;
-
-	if (etxNbrTable.size == 0) {
-    	return (FALSE);
-    }
-
-	for (current = etxNbrTable.head;
-         current != NULL && current->nbrAddr <= nbrAddr;
+    if (nbrTable.size == 0) {
+      	RoutingAodvInsertNbrTable(node, srcAddr);
+    } else {		
+		    for (current = nbrTable.head;
+         current != NULL && current->nbrAddr <= srcAddr;
          current = current->next) {
-
-        if (current->nbrAddr == nbrAddr) {
-            return(TRUE);
-        }
+        		if (current->nbrAddr == srcAddr) {
+            		//进入相应的nfrt表
+        		}
+    		}
     }
-	return (FALSE);
-
-}
-
-void MetricEtxInsertEtxnbrTable(GlomoNode *node, NODE_ADDR nbrAddr)
-{
-	GlomoNetworkIp* ipLayer = (GlomoNetworkIp *) node->networkData.networkVar;
-	GlomoRoutingAodv* aodv = (GlomoRoutingAodv *) ipLayer->routingProtocol;
-	ETX_NT etxNbrTable = aodv->etxNbrTable;
-	ETX_NT_Node* current;
-  ETX_NT_Node* previous;
-  
-  ETX_NT_Node* newNode = 
-  	(ETX_NT_Node *)checked_pc_malloc(sizeof(ETX_NT_Node));
-
-	newNode->nbrAddr = nbrAddr;
-  newNode->etx = 1;
-  newNode->next = NULL;
-  
-  ++(etxNbrTable->size);
-
-	  // Find Insertion point.  Insert after all address matches.
-  
-  previous = NULL;
-  current = etxNbrTable->head;
-  while ((current != NULL) && (current->nbrAddr <= nbrAddr)) {
-      previous = current;
-      current = current->next;
-  }
-  
-
-  if (previous == NULL) {
-	newNode->next = etxNbrTable->head;
-	etxNbrTable->head = newNode;
-  } else {
-	newNode->next = previous->next;
-	previous->next = newNode;
-  }//if//
-
-}
 
 
-void MetricEtxInsertEtxProbeNumTable(
-												GlomoNode *node, NODE_ADDR nbrAddr, PROBE_NUM probeNum)
-{
-	GlomoNetworkIp* ipLayer = (GlomoNetworkIp *) node->networkData.networkVar;
-	GlomoRoutingAodv* aodv = (GlomoRoutingAodv *) ipLayer->routingProtocol;
-	ETX_PNT etxProbeNumTable = aodv->etxProbeNumTable;
-	int sum;
-	ETX_PNT_Node* current;
-  ETX_PNT_Node* previous;
-  
-  ETX_PNT_Node* newNode = 
-  	(ETX_PNT_Node *)checked_pc_malloc(sizeof(ETX_PNT_Node));
-
-	newNode->nbrAddr = nbrAddr;
-  newNode->next = NULL;  
-
+				  RoutingAodvUpdateLastPacketTime(node, srcAddr);
+		
 	
-	newNode->state[probeNum % MAX_NUM_PROBE] = probeNum;
-
-	
-	
-  ++(etxProbeNumTable->size);
-
-	  // Find Insertion point.  Insert after all address matches.
-  
-  previous = NULL;
-  current = etxProbeNumTable->head;
-  while ((current != NULL) && (current->nbrAddr <= nbrAddr)) {
-      previous = current;
-      current = current->next;
-  }
-  
-  if (previous == NULL) {
-	newNode->next = etxProbeNumTable->head;
-	etxProbeNumTable->head = newNode;
-  } else {
-	newNode->next = previous->next;
-	previous->next = newNode;
-  }//if//
-
 }
 
-ETXValue MetricEtxUpdateEtxProbeNumTable(GlomoNode *node, NODE_ADDR nbrAddr, PROBE_NUM probeNum)
-{
 
-}
-
-void MetricEtxUpdateEtxnbrtable(GlomoNode *node, NODE_ADDR nbrAddr, ETXValue etx)
-{
-
-}
-
-void MetricETXEventHandler(GlomoNode *node, Message*msg)
-{
-
-
-}
-
-void MetricETXPacketHandlingFunction(GlomoNode *node, Message*msg, 
-								NODE_ADDR sourceAddress, NODE_ADDR destinationAddress, int ttl)
-{
-
-
-}
-
-void MetricETXFinalize(GlomoNode *node)
-{
-
-
-}
-#endif
-
-//-----------------------tianke-----------------------------end
 

@@ -143,7 +143,11 @@
 
 #define noTIMER_CHECKS
 
+//v----------------------------tianke on 2008-4-14 13:46 0.01--------------------------v
+#define MAX_ETX 256
+
 typedef double ETXValue;
+//^--------------------------- tianke on 2008-4-14 13:46 0.01--------------------------^
   
  
 /* Packet Types */
@@ -203,7 +207,7 @@ typedef struct
     clocktype lifetime;
     //-------------tianke on 2008-3-18 16:4 0.01------>
     GlomoCoordinates Positon;
-	ETXValue etxToDest; //from sender to destination
+	ETXValue etxToDest; //from forwarder neighbor to destination
     //<----------- tianke on 2008-3-18 16:4 0.01--------
 } AODV_RREP_Packet;
 
@@ -277,10 +281,17 @@ typedef struct
 typedef struct RTLE
 {
 	int hopCount;	
+	
 	//--------------tianke on 2008-3-18 23:51 0.01------------>
-	ETXValue etxToDest; // from local to Dest
+	ETXValue etxToDest; // from forwarding neighbor node to Dest
 	//<-------------tianke on 2008-3-18 23:51 0.01------------
+	
 	NODE_ADDR nextHop;
+	
+	//v----------------------------tianke on 2008-4-14 10:55 0.01--------------------------v
+	//GlomoCoordinates nextHopPosition; // position of the next hop neighbor
+	//^--------------------------- tianke on 2008-4-14 10:55 0.01--------------------------^
+	
 	NODE_ADDR nexttolastHop;
 	clocktype lifetime;
     BOOL valid;
@@ -753,11 +764,25 @@ clocktype RoutingAodvGetDeletePeriod(void);
 clocktype RoutingAodvGetMyRouteTimeout(GlomoNode *node);
 
 
-void OPSPUpdateNbrETX(GlomoCoordinates txNodePosition, 
+//v----------------------------tianke on 2008-4-14 15:8 0.01--------------------------v
+void OpspUpdateNbrTableETX(GlomoCoordinates txNodePosition, 
                                 GlomoCoordinates rxNodePosition, 
                                 GlomoNode *node, NODE_ADDR nbrAddr);
 
+void OpspInsertNfrTable(GlomoNode *node, NODE_ADDR nbrAddr, 
+														NODE_ADDR destAddr, ETXValue etxToDest);
+
 ETXValue ETXCalculate(GlomoCoordinates txNodePosition, 
 								GlomoCoordinates rxNodePosition);
+
+void OpspUpdateNbrETX(GlomoCoordinates nbrPosition, GlomoNode node, NODE_ADDR nbrAddr);
+	
+ETXValue OpspGetEtxToDest(NODE_ADDR destAddr, AODV_RT *routeTable, 
+								GlomoCoordinates nodePosition);
+
+void OpspHandleOverhearRREP(GlomoNode *node, Message *msg, NODE_ADDR srcAddr,
+						NODE_ADDR destAddr);
+
+//^--------------------------- tianke on 2008-4-14 15:8 0.01--------------------------^
 
 #endif /* _AOMDV_H_ */

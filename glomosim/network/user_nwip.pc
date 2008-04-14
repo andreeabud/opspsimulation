@@ -189,6 +189,8 @@ void NetworkIpUserHandleProtocolPacket(
       
       break;
    }
+	 
+#if 0
 //-----------------------------tianke------------------------------begin
    case IPPROTO_AOMDV: {
    
@@ -216,6 +218,8 @@ void NetworkIpUserHandleProtocolPacket(
    }
  */
 //------------------------tianke-----------------------------------end
+#endif
+
    default:
       printf("Ip Protocol %d Not Handled\n", ipProtocol);
       assert(FALSE); abort();
