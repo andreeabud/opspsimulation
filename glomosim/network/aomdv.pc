@@ -5253,40 +5253,47 @@ ETXValue OpspGetEtxToDest(NODE_ADDR destAddr, AODV_RT *routeTable, GlomoCoordina
   }
   return (returnEtxToDest);
 }
-//^--------------------------- tianke on 2008-4-14 15:12 0.01--------------------------^
 
-
-
-void OpspHandleOverhearRREP(GlomoNode *node, Message *msg, NODE_ADDR srcAddr,
-						NODE_ADDR destAddr)
+void OpspHandleOverhearRREP( GlomoNode* node,
+                        Message* msg,
+                        NODE_ADDR srcAddr,
+                        NODE_ADDR destAddr )
 {
-		GlomoNetworkIp* ipLayer = (GlomoNetworkIp *) node->networkData.networkVar;
-    GlomoRoutingAodv* aodv = (GlomoRoutingAodv *) ipLayer->routingProtocol;
-    AODV_RREP_Packet *rrepPkt = (AODV_RREP_Packet *)GLOMO_MsgReturnPacket(msg);
-		char timeInSeconds[GLOMO_MAX_STRING_LENGTH];
-		clocktype lifetime;
-		AODV_NT nbrTable = aodv->nbrTable;
-		AODV_NT_Node *current;
-		
-	assert(destAddr != node->nodeAddr);
+  GlomoNetworkIp*   ipLayer   = ( GlomoNetworkIp* )
+                                node->networkData.networkVar;
+  GlomoRoutingAodv* aodv      = ( GlomoRoutingAodv* )
+                                ipLayer->routingProtocol;
+  AODV_RREP_Packet* rrepPkt   = ( AODV_RREP_Packet* )
+                                GLOMO_MsgReturnPacket( msg );
+  char              timeInSeconds[GLOMO_MAX_STRING_LENGTH];
+  clocktype         lifetime;
+  AODV_NT           nbrTable  = aodv->nbrTable;
+  AODV_NT_Node*     current;
 
-    if (nbrTable.size == 0) {
-      	RoutingAodvInsertNbrTable(node, srcAddr);
-    } else {		
-		    for (current = nbrTable.head;
-         current != NULL && current->nbrAddr <= srcAddr;
-         current = current->next) {
-        		if (current->nbrAddr == srcAddr) {
-            		//进入相应的nfrt表
-        		}
-    		}
-    }
+  assert( destAddr != node->nodeAddr );
 
-
-				  RoutingAodvUpdateLastPacketTime(node, srcAddr);
-		
-	
+  if ( !RoutingAodvCheckNbrExist(node, NODE_ADDR srcAddr) )
+  {
+    RoutingAodvInsertNbrTable( node, srcAddr );
+  }
+  else
+  {
+    OpspInstertUpdateNfrTable( node, srcAddr, destAddr, rrepPkt->etxToDest );
+  }
 }
 
 
-
+void OpspInstertUpdateNfrTable( GlomoNode* node,
+                                NODE_ADDR nbrAddr,
+                                NODE_ADDR destAddr,
+                                ETXValue etxToDest )
+{
+  for ( current = nbrTable.head;
+        current != NULL && current->nbrAddr <= srcAddr;
+        current = current->next )
+  {
+    if ( current->nbrAddr == srcAddr )
+    {
+    }
+  }
+}
