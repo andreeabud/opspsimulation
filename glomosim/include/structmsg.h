@@ -187,8 +187,9 @@ enum {
     MSG_AODV_HELLO_EVENT,  
 
 	//------------------tianke--------------->
-	MSG_ETX_PROBE,
-	MSG_ETX_PROBE_ACK,
+	MSG_OPSP_CheckifOverhearRrep,
+	//MSG_ETX_PROBE,
+	//MSG_ETX_PROBE_ACK,
 
 	//<------------------tianke--------------
 

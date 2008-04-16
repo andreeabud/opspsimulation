@@ -765,8 +765,8 @@ void RoutingAodvInsertNbrTable( GlomoNode* node, NODE_ADDR nbrAddr )
     newNode->lastHello = simclock();
     newNode->lastPkt = simclock();
     newNode->next = NULL;
-	newNode->nfrt->head = NULL;
-	newNode->nfrt->size = 0;
+    newNode->nfrt->head = NULL;
+    newNode->nfrt->size = 0;
 
     ++( nbrTable->size );
 
@@ -4042,6 +4042,18 @@ void RoutingAodvHandleProtocolEvent( GlomoNode* node, Message* msg )
         break;
     }
 
+    //v----------------------------tianke on 2008-4-16 19:54 0.01--------------------------v
+    case MSG_OPSP_CheckifOverhearRrep:
+    {
+#ifdef OPSP
+        NODE_ADDR*  destAddr    = ( NODE_ADDR* ) GLOMO_MsgReturnInfo( msg );
+        OpspDeleteNfrTable( node, *destAddr );
+#endif
+        GLOMO_MsgFree( node, msg );
+        break;
+    }
+    //^--------------------------- tianke on 2008-4-16 19:54 0.01--------------------------^
+
     case MSG_AODV_CheckPacketsRecd:
     {
 #ifdef HELLO_PACKETS
@@ -5088,59 +5100,6 @@ void OpspUpdateNbrTableETX( GlomoCoordinates txNodePosition,
 //<-------------tianke on 2008-3-17 22:55 0.01------------
 
 
-//v----------------------------tianke on 2008-3-21 15:29 0.01--------------------------v
-// Insert neighbor forwarding rate table when receive a RREP and RRER
-void OpspInsertNfrTable( GlomoNode* node, NODE_ADDR nbrAddr, NODE_ADDR destAddr, ETXValue etxToDest )
-{
-    GlomoNetworkIp*     ipLayer             = ( GlomoNetworkIp* ) node->networkData.networkVar;
-    GlomoRoutingAodv*   aodv                = ( GlomoRoutingAodv* ) ipLayer->routingProtocol;
-    OPSP_NFRT*          nbrFowardRateTable  = &aodv->nbrFowardRateTable;
-    OPSP_NFRT_Node*     current;
-    OPSP_NFRT_Node*     previous;
-    char                clockdisplay[GLOMO_MAX_STRING_LENGTH];
-
-    OPSP_NFRT_Node*     newNode             = ( OPSP_NFRT_Node* )
-                                              checked_pc_malloc( sizeof( OPSP_NFRT_Node ) );
-
-    // find the neighbor entry
-
-    newNode->destAddr = destAddr;
-    newNode->destSeq = -- - ;
-    newNode->destSeqValid = -- - ;
-    newNode->etxToDest = etxToDest;
-    newNode->next = NULL;
-
-    ++( nbrFowardRateTable->size );
-
-    // Find Insertion point.  Insert after all address matches.
-
-    previous = NULL;
-    current = nbrFowardRateTable->head;
-    while( ( current != NULL ) && ( current->nbrAddr <= nbrAddr ) ) {
-        previous = current;
-        current = current->next;
-    }
-
-
-    if( previous == NULL ) {
-        newNode->next = nbrFowardRateTable->head;
-        nbrFowardRateTable->head = newNode;
-    }else {
-        newNode->next = previous->next;
-        previous->next = newNode;
-    }//if//
-
-    RoutingAodvSetTimer( node,
-                         MSG_AODV_CheckPacketsRecd,
-                         nbrAddr,
-                         ( clocktype ) ( ALLOWED_HELLO_LOSS * HELLO_INTERVAL ) );
-
-    RoutingAodvSetTimer( node, MSG_AODV_CheckIfHelloed, nbrAddr, RoutingAodvGetDeletePeriod() );
-} /* RoutingAodvInsertNbrTable */
-//^--------------------------- tianke on 2008-3-21 15:29 0.01--------------------------^
-
-
-//v----------------------------tianke on 2008-4-14 15:12 0.01--------------------------v
 //在routeListTable中找到etxToDest的最小值
 ETXValue OpspGetEtxToDest( NODE_ADDR destAddr, AODV_RT* routeTable, GlomoCoordinates nodePosition )
 {
@@ -5197,67 +5156,177 @@ void OpspHandleOverhearRREP( GlomoNode* node, Message* msg, NODE_ADDR srcAddr, N
 
     if( !RoutingAodvCheckNbrExist( node, NODE_ADDR srcAddr ) ) {
         RoutingAodvInsertNbrTable( node, srcAddr );
-    }else if ( !OpspCheckNfrExist(GlomoNode * node, NODE_ADDR nbrAddr, NODE_ADDR destAddr)){
+    }else if( !OpspCheckNfrExist( GlomoNode * node, NODE_ADDR nbrAddr, NODE_ADDR destAddr ) ) {
         OpspInstertUpdateNfrTable( node, srcAddr, destAddr, rrepPkt->etxToDest );
     }
 }
 
 
-BOOL OpspCheckNfrExist( GlomoNode* node, NODE_ADDR nbrAddr )
+BOOL OpspCheckNfrExist( OPSP_NFRT* nfrtable, NODE_ADDR destAddr )
 {
-    GlomoNetworkIp*     ipLayer     = ( GlomoNetworkIp* ) node->networkData.networkVar;
-    GlomoRoutingAodv*   aodv        = ( GlomoRoutingAodv* ) ipLayer->routingProtocol;
-    AODV_NT             nbrTable    = aodv->nbrTable;
-    AODV_NT_Node*       current;
+    OPSP_NFRT_Node* current;
 
-    if( nbrTable.size == 0 ) {
+    if( nfrtable.size == 0 ) {
         return ( FALSE );
     }
 
-    for( current = nbrTable.head;
-         current != NULL && current->nbrAddr <= nbrAddr;
+    for( current = nfrtable.head;
+         current != NULL && current->destAddr <= destAddr;
          current = current->next ) {
-        if( current->nbrAddr == nbrAddr ) {
+        if( current->destAddr == destAddr ) {
             return( TRUE );
         }
     }
 
     return ( FALSE );
-} /* RoutingAodvCheckNbrExist */
+} /* OpspCheckNfrExist */
 
 
-void OpspInstertUpdateNfrTable( GlomoNode* node,
-                                NODE_ADDR nbrAddr,
-                                NODE_ADDR destAddr,
-                                //int destSeq,
-                                //BOOL destSeqValid,
-                                ETXValue etxToDest )
+void OpspInsertNfrTable( GlomoNode node, OPSP_NFRT* nfrtable, NODE_ADDR destAddr, ETXValue etxToDest )
 {
-    GlomoNetworkIp*     ipLayer     = ( GlomoNetworkIp* ) node->networkData.networkVar;
-    GlomoRoutingAodv*   aodv        = ( GlomoRoutingAodv* ) ipLayer->routingProtocol;
-    AODV_NT             nbrTable    = aodv->nbrTable;
-    AODV_NT_Node*       currentnbr;
-    OPSP_NFRT           nfrTable;
-    OPSP_NFRT_Node*     currentnfr;
+    OPSP_NFRT_Node* current;
+    OPSP_NFRT_Node* previous;
+    char            clockdisplay[GLOMO_MAX_STRING_LENGTH];
 
-    for( currentnbr = nbrTable.head;
-         currentnbr != NULL && currentnbr->nbrAddr <= nbrAddr;
-         currentnbr = currentnbr->next ) {
-        if( currentnbr->nbrAddr == nbrAddr ) {
-            nfrTable = currentnbr->nfrt;
-            for( currentnfr = nfrTable.head;
-                 currentnfr != NULL && currentnfr->destAddr <= currentnfr;
-                 currentnfr = currentnfr->next ) {
-                if( currentnfr->destAddr == destAddr ) {
-                    // update neighbor table 
-                    //currentnfr->destSeq = destSeq;
-                    //currentnfr->destSeqValid = destSeqValid;
-                    currentnfr->etxToDest = etxToDest;
-                }
-			
-            }
+    OPSP_NFRT_Node* newNode = ( OPSP_NFRT_Node* ) checked_pc_malloc( sizeof( OPSP_NFRT_Node ) );
+
+    newNode->destAddr = destAddr;
+    newNode->lastOverhearRrep = simclock();
+    newNode->etxToDest = etxToDest;
+    newNode->next = NULL;
+
+    ++( nfrtable->size );
+
+    // Find Insertion point.  Insert after all address matches.
+
+    previous = NULL;
+    current = nfrtable->head;
+    while( ( current != NULL ) && ( current->destAddr <= destAddr ) ) {
+        previous = current;
+        current = current->next;
+    }
+
+    // Insert newNode
+
+    if( previous == NULL ) {
+        newNode->next = nfrtable->head;
+        nfrtable->head = newNode;
+    }else {
+        newNode->next = previous->next;
+        previous->next = newNode;
+    }//if//
+
+    RoutingAodvSetTimer( node, MSG_OPSP_CheckifOverhearRrep, destAddr, ACTIVE_NFRT_TIMEOUT );
+} /* OpspInsertNfrTable */
+
+
+void OpspDeleteNfrTable( OPSP_NFRT* nfrtable, NODE_ADDR destAddr )
+{
+    OPSP_NFRT_Node* toFree;
+    OPSP_NFRT_Node* current;
+
+    if( nfrtable->size == 0 ) {
+        return;
+    }else if( ( nfrtable->head->destAddr == destAddr ) &&
+              ( nfrtable->head->lastOverhearRrep + ACTIVE_NFRT_TIMEOUT <= simclock() ) ) {
+        toFree = nfrtable->head;
+        nfrtable->head = toFree->next;
+        pc_free( toFree );
+        --( nfrtable->size );
+        return;
+    }else {
+        for( current = nfrtable->head;
+             ( ( current->next != NULL ) && ( current->next->destAddr < destAddr ) );
+             current = current->next ) {
+        }
+
+        if( ( current->next != NULL ) &&
+            ( current->next->destAddr == destAddr ) &&
+            ( current->next->lastOverhearRrep + ACTIVE_NFRT_TIMEOUT <= simclock() ) ) {
+            toFree = current->next;
+            current->next = toFree->next;
+            pc_free( toFree );
+            --( destAddr->size );
+            return;
         }
     }
+} /* OpspDeleteNfrTable */
+
+
+void OpspUpdateNfrTableLastTime( OPSP_NFRT* nfrtable, NODE_ADDR destAddr )
+{
+    OPSP_NFRT_Node* current;
+
+    if( nfrtable.size == 0 ) {
+        assert( FALSE );
+        return;
+    }
+
+    for( current = nfrtable.head;
+         ( current != NULL ) && ( current->destAddr <= destAddr );
+         current = current->next ) {
+        if( current->destAddr == destAddr ) {
+            current->lastOverhearRrep = simclock();
+            RoutingAodvSetTimer( node, MSG_OPSP_CheckifOverhearRrep, destAddr, ACTIVE_NFRT_TIMEOUT );
+            return;
+        }
+    }
+
+    assert( FALSE );
+    return; //This too should not occur.
+} /* OpspUpdateNfrTableLastTime*/ 
+
+
+void OpspUpdateNfrTableEtxToDest( GlomoNode node,
+                                  OPSP_NFRT* nfrtable,
+                                  NODE_ADDR destAddr,
+                                  ETXValue etxToDest )
+{
+    OPSP_NFRT_Node* current;
+
+    if( nfrtable.size == 0 ) {
+        assert( FALSE );
+        return;
+    }
+
+    for( current = nfrtable.head;
+         ( current != NULL ) && ( current->destAddr <= destAddr );
+         current = current->next ) {
+        if( current->destAddr == destAddr ) {
+            current->etxToDest = etxToDest;
+            RoutingAodvSetTimer( node, MSG_OPSP_CheckifOverhearRrep, destAddr, ACTIVE_NFRT_TIMEOUT );
+            return;
+        }
+    }
+
+    assert( FALSE );
+    return; //This too should not occur.
+} /* OpspUpdateNfrTableEtxToDest*/ 
+
+
+void OpspDisplayNfrTable( OPSP_NFRT* nfrtable )
+{
+    OPSP_NFRT_Node* current;
+    char            clockdisplay[GLOMO_MAX_STRING_LENGTH];
+
+
+    if( nfrtable.head == NULL ) {
+        return;
+    }
+
+    for( current = nfrtable.head;current != NULL;current = current->next ) {
+        GLOMO_PrintClockInSecond( current->lastOverhearRrep, clockdisplay );
+        printf( "\n%d\t%s\t", current->destAddr, clockdisplay );
+        printf( "%s", clockdisplay );
+    } 
+    printf( "\n" );
 }
 
+#if 0
+//---
+RoutingAodvSetTimer( node,
+                     MSG_OPSP_CheckifOverhearRrep,
+                     destAddr,
+                     ACTIVE_NFRT_TIMEOUT );
+#endif
 
