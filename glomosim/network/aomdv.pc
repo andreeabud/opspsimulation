@@ -5158,13 +5158,26 @@ void OpspHandleOverhearRREP( GlomoNode* node,
 
     assert( destAddr != node->nodeAddr );
 
-    if( !RoutingAodvCheckNbrExist( node, NODE_ADDR srcAddr ) ) {
+    if( !RoutingAodvCheckNbrExist( node, srcAddr ) ) {
         RoutingAodvInsertNbrTable( node, srcAddr );
     }
 
-	if( !OpspCheckNfrExist( GlomoNode * node, NODE_ADDR nbrAddr, NODE_ADDR destAddr ) ) {
-        OpspInsertNfrTable(node, OPSP_NFRT * nfrTable, NODE_ADDR destAddr, ETXValue etxToDest);
-    }else 
+	//find the neighbor in Neighbor Table
+	for( current = nbrTable.head;
+         current != NULL && current->nbrAddr <= srcAddr;
+         current = current->next ) {
+        if( current->nbrAddr == srcAddr ) {
+            break;
+        }
+    }
+		 
+	if( !OpspCheckNfrExist( node, current->nfrt, destAddr ) ) {
+        OpspInsertNfrTable(node, current->nfrt, destAddr, rrepPkt->etxToDest);
+    }else {
+    	OpspUpdateNfrTableEtxToDest(GlomoNode node, current->nfrt, destAddr, rrepPkt->etxToDest);
+		OpspUpdateNfrTableLastTime(current->nfrt, destAddr);
+    }
+	
 }
 
 
