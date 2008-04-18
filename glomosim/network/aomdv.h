@@ -161,7 +161,7 @@ typedef double  ETXValue;
 /* Packet Types */
 
 typedef enum { /* Since AODV_RREQ=1,AODV_RREP=2 etc as per draft */
-DUMMY, AODV_RREQ, AODV_RREP, AODV_RERR, AODV_RREP_ACK, ETX_PROBE, ETX_PROBE_ACK }       AODV_PacketType;
+DUMMY, AODV_RREQ, AODV_RREP, AODV_RERR, AODV_RREP_ACK, ETX_PROBE, ETX_PROBE_ACK }          AODV_PacketType;
 
 typedef struct
 {
@@ -500,7 +500,6 @@ typedef struct glomo_network_aodv_str
     AODV_RT     routeTable; //指向路由表第一项的指针
     AODV_NT     nbrTable;
     //v------------tianke on 2008-3-19 14:16 0.01------v
-    OPSP_TN     towHopNbrTable;
     OPSP_NFRT   nbrFowardRateTable;
     //^----------- tianke on 2008-3-19 14:16 0.01------^
     AODV_RST    seenTable;
@@ -523,6 +522,17 @@ typedef struct glomo_network_aodv_str
     clocktype   lastpkt;
 } GlomoRoutingAodv;
 
+
+//v----------------------------tianke on 2008-4-18 15:57 0.01--------------------------v
+typedef struct msg_dest_nbr_addr
+{
+	OPSP_NFRT* nfrTable;
+    NODE_ADDR   destAddr;
+    //NODE_ADDR   nbrAddr;
+} MsgOpspDestNbrAddr;
+//^--------------------------- tianke on 2008-4-18 15:57 0.01--------------------------^
+
+
 void RoutingAodvInit( GlomoNode* node, GlomoRoutingAodv** aodvPtr, const GlomoNodeInput* nodeInput );
 
 void RoutingAodvFinalize( GlomoNode* node );
@@ -542,6 +552,7 @@ void RoutingAodvInitRouteTable( AODV_RT* routeTable );
 void RoutingAodvInitNbrTable( AODV_NT* nbrTable );
 
 void RoutingAodvInitSeenTable( AODV_RST* seenTable );
+
 void RoutingAodvInitReplyTable( AODV_RRT* replyTable );
 
 void RoutingAodvInitBuffer( AODV_BUFFER* buffer );
