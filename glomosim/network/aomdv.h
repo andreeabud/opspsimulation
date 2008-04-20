@@ -161,7 +161,7 @@ typedef double  ETXValue;
 /* Packet Types */
 
 typedef enum { /* Since AODV_RREQ=1,AODV_RREP=2 etc as per draft */
-DUMMY, AODV_RREQ, AODV_RREP, AODV_RERR, AODV_RREP_ACK, ETX_PROBE, ETX_PROBE_ACK }          AODV_PacketType;
+DUMMY, AODV_RREQ, AODV_RREP, AODV_RERR, AODV_RREP_ACK, ETX_PROBE, ETX_PROBE_ACK }                AODV_PacketType;
 
 typedef struct
 {
@@ -526,7 +526,7 @@ typedef struct glomo_network_aodv_str
 //v----------------------------tianke on 2008-4-18 15:57 0.01--------------------------v
 typedef struct msg_dest_nbr_addr
 {
-	OPSP_NFRT* nfrTable;
+    OPSP_NFRT*  nfrTable;
     NODE_ADDR   destAddr;
     //NODE_ADDR   nbrAddr;
 } MsgOpspDestNbrAddr;
@@ -646,9 +646,12 @@ void RoutingAodvInsertNbrTable( GlomoNode* node, NODE_ADDR nbrAddr );
 
 void RoutingAodvDeleteNbrTable( GlomoNode* node, NODE_ADDR nbrAddr );
 
+//--------------tianke on 2008-4-20 18:10 0.01------------>
 BOOL RoutingAodvReplaceInsertRouteTable( GlomoNode* node,
                                          NODE_ADDR destAddr,
                                          int destSeq,
+                                         //GlomoCoordinates Position,
+                                         ETXValue etxToDest,
                                          BOOL destSeqValid,
                                          BOOL valid,
                                          int hopCount,
@@ -657,11 +660,13 @@ BOOL RoutingAodvReplaceInsertRouteTable( GlomoNode* node,
                                          clocktype lifetime,
                                          BOOL replied,
                                          BOOL usedToReply,
-                                         BOOL used );
+                                         BOOL dataSent );
 
 void RoutingAodvReplaceRouteTable( GlomoNode* node,
                                    NODE_ADDR destAddr,
                                    int destSeq,
+                                   //GlomoCoordinates Position,
+                                   ETXValue etxToDest,
                                    BOOL destSeqValid,
                                    BOOL valid,
                                    int hopCount,
@@ -670,7 +675,8 @@ void RoutingAodvReplaceRouteTable( GlomoNode* node,
                                    clocktype lifetime,
                                    BOOL replied,
                                    BOOL usedToReply,
-                                   BOOL used );
+                                   BOOL dataSent );
+//<-------------tianke on 2008-4-20 18:10 0.01------------
 
 void RoutingAodvDeleteRouteTable( GlomoNode* node, NODE_ADDR destAddr );
 
@@ -782,20 +788,31 @@ clocktype RoutingAodvGetMyRouteTimeout( GlomoNode* node );
 
 
 //v----------------------------tianke on 2008-4-14 15:8 0.01--------------------------v
-void OpspUpdateNbrTableETX( GlomoCoordinates txNodePosition,
-                            GlomoCoordinates rxNodePosition,
-                            GlomoNode* node,
-                            NODE_ADDR nbrAddr );
-
-void OpspInsertNfrTable( GlomoNode* node, NODE_ADDR nbrAddr, NODE_ADDR destAddr, ETXValue etxToDest );
-
 ETXValue ETXCalculate( GlomoCoordinates txNodePosition, GlomoCoordinates rxNodePosition );
 
-void OpspUpdateNbrETX( GlomoCoordinates nbrPosition, GlomoNode node, NODE_ADDR nbrAddr );
+void OpspUpdateNbrETX( GlomoCoordinates nbrPosition, GlomoNode *node, NODE_ADDR nbrAddr );
 
-ETXValue OpspGetEtxToDest( NODE_ADDR destAddr, AODV_RT* routeTable, GlomoCoordinates nodePosition );
+ETXValue OpspGetEtxToDest( NODE_ADDR destAddr, AODV_RT* routeTable );
 
 void OpspHandleOverhearRREP( GlomoNode* node, Message* msg, NODE_ADDR srcAddr, NODE_ADDR destAddr );
+
+BOOL OpspCheckNfrExist( OPSP_NFRT* nfrTable, NODE_ADDR destAddr );
+
+void OpspInsertNfrTable( GlomoNode *node, OPSP_NFRT* nfrTable, NODE_ADDR destAddr, ETXValue etxToDest );
+
+void OpspDeleteNfrTable( OPSP_NFRT* nfrTable, NODE_ADDR destAddr );
+
+void OpspUpdateNfrTableLastTime( GlomoNode* node, OPSP_NFRT* nfrTable, NODE_ADDR destAddr );
+
+void OpspUpdateNfrTableEtxToDest( GlomoNode *node,
+                                  OPSP_NFRT* nfrTable,
+                                  NODE_ADDR destAddr,
+                                  ETXValue etxToDest );
+
+void OpspDisplayNfrTable( OPSP_NFRT* nfrTable );
+
+
+void OpspSetTimer( GlomoNode* node, long eventType, MsgOpspDestNbrAddr* destNbrAddr, clocktype delay );
 
 //^--------------------------- tianke on 2008-4-14 15:8 0.01--------------------------^
 
