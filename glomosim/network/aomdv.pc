@@ -2158,6 +2158,10 @@ void RoutingAodvHandleReply( GlomoNode* node, Message* msg, NODE_ADDR srcAddr, N
 
 #ifdef AOMDV_DEBUG_TRACE
     printf( "In Handle Reply\n" );
+			//v----------------------------tianke on 2008-4-21 14:44 0.01--------------------------v
+			printf("destAddr: %d\t", destAddr);
+			printf("nodeAddr: %d\n", node->nodeAddr);
+			//^--------------------------- tianke on 2008-4-21 14:44 0.01--------------------------^
 #endif // AOMDV_DEBUG_TRACE //
 
     if( rrepPkt->ackReqd == TRUE ) {
@@ -3865,7 +3869,7 @@ void RoutingAodvHandleProtocolPacket( GlomoNode* node,
 
     case AODV_RREP:
     {
-        if( destAddr == ANY_DEST ) {
+		if( destAddr == ANY_DEST ) {
             assert( ttl == 0 );
             /*
                      * HELLO packets are the only RREPs that are broadcast...
@@ -3877,8 +3881,14 @@ void RoutingAodvHandleProtocolPacket( GlomoNode* node,
             if( destAddr == node->nodeAddr ) {
                 RoutingAodvHandleReply( node, msg, srcAddr, destAddr );
             }else {
+                     #ifdef OPSP_DEBUG
+					 	printf("destAddr != nodeAddr ");
+					 	printf("nodeAddr:  %d\n", node->nodeAddr);
+                     	printf("destAddr:  %d\n", destAddr);
+                     #endif
                 OpspHandleOverhearRREP( node, msg, srcAddr, destAddr );
             }
+			
             if( RoutingAodvCheckNbrExist( node, srcAddr ) ) {
                 //this neighbor did HELLO in the past DELETE_PERIOD
                 RoutingAodvUpdateLastPacketTime( node, srcAddr );
@@ -5065,7 +5075,7 @@ ETXValue OpspGetEtxToDest( NODE_ADDR destAddr, AODV_RT* routeTable )
     ETXValue        lestEtxToDest;
     //ETXValue        nbrEtx;
 
-#ifdef OPSP_DEBUG_TRACE
+#ifdef OPSP_DEBUG
     printf( "in get lest etx to dest \n" );
 #endif
 
@@ -5111,6 +5121,10 @@ void OpspHandleOverhearRREP( GlomoNode* node, Message* msg, NODE_ADDR srcAddr, N
 
     assert( destAddr != node->nodeAddr );
 
+	#ifdef OPSP_DEBUG
+		printf( "in handle overhear reply \n" );
+	#endif
+	
     if( !RoutingAodvCheckNbrExist( node, srcAddr ) ) {
         RoutingAodvInsertNbrTable( node, srcAddr );
     }
@@ -5130,6 +5144,10 @@ void OpspHandleOverhearRREP( GlomoNode* node, Message* msg, NODE_ADDR srcAddr, N
         OpspUpdateNfrTableEtxToDest( node, &current->nfrt, destAddr, rrepPkt->etxToDest );
         OpspUpdateNfrTableLastTime( node, &current->nfrt, destAddr );
     }
+
+	#ifdef OPSP_DEBUG
+        OpspDisplayNfrTable( &current->nfrt );
+	#endif
 }
 
 

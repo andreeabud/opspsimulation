@@ -91,8 +91,9 @@ call pcc %parsecflags% -I..\include\ -I..\network\ -clock longlong -c ..\network
 call pcc %parsecflags% -I..\include\ -I..\network\ -clock longlong -c ..\network\user_nwip.pc
 call pcc %parsecflags% -I..\include\ -I..\network\ -clock longlong -c ..\network\nwlar1.pc
 call pcc %parsecflags% -I..\include\ -I..\network\ -clock longlong -c ..\network\dsr.pc
+
 :: tianke call pcc %parsecflags% -I..\include\ -I..\network\ -clock longlong -c ..\network\aodv.pc
-:: tianke
+
 call pcc %parsecflags% -I..\include\ -I..\network\ -clock longlong -c ..\network\aomdv.pc
 call pcc %parsecflags% -I..\include\ -I..\network\ -clock longlong -c ..\network\zrp.pc
 call pcc %parsecflags% -I..\include\ -I..\network\ -clock longlong -c ..\network\fifoqueue.pc

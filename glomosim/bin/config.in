@@ -48,7 +48,7 @@
 #        100D    - 100 days
 #
 
-SIMULATION-TIME     15M
+SIMULATION-TIME     10S
 
 #
 # The following is a random number seed used to initialize  part of the seed of
@@ -67,13 +67,13 @@ SEED                1
 # Terrain Area we are simulating.
 #
 
-TERRAIN-DIMENSIONS  (2000, 2000)
+TERRAIN-DIMENSIONS  (2000, 1000)
 
 #
 # The following parameter represents the number of nodes being simulated.
 #
 
-NUMBER-OF-NODES     9
+NUMBER-OF-NODES     50
 
 #
 #
@@ -91,9 +91,9 @@ NUMBER-OF-NODES     9
 
 # NODE-PLACEMENT      FILE
 # NODE-PLACEMENT-FILE ./nodes.input
- NODE-PLACEMENT      GRID
- GRID-UNIT           200  
-# NODE-PLACEMENT      RANDOM
+# NODE-PLACEMENT      GRID
+# GRID-UNIT           200  
+NODE-PLACEMENT      RANDOM
 #NODE-PLACEMENT      UNIFORM
 
 #
@@ -116,9 +116,9 @@ NUMBER-OF-NODES     9
 # Random Waypoint and its required parameters.
 
 MOBILITY RANDOM-WAYPOINT
-MOBILITY-WP-PAUSE       0S
+MOBILITY-WP-PAUSE       0
 MOBILITY-WP-MIN-SPEED   0
-MOBILITY-WP-MAX-SPEED   10
+MOBILITY-WP-MAX-SPEED   100
 
 #MOBILITY TRACE
 #MOBILITY-TRACE-FILE ./mobility.in
@@ -248,7 +248,7 @@ MAC-PROTOCOL        802.11
 # as routing protocol.  Setting it to "NO" may save a trivial amount
 # of time for other protocols.
 
-#PROMISCUOUS-MODE     NO
+PROMISCUOUS-MODE     YES
 
 ##############################
 # 
@@ -307,12 +307,12 @@ APP-CONFIG-FILE   ./app.conf
 APPLICATION-STATISTICS          YES
 TCP-STATISTICS                  NO
 UDP-STATISTICS                  NO
-ROUTING-STATISTICS              NO
-NETWORK-LAYER-STATISTICS        NO
+ROUTING-STATISTICS              YES
+NETWORK-LAYER-STATISTICS        YES
 MAC-LAYER-STATISTICS            NO
 RADIO-LAYER-STATISTICS          NO 
 CHANNEL-LAYER-STATISTICS        NO 
-MOBILITY-STATISTICS             NO 
+MOBILITY-STATISTICS             YES 
 
 #
 #

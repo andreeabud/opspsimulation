@@ -137,9 +137,9 @@
 
 #define noSHORTEST_PATH_COMPUTATION
 
-#define noAOMDV_DEBUG
+//#define AOMDV_DEBUG
 
-#define noAOMDV_DEBUG_TRACE
+#define AOMDV_DEBUG_TRACE
 
 #define OPSP
 
@@ -156,7 +156,6 @@
 
 typedef double  ETXValue;
 //^--------------------------- tianke on 2008-4-14 13:46 0.01--------------------------^
-
 
 /* Packet Types */
 
