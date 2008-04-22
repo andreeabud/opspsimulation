@@ -51,7 +51,7 @@
 #include "queue.h"
 
 
-        
+
 /*
  * FUNCTION     GLOMO_MessageEnqueue
  * PURPOSE      Function called by user to insert message into the queue.
@@ -61,21 +61,20 @@
  *    inMsg:      the message being enqueued
  *    insertPos:  the position where the item will be inserted
  */
-void GLOMO_MessageEnqueue(Queue *inQueue, int insertPos,
-                          void *inMsg)
+void GLOMO_MessageEnqueue( Queue* inQueue, int insertPos, void* inMsg )
 {
-    int i;
-    int msgSize = 0;
-    QueueItem *insertItem = NULL;
+    int         i;
+    int         msgSize     = 0;
+    QueueItem*  insertItem  = NULL;
 
-    if (inQueue->freeListPtr == NULL) {
-        insertItem = (QueueItem *) pc_malloc(sizeof(QueueItem));
-    } else {
+    if( inQueue->freeListPtr == NULL ) {
+        insertItem = ( QueueItem * ) pc_malloc( sizeof( QueueItem ) );
+    }else {
         insertItem = inQueue->freeListPtr;
         inQueue->freeListPtr = inQueue->freeListPtr->next;
     }
-    
-    assert(insertItem != NULL);
+
+    assert( insertItem != NULL );
     insertItem->item = inMsg;
 
 
@@ -84,7 +83,7 @@ void GLOMO_MessageEnqueue(Queue *inQueue, int insertPos,
      * then the item being inserted is the first
      * as well as last item.
      */
-    if (inQueue->itemsInQueue == 0) {
+    if( inQueue->itemsInQueue == 0 ) {
         insertItem->prev = NULL;
         insertItem->next = NULL;
 
@@ -97,8 +96,8 @@ void GLOMO_MessageEnqueue(Queue *inQueue, int insertPos,
      * last item and "prev" field of the inserted item.
      * Point the "last" field of queue to the inserted item.
      */
-    else if (insertPos == QUEUE_INSERT_END) {
-        assert(inQueue->itemsInQueue > 0);
+    else if( insertPos == QUEUE_INSERT_END ) {
+        assert( inQueue->itemsInQueue > 0 );
         insertItem->prev = inQueue->last;
         insertItem->next = NULL;
 
@@ -111,18 +110,16 @@ void GLOMO_MessageEnqueue(Queue *inQueue, int insertPos,
      * first item and "next" field of the inserted item.
      * Point the "first" field of queue to the inserted item.
      */
-    else if (insertPos == QUEUE_INSERT_FRONT) {
-        assert(inQueue->itemsInQueue > 0);
+    else if( insertPos == QUEUE_INSERT_FRONT ) {
+        assert( inQueue->itemsInQueue > 0 );
         insertItem->prev = NULL;
         insertItem->next = inQueue->first;
 
         inQueue->first->prev = insertItem;
         inQueue->first = insertItem;
-    }
-    else {
-        fprintf(stderr, "GLOMO Error: Unknown queue insert position %ld.\n",
-                insertPos);
-        assert(FALSE);
+    }else {
+        fprintf( stderr, "GLOMO Error: Unknown queue insert position %ld.\n", insertPos );
+        assert( FALSE );
     }
 
     /*
@@ -143,10 +140,10 @@ void GLOMO_MessageEnqueue(Queue *inQueue, int insertPos,
  * The actual message is returned. If there are no meessages
  * currently stored in the queue NULL is returned back.
  */
-void* GLOMO_MessageDequeue(Queue *outQueue)
+void* GLOMO_MessageDequeue( Queue* outQueue )
 {
-    QueueItem *outItem;
-    int i;
+    QueueItem*  outItem;
+    int         i;
 
     /*
      * Remove message from queue.
@@ -154,7 +151,7 @@ void* GLOMO_MessageDequeue(Queue *outQueue)
     /*
      * If no items in queue, return NULL.
      */
-    if (outQueue->itemsInQueue == 0) {
+    if( outQueue->itemsInQueue == 0 ) {
         return NULL;
     }
 
@@ -163,7 +160,7 @@ void* GLOMO_MessageDequeue(Queue *outQueue)
      * If there is just one item in queue, remove it
      * and set "first" and "last" of queue to NULL.
      */
-    if (outQueue->itemsInQueue == 1) {
+    if( outQueue->itemsInQueue == 1 ) {
         outItem = outQueue->first;
         outQueue->first = NULL;
         outQueue->last = NULL;
@@ -183,7 +180,7 @@ void* GLOMO_MessageDequeue(Queue *outQueue)
 
     outItem->next = outQueue->freeListPtr;
     outQueue->freeListPtr = outItem;
-    
+
     return outItem->item;
 }
 

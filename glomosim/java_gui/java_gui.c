@@ -62,48 +62,61 @@
 #include<stdio.h>
 #include "java_gui.h"
 
-enum {
-    JGUI_INITIALIZE = 0,
-    JGUI_MOVE_NODE = 1,
-    JGUI_DRAW_BROADCAST = 2,
-    JGUI_DRAW_LINE = 3,
-    JGUI_DRAW_THICKLINE = 4,
-    JGUI_DRAW_LINK = 5,
-    JGUI_ERASE_LINK = 6
-};
+enum { JGUI_INITIALIZE = 0,
+       JGUI_MOVE_NODE = 1,
+       JGUI_DRAW_BROADCAST = 2,
+       JGUI_DRAW_LINE = 3,
+       JGUI_DRAW_THICKLINE = 4,
+       JGUI_DRAW_LINK = 5,
+       JGUI_ERASE_LINK = 6 };
 
-void JGUI_InitNode (int numGuiNodes, int id, int positionX, int positionY,
-                    int txRange, JGUI_COLOR node, JGUI_COLOR connection) { 
-    printf("%d %d %d %d %d %d %d %d\n", JGUI_INITIALIZE, numGuiNodes,
-            id, positionX, positionY, txRange, node, connection);
+void JGUI_InitNode( int numGuiNodes,
+                    int id,
+                    int positionX,
+                    int positionY,
+                    int txRange,
+                    JGUI_COLOR node,
+                    JGUI_COLOR connection )
+{
+    printf( "%d %d %d %d %d %d %d %d\n",
+            JGUI_INITIALIZE,
+            numGuiNodes,
+            id,
+            positionX,
+            positionY,
+            txRange,
+            node,
+            connection );
 }
 
-void JGUI_DrawLink(int srcId, int destId, char *simTime,
-                   JGUI_COLOR color) {
-    printf("%d %s %d %d %d\n", JGUI_DRAW_LINK, simTime, srcId, destId, color);
+void JGUI_DrawLink( int srcId, int destId, char* simTime, JGUI_COLOR color )
+{
+    printf( "%d %s %d %d %d\n", JGUI_DRAW_LINK, simTime, srcId, destId, color );
 }
 
-void JGUI_EraseLink(int srcId, int destId, char *simTime) {
-    printf("%d %s %d %d\n", JGUI_ERASE_LINK, simTime, srcId, destId);
+void JGUI_EraseLink( int srcId, int destId, char* simTime )
+{
+    printf( "%d %s %d %d\n", JGUI_ERASE_LINK, simTime, srcId, destId );
 }  
 
-void JGUI_DrawBroadcast(int id, char *simTime, JGUI_COLOR color) {
-    printf("%d %s %d %d\n", JGUI_DRAW_BROADCAST, simTime, id, color);
+void JGUI_DrawBroadcast( int id, char* simTime, JGUI_COLOR color )
+{
+    printf( "%d %s %d %d\n", JGUI_DRAW_BROADCAST, simTime, id, color );
 }
 
-void JGUI_DrawLine(int srcId, int destId, char *simTime,
-                   JGUI_COLOR color) {
-    printf("%d %s %d %d %d\n", JGUI_DRAW_LINE, simTime, srcId, destId, color);
+void JGUI_DrawLine( int srcId, int destId, char* simTime, JGUI_COLOR color )
+{
+    printf( "%d %s %d %d %d\n", JGUI_DRAW_LINE, simTime, srcId, destId, color );
 }
 
-void JGUI_DrawThickLine(int srcId, int destId, int thickness,
-                        char *simTime, JGUI_COLOR color) {
-    printf("%d %s %d %d %d %d\n", JGUI_DRAW_THICKLINE, simTime, srcId, destId,
-                                  thickness, color);
+void JGUI_DrawThickLine( int srcId, int destId, int thickness, char* simTime, JGUI_COLOR color )
+{
+    printf( "%d %s %d %d %d %d\n", JGUI_DRAW_THICKLINE, simTime, srcId, destId, thickness, color );
 }
 
-void JGUI_MoveNode(int id, int x, int y, char *simTime) {
-    printf("%d %s %d %d %d\n", JGUI_MOVE_NODE, simTime, id, x, y);
+void JGUI_MoveNode( int id, int x, int y, char* simTime )
+{
+    printf( "%d %s %d %d %d\n", JGUI_MOVE_NODE, simTime, id, x, y );
 }
 
 

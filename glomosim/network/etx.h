@@ -14,86 +14,81 @@
 
 
 
-typedef double ETXValue;
-typedef long PROBE_NUM;
+typedef double  ETXValue;
+typedef long    PROBE_NUM;
 
 typedef struct EPNTE
 {
-	NODE_ADDR nbrAddr;
-	PROBE_NUM state[MAX_NUM_PROBE];
-	int sum;
-	struct EPNTE *next;
-
+    NODE_ADDR       nbrAddr;
+    PROBE_NUM       state[MAX_NUM_PROBE];
+    int             sum;
+    struct EPNTE*   next;
 } ETX_PNT_Node;//ETX_Probe_NUM
 
-typedef struct 
+typedef struct
 {
-    ETX_Probe_NUM_Node *head;
-    int size;
+    ETX_Probe_NUM_Node* head;
+    int                 size;
 } ETX_PNT;
 
 typedef struct EPANTE
 {
-	NODE_ADDR nbrAddr;
-	PROBE_NUM state0;
-	PROBE_NUM state[MAX_NUM_PROBE];
-	int sum;
-	struct EPANTE *next;
-	
+    NODE_ADDR       nbrAddr;
+    PROBE_NUM       state0;
+    PROBE_NUM       state[MAX_NUM_PROBE];
+    int             sum;
+    struct EPANTE*  next;
 } ETX_PANT_Node; //ETX_Probe_ACK_NUM
 
-typedef struct 
+typedef struct
 {
-    ETX_Probe_ACK_NUM_Node *head;
-    int size;
+    ETX_Probe_ACK_NUM_Node* head;
+    int                     size;
 } ETX_PANT;
 
 typedef struct ENNTE
 {
-	NODE_ADDR nbrAddr;
-	ETXValue etx;
-	struct ENNTE *next;
-
+    NODE_ADDR       nbrAddr;
+    ETXValue        etx;
+    struct ENNTE*   next;
 } ETX_NT_Node;
 
 typedef struct
 {
-    ETX_NT_Node *head;
-    int size;
+    ETX_NT_Node*    head;
+    int             size;
 } ETX_NT;
 
 typedef struct ELNTE
-{ 
-	NODE_ADDR node1Addr;
-	NODE_ADDR node2Addr;
-	ETXValue etx;
-	struct ELNTE *next;
-	
+{
+    NODE_ADDR       node1Addr;
+    NODE_ADDR       node2Addr;
+    ETXValue        etx;
+    struct ELNTE*   next;
 } ETX_LT_Node;
 
-typedef struct 
+typedef struct
 {
-    ETX_LT_Node *head;
-    int size;
+    ETX_LT_Node*    head;
+    int             size;
 } ETX_LT;
 
 typedef struct ESNTE
-{ 
-	NODE_ADDR nbrAddr;
-	NODE_ADDR destAddr;
-	ETXValue etx;
-	struct ESNTE *next;
-	
+{
+    NODE_ADDR       nbrAddr;
+    NODE_ADDR       destAddr;
+    ETXValue        etx;
+    struct ESNTE*   next;
 } ETX_ST_Node;// segment to destination
-	
+
 typedef struct
 {
-    ETX_ST *head;
-    int size;
+    ETX_ST* head;
+    int     size;
 } ETX_ST;
 
 //--------------tianke on 2008-3-16 25:10 0.01------------>
-void MetricETXCalculate(GlomoCoordinates x, GlomoCoordinates y);
+void MetricETXCalculate( GlomoCoordinates x, GlomoCoordinates y );
 
 
 //<-------------tianke on 2008-3-16 25:10 0.01------------
@@ -114,7 +109,7 @@ void MetricEtxInitSegmentTable(ETX_ST *etxSegmentTable);
 void MetricETXEventHandler(GlomoNode *node, Message*msg);
 
 void MetricETXPacketHandlingFunction(GlomoNode *node, Message*msg, 
-								NODE_ADDR sourceAddress, NODE_ADDR destinationAddress, int ttl);
+                                NODE_ADDR sourceAddress, NODE_ADDR destinationAddress, int ttl);
 
 void MetricETXFinalize(GlomoNode *node);
 

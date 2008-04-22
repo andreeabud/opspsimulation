@@ -83,19 +83,14 @@
 // be modified and the PacketWasRouted must return FALSE.
 //
 
-typedef void (*RouterFunctionType)(
-   GlomoNode* node,
-   Message* msg,
-   NODE_ADDR destAddr,
+typedef void ( *RouterFunctionType )( GlomoNode* node, Message* msg, NODE_ADDR destAddr,
 #ifdef AOMDV
-   NODE_ADDR lastAddr,
+NODE_ADDR lastAddr,
 #endif
-   BOOL *PacketWasRouted); 
+BOOL* PacketWasRouted ); 
 
 
-void NetworkIpSetRouterFunction(
-   GlomoNode* node,
-   RouterFunctionType RouterFunctionPtr);
+void NetworkIpSetRouterFunction( GlomoNode* node, RouterFunctionType RouterFunctionPtr );
 
 
 #define GET_INTERFACE_FROM_TABLE  0xFFFF
@@ -107,14 +102,12 @@ void NetworkIpSetRouterFunction(
 // the next hop.  This usual signifies a link break. 
 //
 
-typedef void (*PacketDropNotificationFunctionType)(
-   GlomoNode* node, 
-   const Message * msg,
-   const NODE_ADDR triedNextHop);
+typedef void ( *PacketDropNotificationFunctionType )( GlomoNode* node,
+                                                      const Message* msg,
+                                                      const NODE_ADDR triedNextHop );
 
-void NetworkIpSetPacketDropNotificationFunction(
-   GlomoNode* node, 
-   PacketDropNotificationFunctionType PacketDropHandlerPtr);
+void NetworkIpSetPacketDropNotificationFunction( GlomoNode* node,
+                                                 PacketDropNotificationFunctionType PacketDropHandlerPtr );
 
 //
 //  NetworkIpSendPacketToMacLayer is for the routing protocol defined
@@ -124,19 +117,17 @@ void NetworkIpSetPacketDropNotificationFunction(
 //
 
 
-void NetworkIpSendPacketToMacLayer(     
-   GlomoNode* node, 
-   Message* msg, 
-   InterfaceIdType interfaceId,
-   NODE_ADDR nextHop);
+void NetworkIpSendPacketToMacLayer( GlomoNode* node,
+                                    Message* msg,
+                                    InterfaceIdType interfaceId,
+                                    NODE_ADDR nextHop );
 
 
-void NetworkIpSendPacketToMacLayerWithDelay(     
-   GlomoNode* node, 
-   Message* msg, 
-   InterfaceIdType interfaceId,
-   NODE_ADDR nextHop,
-   clocktype delay);
+void NetworkIpSendPacketToMacLayerWithDelay( GlomoNode* node,
+                                             Message* msg,
+                                             InterfaceIdType interfaceId,
+                                             NODE_ADDR nextHop,
+                                             clocktype delay );
 
 
 
@@ -148,32 +139,30 @@ void NetworkIpSendPacketToMacLayerWithDelay(
 //  if necessary as it exits the network layer.
 //
 
-void NetworkIpSendRawGlomoMessageToMacLayer(     
-   GlomoNode* node,
-   Message* rawMsg, 
-   NODE_ADDR destAddr,
-   NetworkQueueingPriorityType priority,
-   unsigned char protocol,
-   unsigned int ttl,
-   InterfaceIdType interfaceId,
-   NODE_ADDR nextHop);
-   
+void NetworkIpSendRawGlomoMessageToMacLayer( GlomoNode* node,
+                                             Message* rawMsg,
+                                             NODE_ADDR destAddr,
+                                             NetworkQueueingPriorityType priority,
+                                             unsigned char protocol,
+                                             unsigned int ttl,
+                                             InterfaceIdType interfaceId,
+                                             NODE_ADDR nextHop );
+
 //
 //  NetworkIpSendRawGlomoMessageToMacLayer is just like
 //  NetworkIpSendRawGlomoMessageToMacLayer except that the
 //  action is delayed in simulation time.
 //
 
-void NetworkIpSendRawGlomoMessageToMacLayerWithDelay(     
-   GlomoNode* node,
-   Message* rawMsg, 
-   NODE_ADDR destAddr,
-   NetworkQueueingPriorityType priority,
-   unsigned char protocol,
-   unsigned int ttl,
-   InterfaceIdType interfaceId,
-   NODE_ADDR nextHop,
-   clocktype delay);
+void NetworkIpSendRawGlomoMessageToMacLayerWithDelay( GlomoNode* node,
+                                                      Message* rawMsg,
+                                                      NODE_ADDR destAddr,
+                                                      NetworkQueueingPriorityType priority,
+                                                      unsigned char protocol,
+                                                      unsigned int ttl,
+                                                      InterfaceIdType interfaceId,
+                                                      NODE_ADDR nextHop,
+                                                      clocktype delay );
 
 //
 //  NetworkIpSendPacketToMacLayerWithNewStrictSourceRoute
@@ -184,12 +173,11 @@ void NetworkIpSendRawGlomoMessageToMacLayerWithDelay(
 //
 
 
-void NetworkIpSendPacketToMacLayerWithNewStrictSourceRoute(
-   GlomoNode *node,
-   Message *msg, 
-   NODE_ADDR newRouteAddresses[],
-   int numNewRouteAddresses,
-   BOOL removeExistingRecordedRoute);
+void NetworkIpSendPacketToMacLayerWithNewStrictSourceRoute( GlomoNode* node,
+                                                            Message* msg,
+                                                            NODE_ADDR newRouteAddresses[],
+                                                            int numNewRouteAddresses,
+                                                            BOOL removeExistingRecordedRoute );
 
 
 //
@@ -201,13 +189,13 @@ void NetworkIpSendPacketToMacLayerWithNewStrictSourceRoute(
 //
 
 
-void NetworkIpSendNewPacket(
-   GlomoNode* node, 
-   NODE_ADDR destAddr,
-   NetworkQueueingPriorityType priority,
-   unsigned char protocol,
-   unsigned int ttl,
-   char* payload, int payloadSize);
+void NetworkIpSendNewPacket( GlomoNode* node,
+                             NODE_ADDR destAddr,
+                             NetworkQueueingPriorityType priority,
+                             unsigned char protocol,
+                             unsigned int ttl,
+                             char* payload,
+                             int payloadSize );
 
 
 //
@@ -219,14 +207,14 @@ void NetworkIpSendNewPacket(
 // If ttl (time to live) is 0, then it is set to the default TTL value.
 //
 
-void NetworkIpSendNewPacketWithDelay(
-   GlomoNode* node, 
-   NODE_ADDR destAddr,
-   NetworkQueueingPriorityType priority,
-   unsigned char protocol,
-   unsigned int ttl,
-   char* payload, int payloadSize,
-   clocktype delay);
+void NetworkIpSendNewPacketWithDelay( GlomoNode* node,
+                                      NODE_ADDR destAddr,
+                                      NetworkQueueingPriorityType priority,
+                                      unsigned char protocol,
+                                      unsigned int ttl,
+                                      char* payload,
+                                      int payloadSize,
+                                      clocktype delay );
 
 //
 // NetworkIpSendRawGlomoMessage allows for the routing protocols in the
@@ -237,13 +225,12 @@ void NetworkIpSendNewPacketWithDelay(
 // If ttl (time to live) is 0, then it is set to the default TTL value.
 //
 
-void NetworkIpSendRawGlomoMessage(
-   GlomoNode* node,
-   Message* rawMsg, 
-   NODE_ADDR destAddr,
-   NetworkQueueingPriorityType priority,
-   unsigned char protocol,
-   unsigned int ttl);
+void NetworkIpSendRawGlomoMessage( GlomoNode* node,
+                                   Message* rawMsg,
+                                   NODE_ADDR destAddr,
+                                   NetworkQueueingPriorityType priority,
+                                   unsigned char protocol,
+                                   unsigned int ttl );
 
 //
 // NetworkIpSendRawGlomoMessageWithDelay allows for the routing
@@ -254,14 +241,13 @@ void NetworkIpSendRawGlomoMessage(
 // If ttl (time to live) is 0, then it is set to the default TTL value.
 //
 
-void NetworkIpSendRawGlomoMessageWithDelay(
-   GlomoNode* node,
-   Message* rawMsg, 
-   NODE_ADDR destAddr,
-   NetworkQueueingPriorityType priority,
-   unsigned char protocol,
-   unsigned int ttl,
-   clocktype delay);
+void NetworkIpSendRawGlomoMessageWithDelay( GlomoNode* node,
+                                            Message* rawMsg,
+                                            NODE_ADDR destAddr,
+                                            NetworkQueueingPriorityType priority,
+                                            unsigned char protocol,
+                                            unsigned int ttl,
+                                            clocktype delay );
 
 
 // NetworkIpDeleteOutboundPacketsToANode removes all packets in the
@@ -270,13 +256,12 @@ void NetworkIpSendRawGlomoMessageWithDelay(
 // to the routing protocol via the callback mechanism, otherwise
 // they are just dropped.
 
-void NetworkIpDeleteOutboundPacketsToANode(
-   GlomoNode* node,
-   const NODE_ADDR nextHopAddress,
-   const NODE_ADDR destinationAddress,
-   const BOOL returnPacketsToRoutingProtocol);
-                        
-                        
+void NetworkIpDeleteOutboundPacketsToANode( GlomoNode* node,
+                                            const NODE_ADDR nextHopAddress,
+                                            const NODE_ADDR destinationAddress,
+                                            const BOOL returnPacketsToRoutingProtocol );
+
+
 //***
 //*** Mode obsolete by an explicit packet drop function interface.
 //***
@@ -304,31 +289,26 @@ void NetworkIpDeleteOutboundPacketsToANode(
 // to the message.
 //
 
-typedef void (*PromiscuousMessagePeekFunctionType)(
-   GlomoNode* node, 
-   const Message * msg);
+typedef void ( *PromiscuousMessagePeekFunctionType )( GlomoNode* node, const Message* msg );
 
-void NetworkIpSetPromiscuousMessagePeekFunction(
-   GlomoNode* node, 
-   PromiscuousMessagePeekFunctionType PeekFunctionPtr);
+void NetworkIpSetPromiscuousMessagePeekFunction( GlomoNode* node,
+                                                 PromiscuousMessagePeekFunctionType PeekFunctionPtr );
 
 
 
-void NetworkIpRemoveIpHeader(
-   GlomoNode *node, 
-   Message *msg, 
-   NODE_ADDR* sourceAddress,
-   NODE_ADDR* destinationAddress,
-   NetworkQueueingPriorityType* priority,
-   unsigned char* protocol,
-   unsigned int* ttl);
+void NetworkIpRemoveIpHeader( GlomoNode* node,
+                              Message* msg,
+                              NODE_ADDR* sourceAddress,
+                              NODE_ADDR* destinationAddress,
+                              NetworkQueueingPriorityType* priority,
+                              unsigned char* protocol,
+                              unsigned int* ttl );
 
-void SendToUdp(
-   GlomoNode *node,
-   Message *msg,
-   NetworkQueueingPriorityType priority,
-   NODE_ADDR sourceAddress,
-   NODE_ADDR destinationAddress);
+void SendToUdp( GlomoNode* node,
+                Message* msg,
+                NetworkQueueingPriorityType priority,
+                NODE_ADDR sourceAddress,
+                NODE_ADDR destinationAddress );
 
 
 //
@@ -343,33 +323,30 @@ void SendToUdp(
 // the message.
 
 
-void AddIpOptionField(
-   GlomoNode* node, 
-   Message* msg,
-   int OptionCode, 
-   int OptionSize); 
+void AddIpOptionField( GlomoNode* node, Message* msg, int OptionCode, int OptionSize ); 
 
-void AddIpHeader(
-   GlomoNode *node,
-   Message *msg,
-   NODE_ADDR destinationAddress,
-   NetworkQueueingPriorityType priority,
-   unsigned char protocol,
-   unsigned int ttl);
+void AddIpHeader( GlomoNode* node,
+                  Message* msg,
+                  NODE_ADDR destinationAddress,
+                  NetworkQueueingPriorityType priority,
+                  unsigned char protocol,
+                  unsigned int ttl );
 //---------------------------------------------------------------------------
-   
 
-typedef struct {
-    NODE_ADDR destAddress;       /* destination address */
+
+typedef struct
+{
+    NODE_ADDR       destAddress;       /* destination address */
     InterfaceIdType interfaceId;    /* right now interface Id */
-    NODE_ADDR nextHopAddress;    /* next hop. */
+    NODE_ADDR       nextHopAddress;    /* next hop. */
 } NetworkForwardingTableRow;
 
 
-typedef struct {
-    int size;  /* number of entries */
-    int allocatedSize;
-    NetworkForwardingTableRow *row;  /* allocation in Init function in Ip */
+typedef struct
+{
+    int                         size;  /* number of entries */
+    int                         allocatedSize;
+    NetworkForwardingTableRow*  row;  /* allocation in Init function in Ip */
 } NetworkForwardingTable;
 
 
@@ -384,105 +361,106 @@ typedef struct {
 #define SMALL_REASSEMBLY_BUFFER_SIZE  2048
 #define REASSEMBLY_BUFFER_EXPANSION_MULTIPLIER  8
 
-       
+
 //---------------------------------------------------------------------------
 /* data structure used for assembling fragments */
 
 
-typedef struct { 
-   Message* packetUnderConstruction;
-   int sizeLimit;
-   clocktype expirationDate;
-   unsigned short totalPacketLength;
-   unsigned short fragmentationSize;
-   unsigned char  fragmentIsHereBitTable[MAX_IP_FRAGMENTS_SIMPLE_CASE/8];
-   BOOL endFragmentHasArrived;
-   unsigned short endFragmentOffset;
+typedef struct
+{
+    Message*        packetUnderConstruction;
+    int             sizeLimit;
+    clocktype       expirationDate;
+    unsigned short  totalPacketLength;
+    unsigned short  fragmentationSize;
+    unsigned char   fragmentIsHereBitTable[MAX_IP_FRAGMENTS_SIMPLE_CASE / 8];
+    BOOL            endFragmentHasArrived;
+    unsigned short  endFragmentOffset;
 } IpReassemblyBufferType;
 
 
 
-typedef struct IpReassemblyBufferListCellStruct {
-   struct IpReassemblyBufferListCellStruct* nextPtr;
-   IpReassemblyBufferType reassemblyBuffer;
+typedef struct IpReassemblyBufferListCellStruct
+{
+    struct IpReassemblyBufferListCellStruct*nextPtr;
+    IpReassemblyBufferType                  reassemblyBuffer;
 } IpReassemblyBufferListCellType;
 
 
-typedef struct {
-   IpReassemblyBufferListCellType* firstPtr;
-   IpReassemblyBufferListCellType* freeListPtr;
+typedef struct
+{
+    IpReassemblyBufferListCellType* firstPtr;
+    IpReassemblyBufferListCellType* freeListPtr;
 } IpReassemblyBufferListType;
 
 
 //---------------------------------------------------------------------------
 
-typedef struct {
+typedef struct
+{
     int numPacketsSentToMac;
     int numPacketsRoutedForOtherNodes;
-    
+
     int numPacketsDeliveredToThisNode;
     int deliveredPacketTtlTotal;
-    
+
     int numNetworkUnreachableDrops;
     int numTtlExpirationDrops;
 } NetworkIpStatsType;
 
 
 
-typedef struct {
-    unsigned short              packetIdCounter; // Used for identifying datagram 
-    NetworkForwardingTable      forwardTable;
-    NetworkRoutingProtocolType  routingProtocolChoice;    
-    void*                       routingProtocol; 
-    
-    RouterFunctionType                     routerFunction;
-    PacketDropNotificationFunctionType     packetDropHandlerFunction;
-    
-    PromiscuousMessagePeekFunctionType     promiscuousMessagePeekFunction;
-    
-    int maxPacketLength;
-    
-    IpReassemblyBufferListType reassemblyBufferList;
-    
-    IpOutputQueueType* interfaceQueues[MAX_NUM_INTERFACES];
-    
-    NetworkIpStatsType stats;
+typedef struct
+{
+    unsigned short                      packetIdCounter; // Used for identifying datagram 
+    NetworkForwardingTable              forwardTable;
+    NetworkRoutingProtocolType          routingProtocolChoice;    
+    void*                               routingProtocol; 
+
+    RouterFunctionType                  routerFunction;
+    PacketDropNotificationFunctionType  packetDropHandlerFunction;
+
+    PromiscuousMessagePeekFunctionType  promiscuousMessagePeekFunction;
+
+    int                                 maxPacketLength;
+
+    IpReassemblyBufferListType          reassemblyBufferList;
+
+    IpOutputQueueType*                  interfaceQueues[MAX_NUM_INTERFACES];
+
+    NetworkIpStatsType                  stats;
 } GlomoNetworkIp;
-    
+
 //---------------------------------------------------------------------------
-       
-       
+
+
 /* functions called by network.pc */
 
-void NetworkIpPreInit(GlomoNode *node);
-void NetworkIpInit(GlomoNode *node, const GlomoNodeInput *nodeInput);
-void NetworkIpFinalize(GlomoNode *node);
-void NetworkIpLayer(GlomoNode *node, Message *msg);
+void NetworkIpPreInit( GlomoNode* node );
+void NetworkIpInit( GlomoNode* node, const GlomoNodeInput* nodeInput );
+void NetworkIpFinalize( GlomoNode* node );
+void NetworkIpLayer( GlomoNode* node, Message* msg );
 
 //---------------------------------------------------------------------------
 
 // GloMoSim User modified functions defined in "user_nwip.pc".
 
-void NetworkIpUserProtocolInit(
-   GlomoNode *node,
-   const GlomoNodeInput *nodeInput,
-   const char* routingProtocolString, 
-   NetworkRoutingProtocolType* routingProtocolChoice,
-   void** routingProtocolData);
-      
-void NetworkIpUserHandleProtocolEvent(GlomoNode* node, Message* msg);
+void NetworkIpUserProtocolInit( GlomoNode* node,
+                                const GlomoNodeInput* nodeInput,
+                                const char* routingProtocolString,
+                                NetworkRoutingProtocolType* routingProtocolChoice,
+                                void** routingProtocolData );
 
-void NetworkIpUserHandleProtocolPacket(
-   GlomoNode* node, 
-   Message* msg, 
-   unsigned char ipProtocol,
-   NODE_ADDR sourceAddress,
-   NODE_ADDR destinationAddress, 
-   int ttl);
+void NetworkIpUserHandleProtocolEvent( GlomoNode* node, Message* msg );
 
-void NetworkIpUserProtocolFinalize(
-   GlomoNode* node, 
-   int userProtocolNumber);
+void NetworkIpUserHandleProtocolPacket( GlomoNode* node,
+                                        Message* msg,
+                                        unsigned char ipProtocol,
+                                        NODE_ADDR sourceAddress,
+                                        NODE_ADDR destinationAddress,
+                                        int ttl );
+
+void NetworkIpUserProtocolFinalize( GlomoNode* node, int userProtocolNumber );
 
 
 #endif

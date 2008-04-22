@@ -79,111 +79,108 @@
 #define IPOPT_DSR  217
 
 /* DSR option fields for IP header */
-typedef struct {
-   unsigned char salvagedBit;
-   unsigned char segmentLeft;
+typedef struct
+{
+    unsigned char   salvagedBit;
+    unsigned char   segmentLeft;
 } DsrIpOptionType;
 
 /* Type of packet */
-typedef enum {
-    DSR_ROUTE_REQUEST,
-    DSR_ROUTE_REPLY,
-    DSR_ROUTE_ERROR
-} DSR_PacketType;
+typedef enum { DSR_ROUTE_REQUEST, DSR_ROUTE_REPLY, DSR_ROUTE_ERROR } DSR_PacketType;
 
 typedef struct
 {
-    DSR_PacketType pktType;
-    NODE_ADDR srcAddr;
-    NODE_ADDR targetAddr;
-    int seqNumber;
-    int hopCount;
-    NODE_ADDR path[DSR_MAX_SR_LEN];
+    DSR_PacketType  pktType;
+    NODE_ADDR       srcAddr;
+    NODE_ADDR       targetAddr;
+    int             seqNumber;
+    int             hopCount;
+    NODE_ADDR       path[DSR_MAX_SR_LEN];
 } DSR_RouteRequest;
-    
+
 typedef struct
 {
-    DSR_PacketType pktType;
-    NODE_ADDR targetAddr;                 /* Source of the route */
-    NODE_ADDR srcAddr;                    /* Destination of the route */
-    int hopCount;
-    int segLeft;
-    NODE_ADDR path[DSR_MAX_SR_LEN];
+    DSR_PacketType  pktType;
+    NODE_ADDR       targetAddr;                 /* Source of the route */
+    NODE_ADDR       srcAddr;                    /* Destination of the route */
+    int             hopCount;
+    int             segLeft;
+    NODE_ADDR       path[DSR_MAX_SR_LEN];
 } DSR_RouteReply;
 
 typedef struct
 {
-    DSR_PacketType pktType;
-    NODE_ADDR srcAddr;                 /* Originator of the Route Error */
-    NODE_ADDR destAddr;                /* Source of the broken route */
-    NODE_ADDR unreachableAddr;         /* Immediate downstream of broken link */
-    int hopCount;
-    BOOL salvaged;
-    NODE_ADDR path[DSR_MAX_SR_LEN];
+    DSR_PacketType  pktType;
+    NODE_ADDR       srcAddr;                 /* Originator of the Route Error */
+    NODE_ADDR       destAddr;                /* Source of the broken route */
+    NODE_ADDR       unreachableAddr;         /* Immediate downstream of broken link */
+    int             hopCount;
+    BOOL            salvaged;
+    NODE_ADDR       path[DSR_MAX_SR_LEN];
 } DSR_RouteError;
 
 typedef struct RCE
 {
-    NODE_ADDR destAddr;
-    int hopCount;                        /* Hop length to the destAddr */
-    NODE_ADDR path[DSR_MAX_SR_LEN];
-    struct RCE *prev;
-    struct RCE *next;
+    NODE_ADDR   destAddr;
+    int         hopCount;                        /* Hop length to the destAddr */
+    NODE_ADDR   path[DSR_MAX_SR_LEN];
+    struct RCE* prev;
+    struct RCE* next;
 } DSR_RouteCacheEntry;
 
 typedef struct
 {
-    DSR_RouteCacheEntry *head;
-    int count;                         /* Count of current entries */
+    DSR_RouteCacheEntry*    head;
+    int                     count;                         /* Count of current entries */
 } DSR_RouteCache;
 
 typedef struct RQE
 {
-    NODE_ADDR destAddr;
-    clocktype lastRequest;             /* Time when last sent a request */ 
-    clocktype backoffInterval;         /* No additional Req for this time */
-    int ttl;
-    struct RQE *next;
+    NODE_ADDR   destAddr;
+    clocktype   lastRequest;             /* Time when last sent a request */ 
+    clocktype   backoffInterval;         /* No additional Req for this time */
+    int         ttl;
+    struct RQE* next;
 } DSR_RequestTableEntry;
 
 typedef struct
 {
-    DSR_RequestTableEntry *head;
-    int count;
+    DSR_RequestTableEntry*  head;
+    int                     count;
 } DSR_RequestTable;
- 
+
 typedef struct STE
 {
-    NODE_ADDR srcAddr;
-    int seqNumber;
-    struct STE *next;
+    NODE_ADDR   srcAddr;
+    int         seqNumber;
+    struct STE* next;
 } DSR_RequestSeenEntry;
 
 typedef struct
 {
-    DSR_RequestSeenEntry *front; 
-    DSR_RequestSeenEntry *rear;
-    int count; 
+    DSR_RequestSeenEntry*   front; 
+    DSR_RequestSeenEntry*   rear;
+    int                     count;
 } DSR_RequestSeen;
 
 typedef struct fifo
 {
-    NODE_ADDR destAddr;
-    clocktype timestamp;
-    Message *msg;
-    struct fifo *next;
+    NODE_ADDR       destAddr;
+    clocktype       timestamp;
+    Message*        msg;
+    struct fifo*    next;
 } DSR_BUFFER_Node;
 
 typedef struct
 {
-    DSR_BUFFER_Node *head;
-    int size;
+    DSR_BUFFER_Node*    head;
+    int                 size;
 } DSR_BUFFER;
 
 typedef struct
 {
-    NODE_ADDR destAddr;
-    int ttl;
+    NODE_ADDR   destAddr;
+    int         ttl;
 } DSR_CR;
 
 typedef struct
@@ -209,194 +206,182 @@ typedef struct
     int numRoutes;
 
     int numHops;
-    
+
     int numLinkBreaks;
-    
+
     int numSalvagedPackets;
     int numDroppedPackets;
-    
-    
 } DSR_Stats;
 
-typedef struct glomo_network_dsr_str {
-    DSR_RouteCache routeCacheTable;
-    DSR_RequestTable requestTable;
-    DSR_RequestSeen requestSeenTable;
-    DSR_BUFFER buffer;
-    int seqNumber;
-    DSR_Stats stats;    
+typedef struct glomo_network_dsr_str
+{
+    DSR_RouteCache      routeCacheTable;
+    DSR_RequestTable    requestTable;
+    DSR_RequestSeen     requestSeenTable;
+    DSR_BUFFER          buffer;
+    int                 seqNumber;
+    DSR_Stats           stats;
 } GlomoRoutingDsr;
 
-void RoutingDsrInit(
-    GlomoNode *node, 
-    GlomoRoutingDsr **dsrPtr, 
-    const GlomoNodeInput *nodeInput);
+void RoutingDsrInit( GlomoNode* node, GlomoRoutingDsr** dsrPtr, const GlomoNodeInput* nodeInput );
 
-void RoutingDsrFinalize(GlomoNode *node);
+void RoutingDsrFinalize( GlomoNode* node );
 
-void RoutingDsrHandleRequest(GlomoNode *node, Message *msg, int ttl);
+void RoutingDsrHandleRequest( GlomoNode* node, Message* msg, int ttl );
 
-void RoutingDsrHandleReply(
-    GlomoNode *node, Message *msg, NODE_ADDR destAddr);
+void RoutingDsrHandleReply( GlomoNode* node, Message* msg, NODE_ADDR destAddr );
 
-void RoutingDsrHandleError(
-    GlomoNode *node, Message *msg, NODE_ADDR srcAddr, NODE_ADDR destAddr);
+void RoutingDsrHandleError( GlomoNode* node, Message* msg, NODE_ADDR srcAddr, NODE_ADDR destAddr );
 
-void RoutingDsrInitRouteCache(DSR_RouteCache *routeCache);
+void RoutingDsrInitRouteCache( DSR_RouteCache* routeCache );
 
-void RoutingDsrInitRequestSeen(DSR_RequestSeen *requestSeen);
+void RoutingDsrInitRequestSeen( DSR_RequestSeen* requestSeen );
 
-void RoutingDsrInitRequestTable(DSR_RequestTable *requestTable);
+void RoutingDsrInitRequestTable( DSR_RequestTable* requestTable );
 
-void RoutingDsrInitSeq(GlomoNode *node);
+void RoutingDsrInitSeq( GlomoNode* node );
 
-void RoutingDsrInitBuffer(DSR_BUFFER *buffer);
+void RoutingDsrInitBuffer( DSR_BUFFER* buffer );
 
-void RoutingDsrInitStats(GlomoNode *node);
+void RoutingDsrInitStats( GlomoNode* node );
 
-void RoutingDsrDeleteSeenTable(DSR_RequestSeen *requestSeen);
+void RoutingDsrDeleteSeenTable( DSR_RequestSeen* requestSeen );
 
-BOOL RoutingDsrCheckRouteExist(NODE_ADDR destAddr, DSR_RouteCache *routeCache);
+BOOL RoutingDsrCheckRouteExist( NODE_ADDR destAddr, DSR_RouteCache* routeCache );
 
-BOOL RoutingDsrLookupRequestSeen(NODE_ADDR srcAddr,
-                                 int seq,
-                                 DSR_RequestSeen *requestSeen);
+BOOL RoutingDsrLookupRequestSeen( NODE_ADDR srcAddr, int seq, DSR_RequestSeen* requestSeen );
 
-BOOL RoutingDsrLookupRequestTable(NODE_ADDR destAddr,
-                                  DSR_RequestTable *requestTable);
+BOOL RoutingDsrLookupRequestTable( NODE_ADDR destAddr, DSR_RequestTable* requestTable );
 
-void RoutingDsrInsertRequestSeen(GlomoNode *node,
-                                 NODE_ADDR srcAddr,
-                                 int seq,
-                                 DSR_RequestSeen *requestSeen);
+void RoutingDsrInsertRequestSeen( GlomoNode* node,
+                                  NODE_ADDR srcAddr,
+                                  int seq,
+                                  DSR_RequestSeen* requestSeen );
 
-void RoutingDsrInsertRouteCache(NODE_ADDR destAddr,
-                                int hopCount,
-                                NODE_ADDR *path,
-                                DSR_RouteCache *routeCache);
+void RoutingDsrInsertRouteCache( NODE_ADDR destAddr,
+                                 int hopCount,
+                                 NODE_ADDR* path,
+                                 DSR_RouteCache* routeCache );
 
-DSR_RouteCacheEntry *RoutingDsrInsertRCInOrder(NODE_ADDR destAddr,
-                                               int hopCount,
-                                               NODE_ADDR *path,
-                                               DSR_RouteCacheEntry *old,
-                                               DSR_RouteCacheEntry *last);
+DSR_RouteCacheEntry* RoutingDsrInsertRCInOrder( NODE_ADDR destAddr,
+                                                int hopCount,
+                                                NODE_ADDR* path,
+                                                DSR_RouteCacheEntry* old,
+                                                DSR_RouteCacheEntry* last );
 
-void RoutingDsrInsertRequestTable(NODE_ADDR destAddr,
-                                  DSR_RequestTable *requestTable);
- 
-DSR_RequestTableEntry *RoutingDsrInsertRTInOrder(NODE_ADDR destAddr,
-                                                 DSR_RequestTableEntry *old);
+void RoutingDsrInsertRequestTable( NODE_ADDR destAddr, DSR_RequestTable* requestTable );
 
-void RoutingDsrInsertBuffer(Message *msg, NODE_ADDR destAddr,
-                            DSR_BUFFER *buffer);
+DSR_RequestTableEntry* RoutingDsrInsertRTInOrder( NODE_ADDR destAddr, DSR_RequestTableEntry* old );
 
-DSR_BUFFER_Node *RoutingDsrInsertBufInOrder(Message *msg, NODE_ADDR destAddr,
-                                            DSR_BUFFER_Node *old);
+void RoutingDsrInsertBuffer( Message* msg, NODE_ADDR destAddr, DSR_BUFFER* buffer );
 
-BOOL RoutingDsrCompareRoute(NODE_ADDR destAddr,
-                            int hopCount,
-                            NODE_ADDR *path,
-                            DSR_RouteCache *routeCache);
- 
-void RoutingDsrDeleteRouteCache(GlomoNode *node,
-                                NODE_ADDR fromHop,
-                                NODE_ADDR nextHop,
-                                DSR_RouteCache *routeCache);
+DSR_BUFFER_Node* RoutingDsrInsertBufInOrder( Message* msg, NODE_ADDR destAddr, DSR_BUFFER_Node* old );
+
+BOOL RoutingDsrCompareRoute( NODE_ADDR destAddr,
+                             int hopCount,
+                             NODE_ADDR* path,
+                             DSR_RouteCache* routeCache );
+
+void RoutingDsrDeleteRouteCache( GlomoNode* node,
+                                 NODE_ADDR fromHop,
+                                 NODE_ADDR nextHop,
+                                 DSR_RouteCache* routeCache );
 
 
-void RoutingDsrRemoveOldPacketsFromBuffer(DSR_BUFFER *buffer);
+void RoutingDsrRemoveOldPacketsFromBuffer( DSR_BUFFER* buffer );
 
-BOOL RoutingDsrDeleteBuffer(NODE_ADDR destAddr, DSR_BUFFER *buffer);
+BOOL RoutingDsrDeleteBuffer( NODE_ADDR destAddr, DSR_BUFFER* buffer );
 
-void RoutingDsrDeleteRequestTable(NODE_ADDR destAddr, 
-                                  DSR_RequestTable *requestTable);
+void RoutingDsrDeleteRequestTable( NODE_ADDR destAddr, DSR_RequestTable* requestTable );
 
-BOOL RoutingDsrCheckDataSeen(
-    GlomoNode *node, NODE_ADDR *header, int currentHop);
+BOOL RoutingDsrCheckDataSeen( GlomoNode* node, NODE_ADDR* header, int currentHop );
 
-BOOL RoutingDsrCheckRequestPath(
-    GlomoNode *node, NODE_ADDR *path, int currentHop);
+BOOL RoutingDsrCheckRequestPath( GlomoNode* node, NODE_ADDR* path, int currentHop );
 
-NODE_ADDR *RoutingDsrGetRoute(NODE_ADDR destAddr, DSR_RouteCache *routeCache);
+NODE_ADDR* RoutingDsrGetRoute( NODE_ADDR destAddr, DSR_RouteCache* routeCache );
 
-int RoutingDsrGetHop(NODE_ADDR destAddr, DSR_RouteCache *routeCache); 
+int RoutingDsrGetHop( NODE_ADDR destAddr, DSR_RouteCache* routeCache ); 
 
-int RoutingDsrGetSeq(GlomoNode *node); 
- 
-BOOL RoutingDsrCheckUnprocessedPath(GlomoNode *node,
-                                    int currentHop,
-                                    int segmentLeft,
-                                    NODE_ADDR *header);
- 
-Message *
-RoutingDsrGetBufferedPacket(NODE_ADDR destAddr, DSR_BUFFER *buffer);
+int RoutingDsrGetSeq( GlomoNode* node ); 
 
-BOOL RoutingDsrLookupBuffer(NODE_ADDR destAddr, DSR_BUFFER *buffer);
+BOOL RoutingDsrCheckUnprocessedPath( GlomoNode* node,
+                                     int currentHop,
+                                     int segmentLeft,
+                                     NODE_ADDR* header );
 
-void RoutingDsrUpdateRequestTable(NODE_ADDR destAddr, 
-                                  DSR_RequestTable *requestTable);
+Message* RoutingDsrGetBufferedPacket( NODE_ADDR destAddr, DSR_BUFFER* buffer );
 
-void RoutingDsrUpdateTtl(NODE_ADDR destAddr, 
-                         DSR_RequestTable *requestTable);
+BOOL RoutingDsrLookupBuffer( NODE_ADDR destAddr, DSR_BUFFER* buffer );
 
-BOOL RoutingDsrCheckRequestTable(NODE_ADDR destAddr, 
-                                 DSR_RequestTable *requestTable);
+void RoutingDsrUpdateRequestTable( NODE_ADDR destAddr, DSR_RequestTable* requestTable );
 
-clocktype RoutingDsrGetBackoff(NODE_ADDR destAddr,
-                               DSR_RequestTable *requestTable);
+void RoutingDsrUpdateTtl( NODE_ADDR destAddr, DSR_RequestTable* requestTable );
 
-void RoutingDsrHandleProtocolPacket(
-    GlomoNode *node, Message *msg, NODE_ADDR srcAddr,
-    NODE_ADDR destAddr, int ttl);
+BOOL RoutingDsrCheckRequestTable( NODE_ADDR destAddr, DSR_RequestTable* requestTable );
 
-void RoutingDsrHandleProtocolEvent(GlomoNode *node, Message *msg);
+clocktype RoutingDsrGetBackoff( NODE_ADDR destAddr, DSR_RequestTable* requestTable );
 
-void RoutingDsrRouterFunction(
-    GlomoNode *node,
-    Message *msg,
-    NODE_ADDR destAddr,
-    BOOL *packetWasRouted);
+void RoutingDsrHandleProtocolPacket( GlomoNode* node,
+                                     Message* msg,
+                                     NODE_ADDR srcAddr,
+                                     NODE_ADDR destAddr,
+                                     int ttl );
 
-void RoutingDsrPeekFunction(GlomoNode *node, const Message *msg);
+void RoutingDsrHandleProtocolEvent( GlomoNode* node, Message* msg );
 
-void RoutingDsrPacketDropNotificationHandler(
-   GlomoNode *node, const Message* msg, const NODE_ADDR nextHopAddress);
+void RoutingDsrRouterFunction( GlomoNode* node,
+                               Message* msg,
+                               NODE_ADDR destAddr,
+                               BOOL* packetWasRouted );
 
-void RoutingDsrSetTimer(
-    GlomoNode *node, long eventType, DSR_CR cr, clocktype delay);
+void RoutingDsrPeekFunction( GlomoNode* node, const Message* msg );
 
-void RoutingDsrInitiateRREQ(GlomoNode *node, NODE_ADDR destAddr);
+void RoutingDsrPacketDropNotificationHandler( GlomoNode* node,
+                                              const Message* msg,
+                                              const NODE_ADDR nextHopAddress );
 
-void RoutingDsrRetryRREQ(GlomoNode *node, NODE_ADDR destAddr, int ttl);
+void RoutingDsrSetTimer( GlomoNode* node, long eventType, DSR_CR cr, clocktype delay );
 
-void RoutingDsrTransmitData(GlomoNode *node, Message *msg, NODE_ADDR destAddr);
+void RoutingDsrInitiateRREQ( GlomoNode* node, NODE_ADDR destAddr );
 
-void RoutingDsrRelayRREQ(GlomoNode *node, Message *msg, int ttl);
+void RoutingDsrRetryRREQ( GlomoNode* node, NODE_ADDR destAddr, int ttl );
 
-void RoutingDsrInitiateRREP(GlomoNode *node, Message *msg);
+void RoutingDsrTransmitData( GlomoNode* node, Message* msg, NODE_ADDR destAddr );
 
-void RoutingDsrInitiateRREPbyIN(GlomoNode *node, Message *msg);
+void RoutingDsrRelayRREQ( GlomoNode* node, Message* msg, int ttl );
 
-void RoutingDsrRelayRREP(GlomoNode *node, Message *msg);
+void RoutingDsrInitiateRREP( GlomoNode* node, Message* msg );
 
-void RoutingDsrInitiateRERR(GlomoNode *node, NODE_ADDR destAddr, 
-                            NODE_ADDR unreachableAddr, NODE_ADDR *errorPath);
+void RoutingDsrInitiateRREPbyIN( GlomoNode* node, Message* msg );
 
-void RoutingDsrRelayRERR(GlomoNode *node, Message *msg);
+void RoutingDsrRelayRREP( GlomoNode* node, Message* msg );
 
-void RoutingDsrSalvageData(GlomoNode *node, Message *msg);
+void RoutingDsrInitiateRERR( GlomoNode* node,
+                             NODE_ADDR destAddr,
+                             NODE_ADDR unreachableAddr,
+                             NODE_ADDR* errorPath );
 
-void RoutingDsrSalvageRERR(GlomoNode *node, NODE_ADDR targetAddr,
-                           NODE_ADDR srcAddr, NODE_ADDR unreachableAddr);
+void RoutingDsrRelayRERR( GlomoNode* node, Message* msg );
 
-void RoutingDsrGratuitousRREP(GlomoNode *node, NODE_ADDR srcAddr,
-                    NODE_ADDR destAddr, NODE_ADDR *old, int count, int length);
+void RoutingDsrSalvageData( GlomoNode* node, Message* msg );
 
-void AddCustomDsrIpOptionFields(GlomoNode* node, Message* msg);
+void RoutingDsrSalvageRERR( GlomoNode* node,
+                            NODE_ADDR targetAddr,
+                            NODE_ADDR srcAddr,
+                            NODE_ADDR unreachableAddr );
 
-DsrIpOptionType* GetPtrToDsrIpOptionField(Message* msg);
+void RoutingDsrGratuitousRREP( GlomoNode* node,
+                               NODE_ADDR srcAddr,
+                               NODE_ADDR destAddr,
+                               NODE_ADDR* old,
+                               int count,
+                               int length );
 
-extern double ceil(double x);
+void AddCustomDsrIpOptionFields( GlomoNode* node, Message* msg );
+
+DsrIpOptionType* GetPtrToDsrIpOptionField( Message* msg );
+
+extern double ceil( double x );
 
 #endif /* _DSR_H_ */
 

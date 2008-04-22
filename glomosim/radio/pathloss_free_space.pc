@@ -48,22 +48,21 @@
 #include "api.h"
 #include "pathloss_free_space.h"
 
-void PathlossFreeSpaceInit(GlomoProp *propData,
-                           const GlomoNodeInput *nodeInput)
+void PathlossFreeSpaceInit( GlomoProp* propData, const GlomoNodeInput* nodeInput )
 {
     propData->pathlossVar = NULL;
 }
 
-double PathlossFreeSpace(double distance,
-                         double waveLength,
-                         float txAntennaGain,
-                         float rxAntennaGain)
+double PathlossFreeSpace( double distance,
+                          double waveLength,
+                          float txAntennaGain,
+                          float rxAntennaGain )
 {
-    double pathloss = -(txAntennaGain + rxAntennaGain);
-    double valueForLog = 4.0 * PI * distance / waveLength;
+    double  pathloss    = -( txAntennaGain + rxAntennaGain );
+    double  valueForLog = 4.0 * PI* distance / waveLength;
 
-    if (valueForLog > 1.0) {
-        pathloss += 20.0 * log10(valueForLog);
+    if( valueForLog > 1.0 ) {
+        pathloss += 20.0 * log10( valueForLog );
     }
 
     return pathloss;

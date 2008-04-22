@@ -73,26 +73,23 @@
  *    protocol:   Protocol to be set for this message
  *    eventType:  event type to be set for this message
  */
- //tianke 建立一个新消息
-Message* GLOMO_MsgAlloc (GlomoNode *node, int layerType,
-                         int protocol, int eventType)
+//tianke 建立一个新消息
+Message* GLOMO_MsgAlloc( GlomoNode* node, int layerType, int protocol, int eventType )
 {
-    Message *newMsg;
+    Message*    newMsg;
 
-    if (node->partitionData->msgFreeList == NULL) {
-        MessageListCell* NewCell = (MessageListCell*)
-            pc_malloc(sizeof(MessageListCell));
-        newMsg = (Message *)&(NewCell->messageCell);
-    } else {
-        newMsg = (Message *)&(node->partitionData->msgFreeList->messageCell);
-        node->partitionData->msgFreeList = 
-            node->partitionData->msgFreeList->next;
-        (node->partitionData->msgFreeListNum)--;
+    if( node->partitionData->msgFreeList == NULL ) {
+        MessageListCell*NewCell = ( MessageListCell* ) pc_malloc( sizeof( MessageListCell ) );
+        newMsg = ( Message * ) &( NewCell->messageCell );
+    }else {
+        newMsg = ( Message * ) &( node->partitionData->msgFreeList->messageCell );
+        node->partitionData->msgFreeList = node->partitionData->msgFreeList->next;
+        ( node->partitionData->msgFreeListNum )--;
     }
-    assert(newMsg != NULL);
+    assert( newMsg != NULL );
 
-    memset(newMsg, 0, sizeof(Message));
-    GLOMO_MsgSetLayer(newMsg, layerType, protocol);
+    memset( newMsg, 0, sizeof( Message ) );
+    GLOMO_MsgSetLayer( newMsg, layerType, protocol );
     newMsg->eventType = eventType;
     return newMsg;
 }
@@ -113,25 +110,25 @@ Message* GLOMO_MsgAlloc (GlomoNode *node, int layerType,
  *    msg:          message for which data has to be allocated
  *    infoSize:     size of the info to be allocated
  */
-void GLOMO_MsgInfoAlloc(GlomoNode *node, Message *msg, int infoSize)
+void GLOMO_MsgInfoAlloc( GlomoNode* node, Message* msg, int infoSize )
 {
-    if (msg->infoSize < infoSize) {
-        if (infoSize <= SMALL_INFO_SPACE_SIZE) {
-           msg->info = (char*)&(msg->smallInfoSpace[0]);
-        } else {
-           if (msg->infoSize > SMALL_INFO_SPACE_SIZE) {
-               pc_free(msg->info);
-           }
-           msg->info = (char *)pc_malloc(infoSize); //tianke key sentance!!!!
-           assert(msg->info != NULL);
+    if( msg->infoSize < infoSize ) {
+        if( infoSize <= SMALL_INFO_SPACE_SIZE ) {
+            msg->info = ( char * ) &( msg->smallInfoSpace[0] );
+        }else {
+            if( msg->infoSize > SMALL_INFO_SPACE_SIZE ) {
+                pc_free( msg->info );
+            }
+            msg->info = ( char * ) pc_malloc( infoSize ); //tianke key sentance!!!!
+            assert( msg->info != NULL );
         }
         msg->infoSize = infoSize;
-    } else if (infoSize == 0) {
-       if (msg->infoSize > SMALL_INFO_SPACE_SIZE) {
-           pc_free(msg->info);
-       }
-       msg->infoSize = 0;
-       msg->info = NULL;
+    }else if( infoSize == 0 ) {
+        if( msg->infoSize > SMALL_INFO_SPACE_SIZE ) {
+            pc_free( msg->info );
+        }
+        msg->infoSize = 0;
+        msg->info = NULL;
     }
 }
 
@@ -153,29 +150,27 @@ void GLOMO_MsgInfoAlloc(GlomoNode *node, Message *msg, int infoSize)
  *    msg:          message for which data has to be allocated
  *    payLoadSize:  size of the payLoad to be allocated
  */
-void GLOMO_MsgPacketAlloc(GlomoNode *node, Message *msg, int packetSize)
+void GLOMO_MsgPacketAlloc( GlomoNode* node, Message* msg, int packetSize )
 {
-    assert(msg->payLoad == NULL);
-    assert(msg->payLoadSize == 0);
-    assert(msg->packetSize == 0);
-    assert(msg->packet == NULL);
-    
-    if ((packetSize + MSG_MAX_HDR_SIZE) > MAX_CACHED_PAYLOAD_SIZE) {
-       msg->payLoad = (char *) pc_malloc(packetSize + MSG_MAX_HDR_SIZE);
-    } else {
-       if (node->partitionData->msgPayloadFreeList == NULL) {
-          MessagePayloadListCell* NewCell = (MessagePayloadListCell*)
-              pc_malloc(sizeof(MessagePayloadListCell));
-          msg->payLoad = &(NewCell->payloadMemory[0]);
-       } else {
-          msg->payLoad = (char*)
-              &(node->partitionData->msgPayloadFreeList->payloadMemory[0]);
-          node->partitionData->msgPayloadFreeList = 
-              node->partitionData->msgPayloadFreeList->next;
-          (node->partitionData->msgPayloadFreeListNum)--;
-       }
+    assert( msg->payLoad == NULL );
+    assert( msg->payLoadSize == 0 );
+    assert( msg->packetSize == 0 );
+    assert( msg->packet == NULL );
+
+    if( ( packetSize + MSG_MAX_HDR_SIZE ) > MAX_CACHED_PAYLOAD_SIZE ) {
+        msg->payLoad = ( char * ) pc_malloc( packetSize + MSG_MAX_HDR_SIZE );
+    }else {
+        if( node->partitionData->msgPayloadFreeList == NULL ) {
+            MessagePayloadListCell* NewCell = ( MessagePayloadListCell* )
+                                              pc_malloc( sizeof( MessagePayloadListCell ) );
+            msg->payLoad = &( NewCell->payloadMemory[0] );
+        }else {
+            msg->payLoad = ( char * ) &( node->partitionData->msgPayloadFreeList->payloadMemory[0] );
+            node->partitionData->msgPayloadFreeList = node->partitionData->msgPayloadFreeList->next;
+            ( node->partitionData->msgPayloadFreeListNum )--;
+        }
     }
-    assert(msg->payLoad != NULL);
+    assert( msg->payLoad != NULL );
     msg->payLoadSize = packetSize + MSG_MAX_HDR_SIZE;
     msg->packet = msg->payLoad + MSG_MAX_HDR_SIZE;
     msg->packetSize = packetSize;
@@ -198,16 +193,16 @@ void GLOMO_MsgPacketAlloc(GlomoNode *node, Message *msg, int packetSize)
  *    msg:          message for which header has to be added
  *    hdrSize:      size of the header to be added
  */
-void GLOMO_MsgAddHeader(GlomoNode *node, Message *msg, int hdrSize)
+void GLOMO_MsgAddHeader( GlomoNode* node, Message* msg, int hdrSize )
 {
     msg->packet -= hdrSize;
     msg->packetSize += hdrSize;
 
-    if (msg->packet < msg->payLoad) {
-        printf("GLOMO Error: Not enough space for headers.\n"
-               "Increae MSG_MAX_HDR_SIZE and try again.\n");
-        assert(FALSE);
-        exit(1);
+    if( msg->packet < msg->payLoad ) {
+        printf( "GLOMO Error: Not enough space for headers.\n"
+                "Increae MSG_MAX_HDR_SIZE and try again.\n" );
+        assert( FALSE );
+        exit( 1 );
     }
 }
 
@@ -223,15 +218,15 @@ void GLOMO_MsgAddHeader(GlomoNode *node, Message *msg, int hdrSize)
  *    msg:          message for which header is being removed
  *    hdrSize:      size of the header being removed
  */
-void GLOMO_MsgRemoveHeader(GlomoNode *node, Message *msg, int hdrSize)
+void GLOMO_MsgRemoveHeader( GlomoNode* node, Message* msg, int hdrSize )
 {
     msg->packet += hdrSize;
     msg->packetSize -= hdrSize;
 
-    if (msg->packet >= (msg->payLoad + msg->payLoadSize)) {
-        printf("Glomo Error: Packet pointer going beyond allocated memory.\n");
-        assert(FALSE);
-        exit(1);
+    if( msg->packet >= ( msg->payLoad + msg->payLoadSize ) ) {
+        printf( "Glomo Error: Packet pointer going beyond allocated memory.\n" );
+        assert( FALSE );
+        exit( 1 );
     }
 }
 
@@ -248,38 +243,35 @@ void GLOMO_MsgRemoveHeader(GlomoNode *node, Message *msg, int hdrSize)
  *    node:       node which is freeing the message
  *    msg:        message which has to be freed
  */
-void GLOMO_MsgFree(GlomoNode *node, Message *msg) {
-    if (msg->payLoadSize > 0) {
-        if ((node != NULL) &&
-            (msg->payLoadSize <= MAX_CACHED_PAYLOAD_SIZE) &&
-            (node->partitionData->msgPayloadFreeListNum < MSG_PAYLOAD_LIST_MAX))
-        {
-           MessagePayloadListCell* cellPtr =
-               (MessagePayloadListCell*)msg->payLoad;
-           cellPtr->next = node->partitionData->msgPayloadFreeList;
-           node->partitionData->msgPayloadFreeList = cellPtr;
-           (node->partitionData->msgPayloadFreeListNum)++;
-        } else {
-           pc_free(msg->payLoad);
+void GLOMO_MsgFree( GlomoNode* node, Message* msg )
+{
+    if( msg->payLoadSize > 0 ) {
+        if( ( node != NULL ) &&
+            ( msg->payLoadSize <= MAX_CACHED_PAYLOAD_SIZE ) &&
+            ( node->partitionData->msgPayloadFreeListNum < MSG_PAYLOAD_LIST_MAX ) ) {
+            MessagePayloadListCell* cellPtr = ( MessagePayloadListCell* ) msg->payLoad;
+            cellPtr->next = node->partitionData->msgPayloadFreeList;
+            node->partitionData->msgPayloadFreeList = cellPtr;
+            ( node->partitionData->msgPayloadFreeListNum )++;
+        }else {
+            pc_free( msg->payLoad );
         }
         msg->payLoad = 0;
         msg->payLoadSize = 0;
     }
 
-    if (msg->infoSize > SMALL_INFO_SPACE_SIZE) {
-        pc_free(msg->info);
+    if( msg->infoSize > SMALL_INFO_SPACE_SIZE ) {
+        pc_free( msg->info );
     }
     msg->infoSize = 0;
 
-    if ((node != NULL) &&
-        (node->partitionData->msgFreeListNum < MSG_LIST_MAX))
-    {
-        MessageListCell* cellPtr = (MessageListCell*)msg;
+    if( ( node != NULL ) && ( node->partitionData->msgFreeListNum < MSG_LIST_MAX ) ) {
+        MessageListCell*cellPtr = ( MessageListCell* ) msg;
         cellPtr->next = node->partitionData->msgFreeList;
         node->partitionData->msgFreeList = cellPtr;
-        (node->partitionData->msgFreeListNum)++;
-    } else {
-        pc_free(msg);
+        ( node->partitionData->msgFreeListNum )++;
+    }else {
+        pc_free( msg );
     }
 }
 
@@ -294,58 +286,54 @@ void GLOMO_MsgFree(GlomoNode *node, Message *msg) {
  *    node:       node which is caling message copy
  *    msg:        message for which duplicate has to be made
  */
-Message *GLOMO_MsgCopy(GlomoNode *node, const Message *msg) {
-    Message *newMsg;
+Message* GLOMO_MsgCopy( GlomoNode* node, const Message* msg )
+{
+    Message*    newMsg;
 
-    if (node->partitionData->msgFreeList == NULL) {
-        MessageListCell* NewCell = (MessageListCell*)
-            pc_malloc(sizeof(MessageListCell));
-        newMsg = (Message *)&(NewCell->messageCell);
-    } else {
-        newMsg = (Message *)&(node->partitionData->msgFreeList->messageCell);
-        node->partitionData->msgFreeList = 
-            node->partitionData->msgFreeList->next;
-        (node->partitionData->msgFreeListNum)--;
+    if( node->partitionData->msgFreeList == NULL ) {
+        MessageListCell*NewCell = ( MessageListCell* ) pc_malloc( sizeof( MessageListCell ) );
+        newMsg = ( Message * ) &( NewCell->messageCell );
+    }else {
+        newMsg = ( Message * ) &( node->partitionData->msgFreeList->messageCell );
+        node->partitionData->msgFreeList = node->partitionData->msgFreeList->next;
+        ( node->partitionData->msgFreeListNum )--;
     }
 
-    assert(newMsg != NULL);
-    memcpy(newMsg, msg, sizeof(Message));
+    assert( newMsg != NULL );
+    memcpy( newMsg, msg, sizeof( Message ) );
 
-    if (newMsg->payLoadSize == 0) {
+    if( newMsg->payLoadSize == 0 ) {
         newMsg->payLoad = NULL;
-    }
-    else {
-        if (msg->payLoadSize <= MAX_CACHED_PAYLOAD_SIZE) {
-            if (node->partitionData->msgPayloadFreeList == NULL) {
-               MessagePayloadListCell* NewCell = (MessagePayloadListCell*)
-                   pc_malloc(sizeof(MessagePayloadListCell));
-               newMsg->payLoad = &(NewCell->payloadMemory[0]);
-            } else {
-               newMsg->payLoad = (char*)
-                  &(node->partitionData->msgPayloadFreeList->payloadMemory[0]);
-               node->partitionData->msgPayloadFreeList = 
-                  node->partitionData->msgPayloadFreeList->next;
-               (node->partitionData->msgPayloadFreeListNum)--;
+    }else {
+        if( msg->payLoadSize <= MAX_CACHED_PAYLOAD_SIZE ) {
+            if( node->partitionData->msgPayloadFreeList == NULL ) {
+                MessagePayloadListCell* NewCell = ( MessagePayloadListCell* )
+                                                  pc_malloc( sizeof( MessagePayloadListCell ) );
+                newMsg->payLoad = &( NewCell->payloadMemory[0] );
+            }else {
+                newMsg->payLoad = ( char * ) &( node->partitionData->msgPayloadFreeList->payloadMemory[0] );
+                node->partitionData->msgPayloadFreeList = node->partitionData->msgPayloadFreeList->next;
+                ( node->partitionData->msgPayloadFreeListNum )--;
             }
-        } else {
-            newMsg->payLoad = (char *) pc_malloc(newMsg->payLoadSize);
+        }else {
+            newMsg->payLoad = ( char * ) pc_malloc( newMsg->payLoadSize );
         }
-        assert(newMsg->payLoad != NULL);
-        memcpy(newMsg->payLoad, msg->payLoad, msg->payLoadSize);
+        assert( newMsg->payLoad != NULL );
+        memcpy( newMsg->payLoad, msg->payLoad, msg->payLoadSize );
     }
 
-    if (msg->packet != NULL) {
-        newMsg->packet = newMsg->payLoad + (msg->packet - msg->payLoad);
+    if( msg->packet != NULL ) {
+        newMsg->packet = newMsg->payLoad + ( msg->packet - msg->payLoad );
     }
 
-    if (msg->infoSize > SMALL_INFO_SPACE_SIZE) {
-        newMsg->info = (char *) pc_malloc(newMsg->infoSize);
-        assert(newMsg->info != NULL);
-        memcpy(newMsg->info, msg->info, msg->infoSize);
-    } else {
-        newMsg->info = (char*)&(newMsg->smallInfoSpace[0]);
+    if( msg->infoSize > SMALL_INFO_SPACE_SIZE ) {
+        newMsg->info = ( char * ) pc_malloc( newMsg->infoSize );
+        assert( newMsg->info != NULL );
+        memcpy( newMsg->info, msg->info, msg->infoSize );
+    }else {
+        newMsg->info = ( char * ) &( newMsg->smallInfoSpace[0] );
     }
-    
+
     return newMsg;
 }
 
@@ -365,33 +353,32 @@ Message *GLOMO_MsgCopy(GlomoNode *node, const Message *msg) {
  *    msg:        message to be delivered
  *    delay:      delay suffered by this message.
  */
-void GLOMO_MsgSend(GlomoNode *node, Message *msg, clocktype delay) {
-    SplayNode *splayNodePtr;
+void GLOMO_MsgSend( GlomoNode* node, Message* msg, clocktype delay )
+{
+    SplayNode*  splayNodePtr;
 
     /*
      * If delay is zero, then call the appropriate layer directly from here.
      */
-    if (delay == 0) {
-        GLOMO_CallLayer(node, msg);
+    if( delay == 0 ) {
+        GLOMO_CallLayer( node, msg );
 
         return;
     }
-    assert(delay > 0);
+    assert( delay > 0 );
 
-    if (node->partitionData->splayNodeFreeList == NULL) {
-        SplayNodeListCell* NewCell = (SplayNodeListCell*)
-            pc_malloc(sizeof(SplayNodeListCell));
-        splayNodePtr = (SplayNode *)&(NewCell->splayNodeCell);
-    } else {
-        splayNodePtr = (SplayNode *)
-            &(node->partitionData->splayNodeFreeList->splayNodeCell);
-        node->partitionData->splayNodeFreeList = 
-            node->partitionData->splayNodeFreeList->next;
-        (node->partitionData->splayNodeFreeListNum)--;
+    if( node->partitionData->splayNodeFreeList == NULL ) {
+        SplayNodeListCell*  NewCell = ( SplayNodeListCell* )
+                                      pc_malloc( sizeof( SplayNodeListCell ) );
+        splayNodePtr = ( SplayNode * ) &( NewCell->splayNodeCell );
+    }else {
+        splayNodePtr = ( SplayNode * ) &( node->partitionData->splayNodeFreeList->splayNodeCell );
+        node->partitionData->splayNodeFreeList = node->partitionData->splayNodeFreeList->next;
+        ( node->partitionData->splayNodeFreeListNum )--;
     }
-    assert(splayNodePtr != NULL);
+    assert( splayNodePtr != NULL );
 
-    memset(splayNodePtr, 0, sizeof(SplayNode));
+    memset( splayNodePtr, 0, sizeof( SplayNode ) );
     splayNodePtr->timeValue = simclock() + delay;
     splayNodePtr->msg = msg;
 
@@ -399,9 +386,7 @@ void GLOMO_MsgSend(GlomoNode *node, Message *msg, clocktype delay) {
     send InternalMessage { splayNodePtr->timeValue, node->id }
                          to self after delay;
     */
-    GLOMO_SplayTreeInsert(node, splayNodePtr);
-    
-    
+    GLOMO_SplayTreeInsert( node, splayNodePtr );
 }
 
 
@@ -416,9 +401,8 @@ void GLOMO_MsgSend(GlomoNode *node, Message *msg, clocktype delay) {
  *    dest:       ename of destination entity
  *    delay:      delay suffered by this message.
  */
-void GLOMO_MsgSendReal (GlomoNode *node, Message *msg,
-                        ename dest, clocktype delay)
+void GLOMO_MsgSendReal( GlomoNode* node, Message* msg, ename dest, clocktype delay )
 {
-    send RemoteMessage { node, msg } to dest after delay;
+    send RemoteMessage { node, msg } to dest after  delay;
 }
 

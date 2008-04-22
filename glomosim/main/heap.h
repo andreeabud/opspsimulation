@@ -41,21 +41,22 @@
 #include "main.h"
 
 /* A Heap that determines the earliest time */
-typedef struct heap_str {
-    clocktype minTime;
-    void **heapNodePtr;
-    int heapSize;
-    int length;
+typedef struct heap_str
+{
+    clocktype   minTime;
+    void**      heapNodePtr;
+    int         heapSize;
+    int         length;
 } Heap;
 
 
-void GLOMO_HeapMobilityInternalInsert(Heap *heapPtr, GlomoNode *node);
-void GLOMO_HeapMobilityInternalDelete(Heap *heapPtr, GlomoNode *node);
-void GLOMO_HeapMobilityInternalFixDown(Heap *heapPtr, int i);
+void GLOMO_HeapMobilityInternalInsert( Heap* heapPtr, GlomoNode* node );
+void GLOMO_HeapMobilityInternalDelete( Heap* heapPtr, GlomoNode* node );
+void GLOMO_HeapMobilityInternalFixDown( Heap* heapPtr, int i );
 
 
-void GLOMO_HeapMobilityInsert(Heap *heapPtr, clocktype timeValue);
-clocktype GLOMO_HeapMobilityDelete(Heap *heapPtr);
+void GLOMO_HeapMobilityInsert( Heap* heapPtr, clocktype timeValue );
+clocktype GLOMO_HeapMobilityDelete( Heap* heapPtr );
 
 #endif /* _HEAP_H_ */
 

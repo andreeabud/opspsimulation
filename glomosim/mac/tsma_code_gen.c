@@ -105,7 +105,7 @@
  * ASSUMPTION:  None.
  */
 
-int MacTsmaPower(int base, int exp);
+int MacTsmaPower( int base, int exp );
 
 
 
@@ -122,7 +122,7 @@ int MacTsmaPower(int base, int exp);
  * ASSUMPTION:  None.
  */
 
-void MacTsmaPrintPoly(POLY poly, INT size);
+void MacTsmaPrintPoly( POLY poly, INT size );
 
 
 /*
@@ -140,7 +140,7 @@ void MacTsmaPrintPoly(POLY poly, INT size);
  * ASSUMPTION:  None.
  */
 
-void MacTsmaGeneratePolys(POLY poly, INT Q, INT K, INT pos);
+void MacTsmaGeneratePolys( POLY poly, INT Q, INT K, INT pos );
 
 
 /*
@@ -157,7 +157,7 @@ void MacTsmaGeneratePolys(POLY poly, INT Q, INT K, INT pos);
  * ASSUMPTION:  None.
  */
 
-INT MacTsmaEvaluatePoly(POLY poly, INT degree, INT x);
+INT MacTsmaEvaluatePoly( POLY poly, INT degree, INT x );
 
 
 /*
@@ -174,7 +174,7 @@ INT MacTsmaEvaluatePoly(POLY poly, INT degree, INT x);
  * ASSUMPTION:  None.
  */
 
-INT MacTsmaSlotAssignment(POLY poly, INT Q, INT K, INT slotNumber);
+INT MacTsmaSlotAssignment( POLY poly, INT Q, INT K, INT slotNumber );
 
 
 /*
@@ -191,7 +191,7 @@ INT MacTsmaSlotAssignment(POLY poly, INT Q, INT K, INT slotNumber);
  * ASSUMPTION:  None.
  */
 
-TSMA_CODE MacTsmaBuildCode(POLY poly, INT Q, INT K);
+TSMA_CODE MacTsmaBuildCode( POLY poly, INT Q, INT K );
 
 
 /*
@@ -210,23 +210,22 @@ TSMA_CODE MacTsmaBuildCode(POLY poly, INT Q, INT K);
  * NOTE:        Will be compiled into binary called TsmaCodeGen.
  */
 
-int main(int argc, char* argv[])
+int main( int argc, char* argv[] )
 {
-    POLY polynomial;
-    FILE* ofile;
-    INT Q;
-    INT K;
+    POLY    polynomial;
+    FILE*   ofile;
+    INT     Q;
+    INT     K;
 
-    if (argc != 3)
-    {
-        printf("Error: Invalid number of args present!\n");
+    if( argc != 3 ) {
+        printf( "Error: Invalid number of args present!\n" );
         return 1;
     }
 
-    Q = atoi(argv[1]);
-    K = atoi(argv[2]);
-    polynomial = malloc((K + 1) * sizeof(int));
-    MacTsmaGeneratePolys(polynomial, Q, K, 0);
+    Q = atoi( argv[1] );
+    K = atoi( argv[2] );
+    polynomial = malloc( ( K + 1 ) * sizeof( int ) );
+    MacTsmaGeneratePolys( polynomial, Q, K, 0 );
 
     return 0;
 }
@@ -245,16 +244,15 @@ int main(int argc, char* argv[])
  * ASSUMPTION:  None.
  */
 
-void MacTsmaPrintPoly(POLY poly, INT size)
+void MacTsmaPrintPoly( POLY poly, INT size )
 {
     INT pos;
 
-    for (pos = 0; pos < size; pos++)
-    {
-        printf("%d", poly[pos]);
+    for( pos = 0;pos < size;pos++ ) {
+        printf( "%d", poly[pos] );
     }
 
-    printf("\n");
+    printf( "\n" );
 }
 
 
@@ -273,26 +271,24 @@ void MacTsmaPrintPoly(POLY poly, INT size)
  * ASSUMPTION:  None.
  */
 
-void MacTsmaGeneratePolys(POLY poly, INT Q, INT K, INT pos)
+void MacTsmaGeneratePolys( POLY poly, INT Q, INT K, INT pos )
 {
-    TSMA_CODE code;
-    INT k, q;
-  
-    for(k = pos; k <= K; k++)
-    {
-        for(q = 0; q < Q; q++)
-        {
+    TSMA_CODE   code;
+    INT         k, q;
+
+    for( k = pos;k <= K;k++ ) {
+        for( q = 0;q < Q;q++ ) {
             poly[k] = q;
-            MacTsmaGeneratePolys(poly, Q, K, pos + 1);
+            MacTsmaGeneratePolys( poly, Q, K, pos + 1 );
         }
 
         return;
     }
-/*  MacTsmaPrintPoly(poly, K + 1); */
+    /*  MacTsmaPrintPoly(poly, K + 1); */
 
-    code = MacTsmaBuildCode(poly, Q, K);
-    MacTsmaPrintPoly(code, Q * Q);
-    free(code);
+    code = MacTsmaBuildCode( poly, Q, K );
+    MacTsmaPrintPoly( code, Q * Q );
+    free( code );
 }
 
 
@@ -309,18 +305,15 @@ void MacTsmaGeneratePolys(POLY poly, INT Q, INT K, INT pos)
  * ASSUMPTION:  None.
  */
 
-int MacTsmaPower (int base, int exp)
+int MacTsmaPower( int base, int exp )
 {
-    int pow, 
-    sum = base;
+    int pow, sum = base;
 
-    if (exp == 0)
-    {
+    if( exp == 0 ) {
         return 1;
     }
 
-    for (pow = 1; pow < exp; pow++)
-    {
+    for( pow = 1;pow < exp;pow++ ) {
         sum *= base;
     }
 
@@ -342,13 +335,12 @@ int MacTsmaPower (int base, int exp)
  * ASSUMPTION:  None.
  */
 
-INT MacTsmaEvaluatePoly(POLY poly, INT degree, INT x)
+INT MacTsmaEvaluatePoly( POLY poly, INT degree, INT x )
 {
     INT pos, var, sum = 0;
 
-    for (pos = 0; pos <= degree; pos++)
-    {
-        var = MacTsmaPower(x, pos);
+    for( pos = 0;pos <= degree;pos++ ) {
+        var = MacTsmaPower( x, pos );
         sum += poly[pos] * var;
     }
 
@@ -370,11 +362,11 @@ INT MacTsmaEvaluatePoly(POLY poly, INT degree, INT x)
  * ASSUMPTION:  None.
  */
 
-INT MacTsmaSlotAssignment(POLY poly, INT Q, INT K, INT slotNumber)
+INT MacTsmaSlotAssignment( POLY poly, INT Q, INT K, INT slotNumber )
 {
-    INT sModQ = slotNumber % Q;
-    INT sDivQ = slotNumber / Q;
-    INT result = MacTsmaEvaluatePoly(poly, K, sDivQ);
+    INT sModQ   = slotNumber % Q;
+    INT sDivQ   = slotNumber / Q;
+    INT result  = MacTsmaEvaluatePoly( poly, K, sDivQ );
     result %= Q;
     return sModQ == result;
 }
@@ -394,15 +386,14 @@ INT MacTsmaSlotAssignment(POLY poly, INT Q, INT K, INT slotNumber)
  * ASSUMPTION:  None.
  */
 
-TSMA_CODE MacTsmaBuildCode(POLY poly, INT Q, INT K)
+TSMA_CODE MacTsmaBuildCode( POLY poly, INT Q, INT K )
 {
-    INT slot, size = Q * Q;
-    TSMA_CODE code;
-    code = malloc(size * sizeof(INT));
+    INT         slot, size = Q* Q;
+    TSMA_CODE   code;
+    code = malloc( size * sizeof( INT ) );
 
-    for (slot = 0; slot < size; slot++)
-    {
-        code[slot] = MacTsmaSlotAssignment(poly, Q, K, slot);
+    for( slot = 0;slot < size;slot++ ) {
+        code[slot] = MacTsmaSlotAssignment( poly, Q, K, slot );
     }
 
     return code;

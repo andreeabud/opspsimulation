@@ -47,15 +47,12 @@
 
 #include "mac.h"
 
-enum 
-{
-    CSMA_STATUS_PASSIVE,
-    CSMA_STATUS_CARRIER_SENSE,
-    CSMA_STATUS_BACKOFF,
-    CSMA_STATUS_XMIT,
-    CSMA_STATUS_IN_XMITING,
-    CSMA_STATUS_YIELD
-};
+enum { CSMA_STATUS_PASSIVE,
+       CSMA_STATUS_CARRIER_SENSE,
+       CSMA_STATUS_BACKOFF,
+       CSMA_STATUS_XMIT,
+       CSMA_STATUS_IN_XMITING,
+       CSMA_STATUS_YIELD };
 
 
 #define CSMA_TX_DATA_YIELD_TIME         (20 * MICRO_SECOND)
@@ -77,37 +74,38 @@ enum
 #define CSMA_TIMER_UNDEFINED 0xE
 
 
-typedef struct csma_timer 
+typedef struct csma_timer
 {
-    long seq;
-    unsigned char flag;
+    long            seq;
+    unsigned char   flag;
 } CsmaTimer;
 
-typedef struct csma_header_str {
-    NODE_ADDR sourceAddr;
-    NODE_ADDR destAddr;
-    int priority;
+typedef struct csma_header_str
+{
+    NODE_ADDR   sourceAddr;
+    NODE_ADDR   destAddr;
+    int         priority;
 } CsmaHeader;
 
-typedef struct glomo_mac_csma_str 
+typedef struct glomo_mac_csma_str
 {
-    GlomoMac* myGlomoMac;
-    
-    long status;           /* status of layer CSMA_STATUS_* */
-    long BOmin;            /* minimum backoff */
-    long BOmax;            /* maximum backoff */
-    long BOtimes;          /* how many times has it backoff ? */
+    GlomoMac*   myGlomoMac;
 
-    long pktsToSend;
-    long pktsLostOverflow;
+    long        status;           /* status of layer CSMA_STATUS_* */
+    long        BOmin;            /* minimum backoff */
+    long        BOmax;            /* maximum backoff */
+    long        BOtimes;          /* how many times has it backoff ? */
 
-    long pktsSentUnicast;
-    long pktsSentBroadcast;
+    long        pktsToSend;
+    long        pktsLostOverflow;
 
-    long pktsGotUnicast;
-    long pktsGotBroadcast;
+    long        pktsSentUnicast;
+    long        pktsSentBroadcast;
 
-    CsmaTimer timer;
+    long        pktsGotUnicast;
+    long        pktsGotBroadcast;
+
+    CsmaTimer   timer;
 } GlomoMacCsma;
 
 
@@ -120,8 +118,7 @@ typedef struct glomo_mac_csma_str
  *     node:      node being initialized.
  *     nodeInput: structure containing contents of input file
  */
-void MacCsmaInit(
-    GlomoNode *node, int interfaceIndex, const GlomoNodeInput *nodeInput);
+void MacCsmaInit( GlomoNode* node, int interfaceIndex, const GlomoNodeInput* nodeInput );
 
 
 /*
@@ -133,8 +130,7 @@ void MacCsmaInit(
  *     node:     node which received the message
  *     msgHdr:   message received by the layer
  */
-void MacCsmaLayer(
-    GlomoNode *node, int interfaceIndex, Message *msg);
+void MacCsmaLayer( GlomoNode* node, int interfaceIndex, Message* msg );
 
 
 /*
@@ -145,25 +141,23 @@ void MacCsmaLayer(
  * Parameter:
  *     node:     node for which results are to be collected.
  */
-void MacCsmaFinalize(GlomoNode *node, int interfaceIndex);
+void MacCsmaFinalize( GlomoNode* node, int interfaceIndex );
 
 /*
  * FUNCTION    MacCsmaNetworkLayerHasPacketToSend
  * PURPOSE     To tell CSMA that the network layer has a packet to send.
  */
 
-void MacCsmaNetworkLayerHasPacketToSend(GlomoNode *node, GlomoMacCsma *csma);
+void MacCsmaNetworkLayerHasPacketToSend( GlomoNode* node, GlomoMacCsma* csma );
 
 
-void MacCsmaReceivePacketFromRadio(
-    GlomoNode* node, GlomoMacCsma* csma, Message* msg);
-    
-    
-void MacCsmaReceiveRadioStatusChangeNotification(
-   GlomoNode* node,
-   GlomoMacCsma* csma,
-   RadioStatusType oldRadioStatus,
-   RadioStatusType newRadioStatus);
+void MacCsmaReceivePacketFromRadio( GlomoNode* node, GlomoMacCsma* csma, Message* msg );
+
+
+void MacCsmaReceiveRadioStatusChangeNotification( GlomoNode* node,
+                                                  GlomoMacCsma* csma,
+                                                  RadioStatusType oldRadioStatus,
+                                                  RadioStatusType newRadioStatus );
 
 #endif /* _CSMA_H_ */
 

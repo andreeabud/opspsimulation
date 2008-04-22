@@ -60,7 +60,7 @@
 #define MAX_NUM_INTERFACES 30
 
 
-struct EventTimeHeapStruct;
+struct  EventTimeHeapStruct;
 
 
 /*
@@ -70,48 +70,48 @@ struct EventTimeHeapStruct;
  *
  * typedef to GlomoNode in main.h
  */
-struct glomo_node_str {
+struct glomo_node_str
+{
     /* Common Information  about each node. */
     /* This field represents the simulation id of the node. It is used
        only for simulation purposes and should not be used by the protocol
        code at any layer. For the network address of the node use the next
        field, which is called nodeAddr. */
-    unsigned       id;
+    unsigned            id;
 
-    NODE_ADDR      nodeAddr;      /* the network address of the node */
-    unsigned short seed[3];       /* seed for random number generator */
-    unsigned short initialSeedValue[3]; /* First seed value for a node */
-    long           numNodes;      /* number of nodes in the simulation */
+    NODE_ADDR           nodeAddr;      /* the network address of the node */
+    unsigned short      seed[3];       /* seed for random number generator */
+    unsigned short      initialSeedValue[3]; /* First seed value for a node */
+    long                numNodes;      /* number of nodes in the simulation */
 
-    GlomoCoordinates position;
+    GlomoCoordinates    position;
 
-    SplayTree splayTree;
-    
-    
-    
+    SplayTree           splayTree;
 
-    GlomoPartition *partitionData;
 
-    GlomoMobility  mobilityData;
+
+
+    GlomoPartition*     partitionData;
+
+    GlomoMobility       mobilityData;
 
     /* Information about partition nodes */
-    GlomoNode      *prevNodeData;
-    GlomoNode      *nextNodeData;
+    GlomoNode*          prevNodeData;
+    GlomoNode*          nextNodeData;
 
     /* Layer specific information about each node. */
-    GlomoProp      *propData; /* propagation information */
-    GlomoRadio*     radioData[MAX_NUM_RADIOS]; /* radio layer information   */
-    int             numberRadios;
-    GlomoMac*       macData[MAX_NUM_INTERFACES];  /* mac layer information */
-    int             numberInterfaces;
-    GlomoNetwork    networkData;   /* network layer information */
-    GlomoTransport  transportData; /* transport layer information */
-    GlomoApp        appData;       /* application layer information */
-    
+    GlomoProp*          propData; /* propagation information */
+    GlomoRadio*         radioData[MAX_NUM_RADIOS]; /* radio layer information   */
+    int                 numberRadios;
+    GlomoMac*           macData[MAX_NUM_INTERFACES];  /* mac layer information */
+    int                 numberInterfaces;
+    GlomoNetwork        networkData;   /* network layer information */
+    GlomoTransport      transportData; /* transport layer information */
+    GlomoApp            appData;       /* application layer information */
+
     // For Parallel Lookahead Calculation
-    
-    int eotCalculatorBackPtrIndex;
-    
+
+    int                 eotCalculatorBackPtrIndex;
 };
 
 
@@ -121,7 +121,7 @@ struct glomo_node_str {
  * PURPOSE       Read the string in "buf" and provide the corresponding
  *               coordinates for the string.
  */
-void GLOMO_ConvertToCoordinates(char *buf, GlomoCoordinates *coordinates);
+void GLOMO_ConvertToCoordinates( char* buf, GlomoCoordinates* coordinates );
 
 /*
  * FUNCTION      GLOMO_ConvertToClock
@@ -133,14 +133,14 @@ void GLOMO_ConvertToCoordinates(char *buf, GlomoCoordinates *coordinates);
  *               H  - hours
  *               D  - days
  */
-clocktype GLOMO_ConvertToClock(char *buf);
+clocktype GLOMO_ConvertToClock( char* buf );
 
 /*
  * FUNCTION      GLOMO_PrintClockInSecond
  * PURPOSE       Print a clocktype value in second.
  *               The result is copied to stringInSecond
  */
-void GLOMO_PrintClockInSecond(clocktype clock, char stringInSecond[]);
+void GLOMO_PrintClockInSecond( clocktype clock, char stringInSecond[] );
 
 /*
  * FUNCTION      GLOMO_PrintStat
@@ -152,7 +152,7 @@ void GLOMO_PrintClockInSecond(clocktype clock, char stringInSecond[]);
  *     layer        the layer generating the stat
  *     buf          string which has the statistic to be printed out
  */
-void GLOMO_PrintStat(GlomoNode *node, char *layer, char *buf);
+void GLOMO_PrintStat( GlomoNode* node, char* layer, char* buf );
 
 #endif /* _API_H_ */
 

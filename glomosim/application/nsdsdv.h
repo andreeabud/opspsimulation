@@ -61,7 +61,9 @@
 #include "api.h"
 
 static
-void RoutingNsDsdvLayer(GlomoNode *nodePtr, Message *msg) {}
+void RoutingNsDsdvLayer( GlomoNode* nodePtr, Message* msg )
+{
+}
 
 
 /*
@@ -77,9 +79,10 @@ void RoutingNsDsdvLayer(GlomoNode *nodePtr, Message *msg) {}
  */
 
 static
-void RoutingNsDsdvInit(GlomoNode *nodePtr) {
-   printf("NS DSDV Disabled\n");
-   abort();
+void RoutingNsDsdvInit( GlomoNode* nodePtr )
+{
+    printf( "NS DSDV Disabled\n" );
+    abort();
 }
 
 
@@ -96,7 +99,9 @@ void RoutingNsDsdvInit(GlomoNode *nodePtr) {
  */
 
 static
-void RoutingNsDsdvFinalize(GlomoNode* NodePtr) {}
+void RoutingNsDsdvFinalize( GlomoNode* NodePtr )
+{
+}
 
 
 #endif /* NSDSDV_H */

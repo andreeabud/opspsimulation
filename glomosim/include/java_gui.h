@@ -41,33 +41,33 @@
 #include<stdio.h>
 #include "main.h"
 
-typedef enum {
-    JGUI_BLACK=0,
-    JGUI_BLUE=1, 
-    JGUI_CYAN=2, 
-    JGUI_DARK_GRAY=3, 
-    JGUI_GRAY=4,
-    JGUI_GREEN=5,
-    JGUI_LIGHT_GRAY=6,
-    JGUI_MAGENTA=7,
-    JGUI_ORANGE=8,
-    JGUI_PINK=9,
-    JGUI_RED=10,
-    JGUI_WHITE=11,
-    JGUI_YELLOW=12
-} JGUI_COLOR;
+typedef enum { JGUI_BLACK = 0,
+               JGUI_BLUE = 1,
+               JGUI_CYAN = 2,
+               JGUI_DARK_GRAY = 3,
+               JGUI_GRAY = 4,
+               JGUI_GREEN = 5,
+               JGUI_LIGHT_GRAY = 6,
+               JGUI_MAGENTA = 7,
+               JGUI_ORANGE = 8,
+               JGUI_PINK = 9,
+               JGUI_RED = 10,
+               JGUI_WHITE = 11,
+               JGUI_YELLOW = 12 }    JGUI_COLOR;
 
-void JGUI_InitNode(int numGuiNodes, int id, int positionX, int positionY,
-                   int txRange, JGUI_COLOR node, JGUI_COLOR connection);
-void JGUI_DrawLine(int srcId, int destId, char *simTime,
-                   JGUI_COLOR color);
-void JGUI_DrawThickLine(int srcId, int destId, int thickness,
-                        char *simTime, JGUI_COLOR color);
-void JGUI_DrawLink(int srcId, int destId, char *simTime,
-                   JGUI_COLOR color);
-void JGUI_EraseLink(int srcId, int destId, char *simTime);
-void JGUI_DrawBroadcast(int id, char *simTime, JGUI_COLOR color);
-void JGUI_MoveNode(int id, int x, int y, char *simTime);
+void JGUI_InitNode( int numGuiNodes,
+                    int id,
+                    int positionX,
+                    int positionY,
+                    int txRange,
+                    JGUI_COLOR node,
+                    JGUI_COLOR connection );
+void JGUI_DrawLine( int srcId, int destId, char* simTime, JGUI_COLOR color );
+void JGUI_DrawThickLine( int srcId, int destId, int thickness, char* simTime, JGUI_COLOR color );
+void JGUI_DrawLink( int srcId, int destId, char* simTime, JGUI_COLOR color );
+void JGUI_EraseLink( int srcId, int destId, char* simTime );
+void JGUI_DrawBroadcast( int id, char* simTime, JGUI_COLOR color );
+void JGUI_MoveNode( int id, int x, int y, char* simTime );
 
 #endif
 

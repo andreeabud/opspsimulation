@@ -49,36 +49,32 @@
 
 #define MAX_APP_DATA_UNIT 2048
 
-typedef enum {
-    APP_FTP_SERVER = 21,
-    APP_FTP_CLIENT,
-    APP_TELNET_SERVER = 23,
-    APP_TELNET_CLIENT,
-    APP_NSTELNET_CLIENT,
-    APP_GEN_FTP_SERVER,
-    APP_GEN_FTP_CLIENT,
-    APP_CBR_SERVER = 59,
-    APP_CBR_CLIENT = 60,
-    APP_HTTP_CLIENT,
-    APP_HTTP_SERVER,
-    /* Rumorsim */
-    APP_RUMOR,
-
-    /* Routing Protocols */
-    APP_ROUTING_BELLMANFORD = IPPROTO_BELLMANFORD,
-    ROUTING_PROTOCOL_FISHEYE = IPPROTO_FISHEYE,
-    APP_ROUTING_WRP,
-    APP_ROUTING_NS_DSDV,
-    APP_ROUTING_STATIC
-} APP_TYPE;
+typedef enum { APP_FTP_SERVER = 21,
+               APP_FTP_CLIENT,
+               APP_TELNET_SERVER = 23,
+               APP_TELNET_CLIENT,
+               APP_NSTELNET_CLIENT,
+               APP_GEN_FTP_SERVER,
+               APP_GEN_FTP_CLIENT,
+               APP_CBR_SERVER = 59,
+               APP_CBR_CLIENT = 60,
+               APP_HTTP_CLIENT,
+               APP_HTTP_SERVER, /* Rumorsim */
+               APP_RUMOR, /* Routing Protocols */
+               APP_ROUTING_BELLMANFORD = IPPROTO_BELLMANFORD,
+               ROUTING_PROTOCOL_FISHEYE = IPPROTO_FISHEYE,
+               APP_ROUTING_WRP,
+               APP_ROUTING_NS_DSDV,
+               APP_ROUTING_STATIC }    APP_TYPE;
 
 /*
  * Protocol specific information.
  */
-typedef struct app_info {
-    APP_TYPE appType;         /* type of application */
-    void *appDetail;          /* statistics of the application */ 
-    struct app_info *appNext; /* link to the next app of the node */
+typedef struct app_info
+{
+    APP_TYPE            appType;         /* type of application */
+    void*               appDetail;          /* statistics of the application */ 
+    struct app_info*    appNext; /* link to the next app of the node */
 } AppInfo;
 
 /*
@@ -86,44 +82,44 @@ typedef struct app_info {
  *
  * typedef to GlomoApp in main.h
  */
-struct glomo_app_str {
-    AppInfo *appPtr;         /* pointer to the list of app info */
-    short    nextPortNum;    /* next available port number */
-    BOOL     appStats;       /* whether app stat is enabled */
-    APP_TYPE routingProtocol;
-    BOOL routingStats;
-    void *routingVar;
-    void* userApplicationData;
+struct glomo_app_str
+{
+    AppInfo*    appPtr;         /* pointer to the list of app info */
+    short       nextPortNum;    /* next available port number */
+    BOOL        appStats;       /* whether app stat is enabled */
+    APP_TYPE    routingProtocol;
+    BOOL        routingStats;
+    void*       routingVar;
+    void*       userApplicationData;
 
     /*
      * Application statistics for the node using TCP.
      */
-    long numAppTcpFailure;     /* # of apps terminated due to failure */
+    long        numAppTcpFailure;     /* # of apps terminated due to failure */
 
     /* Used to determine unique client/server pair. */
-    long uniqueId;
-    
+    long        uniqueId;
+
     /*
      * User specified session parameters.
      */
-    clocktype telnetSessTime;/* duration of a telnet session */
+    clocktype   telnetSessTime;/* duration of a telnet session */
 };
 
 /*
  * Application timer types. 
  */
-typedef enum {
-    APP_TIMER_SEND_PKT,      /* for sending a packet */
-    APP_TIMER_CLOSE_SESS     /* for closing a session */
-} AppTimerType;
+typedef enum { APP_TIMER_SEND_PKT, /* for sending a packet */
+APP_TIMER_CLOSE_SESS     /* for closing a session */ }   AppTimerType;
 
 /*
  * Timer structure used by applications.
  */
-typedef struct app_timer {
-    AppTimerType type;        /* timer type */
-    int connectionId;         /* which connection this timer is meant for */
-    long uniqueId;            /* which cbr session this timer is meant for */
+typedef struct app_timer
+{
+    AppTimerType    type;        /* timer type */
+    int             connectionId;         /* which connection this timer is meant for */
+    long            uniqueId;            /* which cbr session this timer is meant for */
 } AppTimer;
 
 
@@ -132,10 +128,10 @@ typedef struct app_timer {
  */
 typedef struct glomo_app_cbr_data
 {
-    long uniqueId;
-    char type;
-    long seqNo;
-    clocktype txTime;
+    long        uniqueId;
+    char        type;
+    long        seqNo;
+    clocktype   txTime;
 } GlomoAppCbrData;
 
 
@@ -148,8 +144,7 @@ typedef struct glomo_app_cbr_data
  *              nodeInput - configuration information.
  * RETURN:      none.
  */
-void
-GLOMO_AppInitApplications(GlomoNode *node, const GlomoNodeInput *nodeInput);
+void GLOMO_AppInitApplications( GlomoNode* node, const GlomoNodeInput* nodeInput );
 
 
 //--------------------------------------------------------------------
@@ -157,19 +152,13 @@ GLOMO_AppInitApplications(GlomoNode *node, const GlomoNodeInput *nodeInput);
 // GloMoSim User modified functions defined in "user_application.pc".
 
 
-void AppLayerInitUserApplications(
-   GlomoNode *node,
-   const GlomoNodeInput *nodeInput,
-   void** userApplicationData);
-      
-void AppLayerHandleUserAppEvent(
-   GlomoNode* node, 
-   void* userApplicationData,
-   Message* msg);
+void AppLayerInitUserApplications( GlomoNode* node,
+                                   const GlomoNodeInput* nodeInput,
+                                   void** userApplicationData );
 
-void AppLayerFinalizeUserApps(
-   GlomoNode* node,
-   void* userApplicationData);
+void AppLayerHandleUserAppEvent( GlomoNode* node, void* userApplicationData, Message* msg );
+
+void AppLayerFinalizeUserApps( GlomoNode* node, void* userApplicationData );
 
 
 #endif /* _APPLICATION_H_ */

@@ -87,257 +87,224 @@
  *              msg - message received by the layer
  * RETURN:      none.
  */
-void 
-AppLayerHttpClient(GlomoNode *nodePtr, Message *msg)
+void AppLayerHttpClient( GlomoNode* nodePtr, Message* msg )
 {
-    char buf[GLOMO_MAX_STRING_LENGTH];
-    GlomoAppHttpClient *clientPtr;
+    char                buf[GLOMO_MAX_STRING_LENGTH];
+    GlomoAppHttpClient* clientPtr;
 
-    ctoa(simclock(), buf);
+    ctoa( simclock(), buf );
 
-    switch(msg->eventType) 
+    switch( msg->eventType ) {
+    case MSG_APP_FromTransOpenResult:
     {
-        case MSG_APP_FromTransOpenResult:
-        {
-            TransportToAppOpenResult *openResult;
+        TransportToAppOpenResult*   openResult;
 
-            openResult = (TransportToAppOpenResult *) msg->info;
-
-            #ifdef DEBUG
-                printf("%s: node %u got OpenResult\n", buf, nodePtr->nodeAddr);
-            #endif
-
-            assert(openResult->type == TCP_CONN_ACTIVE_OPEN);
-
-            if (openResult->connectionId < 0)
-            {
-                #ifdef DEBUG
-                    printf("%s: node %u connection failed!\n", buf, 
-                           nodePtr->nodeAddr);
-                #endif
-
-                nodePtr->appData.numAppTcpFailure ++;
-            }
-            else 
-            {
-                GlomoAppHttpClient *clientPtr;
-                long primaryRequestLength;
-
-                clientPtr = AppHttpClientUpdateHttpClient(nodePtr, openResult);
-
-                assert(clientPtr != NULL);
-
-                clientPtr->documentsOnCurrentServer--;
-
-                clientPtr->stats.pageItems = 
-                    AppHttpClientDetermineItemCount(clientPtr);
+        openResult = ( TransportToAppOpenResult * ) msg->info;
 
 #ifdef DEBUG
-                printf("    There are %d items on this page.\n", 
-                       clientPtr->stats.pageItems);
+        printf( "%s: node %u got OpenResult\n", buf, nodePtr->nodeAddr );
 #endif
 
-                clientPtr->stats.pageItems--;
+        assert( openResult->type == TCP_CONN_ACTIVE_OPEN );
 
-                primaryRequestLength = 
-                    AppHttpClientDeterminePrimaryRequestLength(clientPtr);
+        if( openResult->connectionId < 0 ) {
+#ifdef DEBUG
+            printf( "%s: node %u connection failed!\n", buf, nodePtr->nodeAddr );
+#endif
+
+            nodePtr->appData.numAppTcpFailure ++;
+        }else {
+            GlomoAppHttpClient* clientPtr;
+            long                primaryRequestLength;
+
+            clientPtr = AppHttpClientUpdateHttpClient( nodePtr, openResult );
+
+            assert( clientPtr != NULL );
+
+            clientPtr->documentsOnCurrentServer--;
+
+            clientPtr->stats.pageItems = AppHttpClientDetermineItemCount( clientPtr );
 
 #ifdef DEBUG
-                printf("    Primary request length = %d\n", 
-                       primaryRequestLength);
+            printf( "    There are %d items on this page.\n", clientPtr->stats.pageItems );
 #endif
 
-                AppHttpClientSendPrimaryRequest(nodePtr, clientPtr,
-                                                primaryRequestLength);
+            clientPtr->stats.pageItems--;
 
-                #ifdef DEBUG
-                    printf("#%u: HTTP Client: TCP Open\n", 
-                           nodePtr->nodeAddr);
-                #endif
-            }
+            primaryRequestLength = AppHttpClientDeterminePrimaryRequestLength( clientPtr );
 
-            break;
+#ifdef DEBUG
+            printf( "    Primary request length = %d\n", primaryRequestLength );
+#endif
+
+            AppHttpClientSendPrimaryRequest( nodePtr, clientPtr, primaryRequestLength );
+
+#ifdef DEBUG
+            printf( "#%u: HTTP Client: TCP Open\n", nodePtr->nodeAddr );
+#endif
         }
-        case MSG_APP_FromTransDataSent:
-        {
-            TransportToAppDataSent *dataSent;
 
-            dataSent = (TransportToAppDataSent *) msg->info; 
+        break;
+    }
+    case MSG_APP_FromTransDataSent:
+    {
+        TransportToAppDataSent* dataSent;
 
-            #ifdef DEBUG
-                printf("%s: node %u sent data %ld\n", buf, nodePtr->nodeAddr,
-                       dataSent->length); 
-            #endif
+        dataSent = ( TransportToAppDataSent * ) msg->info; 
 
-            clientPtr = AppHttpClientGetHttpClient(nodePtr,
-                                                   dataSent->connectionId);
+#ifdef DEBUG
+        printf( "%s: node %u sent data %ld\n", buf, nodePtr->nodeAddr, dataSent->length ); 
+#endif
 
-            assert(clientPtr != NULL);
+        clientPtr = AppHttpClientGetHttpClient( nodePtr, dataSent->connectionId );
 
-            clientPtr->numBytesSent += dataSent->length;
+        assert( clientPtr != NULL );
 
-            if ((clientPtr->state == XMIT_PRIMARY_REQUEST) ||
-                (clientPtr->state == XMIT_SECONDARY_REQUEST))
-            {
+        clientPtr->numBytesSent += dataSent->length;
 
-                char payload[MAX_APP_DATA_UNIT];
-                long sendSize;
+        if( ( clientPtr->state == XMIT_PRIMARY_REQUEST ) ||
+            ( clientPtr->state == XMIT_SECONDARY_REQUEST ) ) {
+            char    payload[MAX_APP_DATA_UNIT];
+            long    sendSize;
 
-                assert (clientPtr->stats.itemRequestBytes > 0);
-                memset(payload, 0, MAX_APP_DATA_UNIT);
+            assert( clientPtr->stats.itemRequestBytes > 0 );
+            memset( payload, 0, MAX_APP_DATA_UNIT );
 
-                sendSize = MIN(clientPtr->stats.itemRequestBytes, 
-                               MAX_APP_DATA_UNIT);
-                clientPtr->stats.itemRequestBytes -= sendSize;
-                if (clientPtr->stats.itemRequestBytes == 0)
-                {
-                    if (clientPtr->state == XMIT_PRIMARY_REQUEST)
-                    {
-                        payload[sendSize-1] = 'p';
-                        clientPtr->state = WAIT_PRIMARY_RESPONSE;
-                        AppHttpClientSendWaitReplyTimer(nodePtr,
-                            clientPtr, WAIT_PRIMARY_REPLY_TIMER);
-                    }
-                    else
-                    {
-                        payload[sendSize-1] = 's';
-                        clientPtr->state = WAIT_SECONDARY_RESPONSE;
-                        AppHttpClientSendWaitReplyTimer(nodePtr,
-                            clientPtr, WAIT_SECONDARY_REPLY_TIMER);
-                    }
+            sendSize = MIN( clientPtr->stats.itemRequestBytes, MAX_APP_DATA_UNIT );
+            clientPtr->stats.itemRequestBytes -= sendSize;
+            if( clientPtr->stats.itemRequestBytes == 0 ) {
+                if( clientPtr->state == XMIT_PRIMARY_REQUEST ) {
+                    payload[sendSize - 1] = 'p';
+                    clientPtr->state = WAIT_PRIMARY_RESPONSE;
+                    AppHttpClientSendWaitReplyTimer( nodePtr, clientPtr, WAIT_PRIMARY_REPLY_TIMER );
+                }else {
+                    payload[sendSize - 1] = 's';
+                    clientPtr->state = WAIT_SECONDARY_RESPONSE;
+                    AppHttpClientSendWaitReplyTimer( nodePtr, clientPtr, WAIT_SECONDARY_REPLY_TIMER );
                 }
-
-                AppTcpSendData(nodePtr, TRANSPORT_PROTOCOL_TCP,
-                               clientPtr->connectionId, payload, sendSize);
-
             }
-            else if ( ( (clientPtr->state == WAIT_PRIMARY_RESPONSE) ||
-                        (clientPtr->state == WAIT_SECONDARY_RESPONSE) ||
-                        (clientPtr->state == IDLE)) &&
-                      (clientPtr->stats.itemRequestBytes == 0))
-            {
-                // DONE transmitting
-            }
-            else
-                assert(FALSE);
 
-            break;
-        }  
-        case MSG_APP_FromTransDataReceived:
-        {
-            TransportToAppDataReceived *dataRecvd;
+            AppTcpSendData( nodePtr,
+                            TRANSPORT_PROTOCOL_TCP,
+                            clientPtr->connectionId,
+                            payload,
+                            sendSize );
+        }else if( ( ( clientPtr->state == WAIT_PRIMARY_RESPONSE ) ||
+                    ( clientPtr->state == WAIT_SECONDARY_RESPONSE ) ||
+                    ( clientPtr->state == IDLE ) ) &&
+                  ( clientPtr->stats.itemRequestBytes == 0 ) ) {
+            // DONE transmitting
+        }else {
+            assert( FALSE );
+        }
 
-            dataRecvd = (TransportToAppDataReceived *) msg->info;
+        break;
+    }  
+    case MSG_APP_FromTransDataReceived:
+    {
+        TransportToAppDataReceived* dataRecvd;
 
-            #ifdef DEBUG
-                printf("%s: node %u received data %ld\n", 
-                       buf, nodePtr->nodeAddr, msg->packetSize);
-            #endif
+        dataRecvd = ( TransportToAppDataReceived * ) msg->info;
 
-            clientPtr = AppHttpClientGetHttpClient(nodePtr,
-                                                 dataRecvd->connectionId);
-
-            assert(clientPtr != NULL);
-
-            clientPtr->numBytesRecvd += msg->packetSize;
-
-           if (msg->packet[msg->packetSize - 1] == 0)
-           {
-               clientPtr->lastReceiveTime = simclock();
-           }
-           else if (msg->packet[msg->packetSize - 1] == 'd')
-           {
 #ifdef DEBUG
-               printf("#%ld: HTTP - Received Reply Packet.\n", 
-                      nodePtr->nodeAddr);
+        printf( "%s: node %u received data %ld\n", buf, nodePtr->nodeAddr, msg->packetSize );
 #endif
-               clientPtr->lastReceiveTime = simclock();
-               AppHttpClientProcessReplyPacket(nodePtr, clientPtr);
-           }
-           else
-               assert(FALSE);
+
+        clientPtr = AppHttpClientGetHttpClient( nodePtr, dataRecvd->connectionId );
+
+        assert( clientPtr != NULL );
+
+        clientPtr->numBytesRecvd += msg->packetSize;
+
+        if( msg->packet[msg->packetSize - 1] == 0 ) {
+            clientPtr->lastReceiveTime = simclock();
+        }else if( msg->packet[msg->packetSize - 1] == 'd' ) {
+#ifdef DEBUG
+            printf( "#%ld: HTTP - Received Reply Packet.\n", nodePtr->nodeAddr );
+#endif
+            clientPtr->lastReceiveTime = simclock();
+            AppHttpClientProcessReplyPacket( nodePtr, clientPtr );
+        }else {
+            assert( FALSE );
+        }
+        break;
+    }
+    case MSG_APP_FromTransCloseResult:
+    {
+        TransportToAppCloseResult*  closeResult;
+
+        closeResult = ( TransportToAppCloseResult * ) msg->info;
+
+#ifdef DEBUG
+        printf( "%s: node %u got close result\n", buf, nodePtr->nodeAddr );
+#endif
+        clientPtr = AppHttpClientGetHttpClient( nodePtr, closeResult->connectionId );
+
+        if( clientPtr == NULL ) {
             break;
         }
-        case MSG_APP_FromTransCloseResult:
-        {
-            TransportToAppCloseResult *closeResult;
 
-            closeResult = (TransportToAppCloseResult *) msg->info;
-
-            #ifdef DEBUG
-                printf("%s: node %u got close result\n", 
-                       buf, nodePtr->nodeAddr);
-            #endif
-            clientPtr = AppHttpClientGetHttpClient(nodePtr, 
-                                                 closeResult->connectionId);
-
-            if(clientPtr == NULL)
-                break;
-
-            if (clientPtr->sessionIsClosed == FALSE) 
-            {
-                clientPtr->sessionIsClosed = TRUE;
-                clientPtr->state = IDLE;
-            }
-            break;
+        if( clientPtr->sessionIsClosed == FALSE ) {
+            clientPtr->sessionIsClosed = TRUE;
+            clientPtr->state = IDLE;
         }
-        case MSG_APP_TimerExpired:
-        {
-            AppInfo *appList = nodePtr->appData.appPtr;
-            GlomoAppHttpClient *tmpHttpClient = NULL;
-            GlomoAppHttpClient *httpClient = NULL;
-            HttpClientTimer *timer;
-            
-            timer = (HttpClientTimer *) GLOMO_MsgReturnInfo(msg);
+        break;
+    }
+    case MSG_APP_TimerExpired:
+    {
+        AppInfo*            appList         = nodePtr->appData.appPtr;
+        GlomoAppHttpClient* tmpHttpClient   = NULL;
+        GlomoAppHttpClient* httpClient      = NULL;
+        HttpClientTimer*    timer;
 
-            for (; appList != NULL; appList = appList->appNext)
-            {
-                if (appList->appType == APP_HTTP_CLIENT)
-                {
-                    tmpHttpClient = (GlomoAppHttpClient *) appList->appDetail;
+        timer = ( HttpClientTimer * ) GLOMO_MsgReturnInfo( msg );
 
-                    #ifdef DEBUG
-                        printf("HTTP Client: Node %ld comparing uniqueId "
-                               "%ld with %ld\n", nodePtr->nodeAddr,
-                               tmpHttpClient->uniqueId, timer->clientId);
-                    #endif
+        for( ;appList != NULL;appList = appList->appNext ) {
+            if( appList->appType == APP_HTTP_CLIENT ) {
+                tmpHttpClient = ( GlomoAppHttpClient * ) appList->appDetail;
 
-                    if (tmpHttpClient->uniqueId == timer->clientId)
-                    {
-                        httpClient = tmpHttpClient;
-                        break;
-                    }
-                } 
-            }
-
-            if (httpClient == NULL)
-                assert(FALSE);
-
-            if (timer->timerType == THINK_TIMER)
-            {
 #ifdef DEBUG
-                printf("#%ld:    DONE Thinking....\n",nodePtr->nodeAddr);
+                printf( "HTTP Client: Node %ld comparing uniqueId "
+                        "%ld with %ld\n",
+                        nodePtr->nodeAddr,
+                        tmpHttpClient->uniqueId,
+                        timer->clientId );
 #endif
-                AppHttpClientProcessDoneThinking(nodePtr, httpClient);
+
+                if( tmpHttpClient->uniqueId == timer->clientId ) {
+                    httpClient = tmpHttpClient;
+                    break;
+                }
             }
-            else
-            {
-#ifdef DEBUG
-                printf("%ld:    PROCESS WaitReplyTimer...\n",
-                       nodePtr->nodeAddr);
-#endif
-                AppHttpClientProcessWaitReplyTimer(nodePtr, httpClient);
-            }
-            break;
         }
-        default:
-            ctoa(simclock(), buf);
-            printf("Time %s: Node %u received message of unknown type"
-                   " %ld.\n", buf, nodePtr->nodeAddr, msg->eventType);
-            assert(FALSE);
+
+        if( httpClient == NULL ) {
+            assert( FALSE );
+        }
+
+        if( timer->timerType == THINK_TIMER ) {
+#ifdef DEBUG
+            printf( "#%ld:    DONE Thinking....\n", nodePtr->nodeAddr );
+#endif
+            AppHttpClientProcessDoneThinking( nodePtr, httpClient );
+        }else {
+#ifdef DEBUG
+            printf( "%ld:    PROCESS WaitReplyTimer...\n", nodePtr->nodeAddr );
+#endif
+            AppHttpClientProcessWaitReplyTimer( nodePtr, httpClient );
+        }
+        break;
+    }
+    default:ctoa( simclock(), buf );
+    printf( "Time %s: Node %u received message of unknown type"
+            " %ld.\n",
+            buf,
+            nodePtr->nodeAddr,
+            msg->eventType );
+    assert( FALSE );
     }
 
-    GLOMO_MsgFree(nodePtr, msg);
+    GLOMO_MsgFree( nodePtr, msg );
 }
 
 
@@ -350,26 +317,22 @@ AppLayerHttpClient(GlomoNode *nodePtr, Message *msg)
  *              thinkTime - determined thinking period
  * RETURN:      none.
  */
-void AppHttpClientSendThinkTimer(GlomoNode *nodePtr, 
-                                 GlomoAppHttpClient *clientPtr,
-                                 clocktype thinkTime)
+void AppHttpClientSendThinkTimer( GlomoNode* nodePtr,
+                                  GlomoAppHttpClient* clientPtr,
+                                  clocktype thinkTime )
 {
-    Message *newMsg;
-    HttpClientTimer *timer;
+    Message*            newMsg;
+    HttpClientTimer*    timer;
 
-    newMsg =  GLOMO_MsgAlloc(nodePtr,
-                             GLOMO_APP_LAYER,
-                             APP_HTTP_CLIENT,
-                             MSG_APP_TimerExpired);
+    newMsg = GLOMO_MsgAlloc( nodePtr, GLOMO_APP_LAYER, APP_HTTP_CLIENT, MSG_APP_TimerExpired );
 
-    GLOMO_MsgInfoAlloc(nodePtr, newMsg, sizeof(HttpClientTimer));
-    timer = (HttpClientTimer *) GLOMO_MsgReturnInfo(newMsg);
+    GLOMO_MsgInfoAlloc( nodePtr, newMsg, sizeof( HttpClientTimer ) );
+    timer = ( HttpClientTimer * ) GLOMO_MsgReturnInfo( newMsg );
 
     timer->clientId = clientPtr->uniqueId;
     timer->timerType = THINK_TIMER;
 
-    GLOMO_MsgSend(nodePtr, newMsg, thinkTime);
-
+    GLOMO_MsgSend( nodePtr, newMsg, thinkTime );
 }
 
 /*
@@ -383,26 +346,22 @@ void AppHttpClientSendThinkTimer(GlomoNode *nodePtr,
  *                                 WAIT_SECONDARY_RESPONSE
  * RETURN:      none.
  */
-void AppHttpClientSendWaitReplyTimer(GlomoNode *nodePtr,
-                                     GlomoAppHttpClient *clientPtr,
-                                     HttpClientTimerType timerType)
+void AppHttpClientSendWaitReplyTimer( GlomoNode* nodePtr,
+                                      GlomoAppHttpClient* clientPtr,
+                                      HttpClientTimerType timerType )
 {
-    Message *newMsg;
-    HttpClientTimer *timer;
+    Message*            newMsg;
+    HttpClientTimer*    timer;
 
-    newMsg =  GLOMO_MsgAlloc(nodePtr,
-                             GLOMO_APP_LAYER,
-                             APP_HTTP_CLIENT,
-                             MSG_APP_TimerExpired);
+    newMsg = GLOMO_MsgAlloc( nodePtr, GLOMO_APP_LAYER, APP_HTTP_CLIENT, MSG_APP_TimerExpired );
 
-    GLOMO_MsgInfoAlloc(nodePtr, newMsg, sizeof(HttpClientTimer));
-    timer = (HttpClientTimer *) GLOMO_MsgReturnInfo(newMsg);
+    GLOMO_MsgInfoAlloc( nodePtr, newMsg, sizeof( HttpClientTimer ) );
+    timer = ( HttpClientTimer * ) GLOMO_MsgReturnInfo( newMsg );
 
     timer->clientId = clientPtr->uniqueId;
     timer->timerType = timerType;
 
-    GLOMO_MsgSend(nodePtr, newMsg, clientPtr->threshhold);
-
+    GLOMO_MsgSend( nodePtr, newMsg, clientPtr->threshhold );
 }
 
 /*
@@ -413,108 +372,86 @@ void AppHttpClientSendWaitReplyTimer(GlomoNode *nodePtr,
  *              clientPtr - pointer to the client's data structure
  * RETURN:      none.
  */
-void AppHttpClientProcessDoneThinking(GlomoNode *node,
-                                      GlomoAppHttpClient *clientPtr)
+void AppHttpClientProcessDoneThinking( GlomoNode* node, GlomoAppHttpClient* clientPtr )
 {
-    if (clientPtr->documentsOnCurrentServer > 0)
-    {
-        long primaryRequestLength;
+    if( clientPtr->documentsOnCurrentServer > 0 ) {
+        long    primaryRequestLength;
 
         clientPtr->documentsOnCurrentServer--;
-        
-        clientPtr->stats.pageItems =
-             AppHttpClientDetermineItemCount(clientPtr);
+
+        clientPtr->stats.pageItems = AppHttpClientDetermineItemCount( clientPtr );
 
 #ifdef DEBUG
-        printf("    There are %d items on this NEXT page.\n",
-               clientPtr->stats.pageItems);
+        printf( "    There are %d items on this NEXT page.\n", clientPtr->stats.pageItems );
 #endif
 
         clientPtr->stats.pageItems--;
 
-        primaryRequestLength =
-            AppHttpClientDeterminePrimaryRequestLength(clientPtr);
+        primaryRequestLength = AppHttpClientDeterminePrimaryRequestLength( clientPtr );
 
 #ifdef DEBUG
-        printf("    Primary request length = %d\n",
-               primaryRequestLength);
+        printf( "    Primary request length = %d\n", primaryRequestLength );
 #endif
 
-        AppHttpClientSendPrimaryRequest(node, clientPtr,
-                                        primaryRequestLength);
+        AppHttpClientSendPrimaryRequest( node, clientPtr, primaryRequestLength );
+    }else {
+        NODE_ADDR   serverAddr  = AppHttpClientSelectNewServer( clientPtr );
 
-    }
-    else
-    {
-        NODE_ADDR serverAddr = AppHttpClientSelectNewServer(clientPtr);
-
-        clientPtr->documentsOnCurrentServer =
-        AppHttpClientConsecutiveDocumentRetrievals(clientPtr);
+        clientPtr->documentsOnCurrentServer = AppHttpClientConsecutiveDocumentRetrievals( clientPtr );
 
 #ifdef DEBUG
-        printf("    Request %d documents on server address %ld\n",
-               clientPtr->documentsOnCurrentServer, serverAddr);
+        printf( "    Request %d documents on server address %ld\n",
+                clientPtr->documentsOnCurrentServer,
+                serverAddr );
 #endif
 
-        if (serverAddr != clientPtr->remoteAddr)
-        {
-            clocktype sum;
+        if( serverAddr != clientPtr->remoteAddr ) {
+            clocktype   sum;
 
-            sum  = clientPtr->avgSessionLength * clientPtr->numSessions;
+            sum = clientPtr->avgSessionLength * clientPtr->numSessions;
             clientPtr->sessionFinish = simclock();
-            sum += (clientPtr->sessionFinish - clientPtr->sessionStart);
+            sum += ( clientPtr->sessionFinish - clientPtr->sessionStart );
             clientPtr->numSessions++;
             clientPtr->avgSessionLength = sum / clientPtr->numSessions;
 
-            AppTcpSendData(node, TRANSPORT_PROTOCOL_TCP,
-                           clientPtr->connectionId, "c", 1);
+            AppTcpSendData( node, TRANSPORT_PROTOCOL_TCP, clientPtr->connectionId, "c", 1 );
 
-            AppTcpCloseConnection(node, TRANSPORT_PROTOCOL_TCP,
-                                  clientPtr->connectionId);
-            
-            AppTcpOpenConnectionWithPriority(node,
-                                             TRANSPORT_PROTOCOL_TCP,
-                                             APP_HTTP_CLIENT,
-                                             serverAddr,
-                                             (short)APP_HTTP_SERVER,
-                                             clientPtr->uniqueId,
-                                             0,
-                                             NON_REAL_TIME);
+            AppTcpCloseConnection( node, TRANSPORT_PROTOCOL_TCP, clientPtr->connectionId );
+
+            AppTcpOpenConnectionWithPriority( node,
+                                              TRANSPORT_PROTOCOL_TCP,
+                                              APP_HTTP_CLIENT,
+                                              serverAddr,
+                                              ( short ) APP_HTTP_SERVER,
+                                              clientPtr->uniqueId,
+                                              0,
+                                              NON_REAL_TIME );
 
 #ifdef DEBUG
-            printf("    DONE with this server.\n");
+            printf( "    DONE with this server.\n" );
 #endif
-        }
-        else
-        {
-            long primaryRequestLength;
+        }else {
+            long    primaryRequestLength;
 
-            clientPtr->documentsOnCurrentServer =
-                AppHttpClientConsecutiveDocumentRetrievals(clientPtr);
+            clientPtr->documentsOnCurrentServer = AppHttpClientConsecutiveDocumentRetrievals( clientPtr );
 
             clientPtr->documentsOnCurrentServer--;
 
-            clientPtr->stats.pageItems =
-                AppHttpClientDetermineItemCount(clientPtr);
+            clientPtr->stats.pageItems = AppHttpClientDetermineItemCount( clientPtr );
 
 #ifdef DEBUG
-            printf("    There are %d items on this page.\n",
-                   clientPtr->stats.pageItems);
+            printf( "    There are %d items on this page.\n", clientPtr->stats.pageItems );
 #endif
 
             clientPtr->stats.pageItems--;
 
-            primaryRequestLength =
-                AppHttpClientDeterminePrimaryRequestLength(clientPtr);
+            primaryRequestLength = AppHttpClientDeterminePrimaryRequestLength( clientPtr );
 
 #ifdef DEBUG
-            printf("    Primary request length = %d\n",
-                   primaryRequestLength);
+            printf( "    Primary request length = %d\n", primaryRequestLength );
 #endif
 
-            AppHttpClientSendPrimaryRequest(node, clientPtr,
-                                            primaryRequestLength);
-
+            AppHttpClientSendPrimaryRequest( node, clientPtr, primaryRequestLength );
         }
 
         clientPtr->remoteAddr = serverAddr;
@@ -531,41 +468,32 @@ void AppHttpClientProcessDoneThinking(GlomoNode *node,
  *              clientPtr - pointer to the client's data structure
  * RETURN:      none.
  */
-void AppHttpClientProcessWaitReplyTimer(GlomoNode *node,
-                                   GlomoAppHttpClient *clientPtr)
+void AppHttpClientProcessWaitReplyTimer( GlomoNode* node, GlomoAppHttpClient* clientPtr )
 {
-    if (clientPtr->state == IDLE)
+    if( clientPtr->state == IDLE ) {
         return;
-    else if ((clientPtr->state == WAIT_PRIMARY_RESPONSE) || 
-             (clientPtr->state == WAIT_SECONDARY_RESPONSE))
-    {
-        if (clientPtr->lastReceiveTime < (simclock() - clientPtr->threshhold))
-        {
-            clocktype sum; 
+    }else if( ( clientPtr->state == WAIT_PRIMARY_RESPONSE ) ||
+              ( clientPtr->state == WAIT_SECONDARY_RESPONSE ) ) {
+        if( clientPtr->lastReceiveTime < ( simclock() - clientPtr->threshhold ) ) {
+            clocktype   sum; 
 
-            sum  = clientPtr->avgSessionLength * clientPtr->numSessions;
+            sum = clientPtr->avgSessionLength * clientPtr->numSessions;
             clientPtr->sessionFinish = simclock();
-            sum += (clientPtr->sessionFinish - clientPtr->sessionStart);
+            sum += ( clientPtr->sessionFinish - clientPtr->sessionStart );
             clientPtr->numSessions++;
             clientPtr->avgSessionLength = sum / clientPtr->numSessions;
             clientPtr->sessionStart = simclock();
-            AppHttpClientProcessDoneThinking(node, clientPtr);
+            AppHttpClientProcessDoneThinking( node, clientPtr );
+        }else if( clientPtr->state == WAIT_PRIMARY_RESPONSE ) {
+            AppHttpClientSendWaitReplyTimer( node, clientPtr, WAIT_PRIMARY_REPLY_TIMER );
+        }else if( clientPtr->state == WAIT_SECONDARY_RESPONSE ) {
+            AppHttpClientSendWaitReplyTimer( node, clientPtr, WAIT_SECONDARY_REPLY_TIMER );
+        }else {
+            assert( FALSE );
         }
-        else if (clientPtr->state == WAIT_PRIMARY_RESPONSE)
-        {
-            AppHttpClientSendWaitReplyTimer(node,
-                clientPtr, WAIT_PRIMARY_REPLY_TIMER);
-        }
-        else if (clientPtr->state == WAIT_SECONDARY_RESPONSE)
-        {
-            AppHttpClientSendWaitReplyTimer(node,
-                clientPtr, WAIT_SECONDARY_REPLY_TIMER);
-        }
-        else
-            assert(FALSE);
+    }else {
+        assert( FALSE );
     }
-    else
-        assert(FALSE);
 }
 
 /*
@@ -576,41 +504,34 @@ void AppHttpClientProcessWaitReplyTimer(GlomoNode *node,
  *              clientPtr - pointer to the client's data structure
  * RETURN:      none.
  */
-void AppHttpClientProcessReplyPacket(GlomoNode *node,
-                                     GlomoAppHttpClient *clientPtr)
+void AppHttpClientProcessReplyPacket( GlomoNode* node, GlomoAppHttpClient* clientPtr )
 {
-    if (clientPtr->stats.pageItems > 0)
-    {
-        long secondaryRequestLength =
-            AppHttpClientDetermineSecondaryRequestLength(clientPtr);
+    if( clientPtr->stats.pageItems > 0 ) {
+        long    secondaryRequestLength  = AppHttpClientDetermineSecondaryRequestLength( clientPtr );
 
 #ifdef DEBUG
-        printf("    Secondary Request Length %d\n", secondaryRequestLength);
+        printf( "    Secondary Request Length %d\n", secondaryRequestLength );
 #endif
-        AppHttpClientSendSecondaryRequest(node, clientPtr,
-                                        secondaryRequestLength);
+        AppHttpClientSendSecondaryRequest( node, clientPtr, secondaryRequestLength );
 
         clientPtr->stats.pageItems--;
-    }
-    else
-    {
-        double thinkTimeDouble = AppHttpClientDetermineThinkTime(clientPtr);
-        clocktype thinkTime = (thinkTimeDouble * SECOND);
-        char buf[80];
+    }else {
+        double      thinkTimeDouble = AppHttpClientDetermineThinkTime( clientPtr );
+        clocktype   thinkTime       = ( thinkTimeDouble* SECOND );
+        char        buf[80];
 
         clientPtr->numPages++;
 
-        if (thinkTime > clientPtr->threshhold)
-            thinkTime = (thinkTime % clientPtr->threshhold);
-        ctoa(thinkTime, buf);
+        if( thinkTime > clientPtr->threshhold ) {
+            thinkTime = ( thinkTime % clientPtr->threshhold );
+        }
+        ctoa( thinkTime, buf );
 #ifdef DEBUG
-        printf("    Thinking for %s.......%f\n", buf, thinkTimeDouble);
+        printf( "    Thinking for %s.......%f\n", buf, thinkTimeDouble );
 #endif
         clientPtr->state = IDLE;
-        AppHttpClientSendThinkTimer(node, clientPtr, thinkTime);
-        
+        AppHttpClientSendThinkTimer( node, clientPtr, thinkTime );
     }
- 
 }
 
 /*
@@ -620,32 +541,34 @@ void AppHttpClientProcessReplyPacket(GlomoNode *node,
  * PARAMETERS:  clientPtr - pointer to the client's data structure
  * RETURN:      the number of consecutive document retrievals.
  */
-long AppHttpClientConsecutiveDocumentRetrievals(GlomoAppHttpClient *clientPtr)
+long AppHttpClientConsecutiveDocumentRetrievals( GlomoAppHttpClient* clientPtr )
 {
-    extern const DoubleDistElement *HttpConsecutiveDocsDistTable;
-    extern const int HttpConsecutiveDocsDistLength;
-    double u = pc_erand(clientPtr->seed);
-    float value;
-    int midpoint = DoubleDistFindIndex(HttpConsecutiveDocsDistTable,
-                                       HttpConsecutiveDocsDistLength,
-                                       u);
+    extern const DoubleDistElement*                                 HttpConsecutiveDocsDistTable;
+    extern const int            HttpConsecutiveDocsDistLength;
+    double                      u           = pc_erand( clientPtr->seed );
+    float                       value;
+    int                         midpoint    = DoubleDistFindIndex( HttpConsecutiveDocsDistTable,
+                                                                   HttpConsecutiveDocsDistLength,
+                                                                   u );
 
 #ifdef DEBUG
-    printf("    u = %f\n", u);
-    printf("AppHttpClientConsecutiveDocumentRetrievals(of %d) = %d\n",
-           HttpConsecutiveDocsDistLength, midpoint);
+    printf( "    u = %f\n", u );
+    printf( "AppHttpClientConsecutiveDocumentRetrievals(of %d) = %d\n",
+            HttpConsecutiveDocsDistLength,
+            midpoint );
 #endif
-    if (midpoint < 0)
+    if( midpoint < 0 ) {
         value = HttpConsecutiveDocsDistTable[0].value;
-    else
-        value = DoubleDistEmpiricalIntegralInterpolate(
-                HttpConsecutiveDocsDistTable[midpoint].cdf, 
-                HttpConsecutiveDocsDistTable[midpoint+1].cdf,
-                HttpConsecutiveDocsDistTable[midpoint].value, 
-                HttpConsecutiveDocsDistTable[midpoint+1].value, u);
+    }else {
+        value = DoubleDistEmpiricalIntegralInterpolate( HttpConsecutiveDocsDistTable[midpoint].cdf,
+                                                        HttpConsecutiveDocsDistTable[midpoint + 1].cdf,
+                                                        HttpConsecutiveDocsDistTable[midpoint].value,
+                                                        HttpConsecutiveDocsDistTable[midpoint + 1].value,
+                                                        u );
+    }
 
 #ifdef DEBUG
-    printf("    midpoint = %d, value = %f\n", midpoint, value);
+    printf( "    midpoint = %d, value = %f\n", midpoint, value );
 #endif
 
     return value;
@@ -657,25 +580,24 @@ long AppHttpClientConsecutiveDocumentRetrievals(GlomoAppHttpClient *clientPtr)
  * PARAMETERS:  clientPtr - pointer to the client's data structure
  * RETURN:      the node address for the next server to communicate with.
  */
-NODE_ADDR AppHttpClientSelectNewServer(GlomoAppHttpClient *clientPtr)
+NODE_ADDR AppHttpClientSelectNewServer( GlomoAppHttpClient* clientPtr )
 {
-    long serverIndex;
-    double tryCdf, u;
+    long    serverIndex;
+    double  tryCdf, u;
     // Get a Uniform[0,1] random variable
-    u = pc_erand(clientPtr->seed);
+    u = pc_erand( clientPtr->seed );
 
     // Invert the CDF
     tryCdf = 0.0;
     serverIndex = 1;
 
-    while (TRUE) {
-
-        if (serverIndex > clientPtr->num_servers) {
-            assert(FALSE);
+    while( TRUE ) {
+        if( serverIndex > clientPtr->num_servers ) {
+            assert( FALSE );
         }
 
-        tryCdf += (1.0 / (double) serverIndex);
-        if (tryCdf / clientPtr->Zipf_constant >= u) {
+        tryCdf += ( 1.0 / ( double ) serverIndex );
+        if( tryCdf / clientPtr->Zipf_constant >= u ) {
             break;
         }
         serverIndex++;
@@ -683,7 +605,7 @@ NODE_ADDR AppHttpClientSelectNewServer(GlomoAppHttpClient *clientPtr)
 
     serverIndex--;
 #ifdef DEBUG
-    printf("serverIndex = %ld\n", serverIndex);
+    printf( "serverIndex = %ld\n", serverIndex );
 #endif
     return clientPtr->servers[serverIndex];
 }
@@ -695,34 +617,33 @@ NODE_ADDR AppHttpClientSelectNewServer(GlomoAppHttpClient *clientPtr)
  * PARAMETERS:  clientPtr - pointer to the client's data structure
  * RETURN:      the amount of time to wait.
  */
-double AppHttpClientDetermineThinkTime(GlomoAppHttpClient *clientPtr)
+double AppHttpClientDetermineThinkTime( GlomoAppHttpClient* clientPtr )
 {
-    
-    extern const DoubleDistElement *HttpThinkTimeDistTable;
-    extern const int HttpThinkTimeDistLength;
-    double u = pc_erand(clientPtr->seed);
-    double value;
-    int midpoint = DoubleDistFindIndex(HttpThinkTimeDistTable,
-                                       HttpThinkTimeDistLength,
-                                       u);
+    extern const DoubleDistElement*                                 HttpThinkTimeDistTable;
+    extern const int            HttpThinkTimeDistLength;
+    double                      u           = pc_erand( clientPtr->seed );
+    double                      value;
+    int                         midpoint    = DoubleDistFindIndex( HttpThinkTimeDistTable,
+                                                                   HttpThinkTimeDistLength,
+                                                                   u );
 
 #ifdef DEBUG
-    printf("    u = %f\n", u);
-    printf("AppHttpClientDetermineThinkTime(of %d) = %d\n",
-           HttpThinkTimeDistLength, midpoint);
+    printf( "    u = %f\n", u );
+    printf( "AppHttpClientDetermineThinkTime(of %d) = %d\n", HttpThinkTimeDistLength, midpoint );
 #endif
 
-    if (midpoint < 0)
+    if( midpoint < 0 ) {
         value = HttpThinkTimeDistTable[0].value;
-    else
-        value = DoubleDistEmpiricalContinuousInterpolate(
-                HttpThinkTimeDistTable[midpoint].cdf,
-                HttpThinkTimeDistTable[midpoint+1].cdf,
-                HttpThinkTimeDistTable[midpoint].value,
-                HttpThinkTimeDistTable[midpoint+1].value, u);
+    }else {
+        value = DoubleDistEmpiricalContinuousInterpolate( HttpThinkTimeDistTable[midpoint].cdf,
+                                                          HttpThinkTimeDistTable[midpoint + 1].cdf,
+                                                          HttpThinkTimeDistTable[midpoint].value,
+                                                          HttpThinkTimeDistTable[midpoint + 1].value,
+                                                          u );
+    }
 
 #ifdef DEBUG
-    printf("    midpoint = %d, value = %f\n", midpoint, value);
+    printf( "    midpoint = %d, value = %f\n", midpoint, value );
 #endif
     return value;
 }
@@ -733,34 +654,35 @@ double AppHttpClientDetermineThinkTime(GlomoAppHttpClient *clientPtr)
  * PARAMETERS:  clientPtr - pointer to the client's data structure
  * RETURN:      the number of items.
  */
-long AppHttpClientDetermineItemCount(GlomoAppHttpClient *clientPtr)
+long AppHttpClientDetermineItemCount( GlomoAppHttpClient* clientPtr )
 {
-    
-    extern const DoubleDistElement *HttpFilesPerDocumentDistTable;
-    extern const int HttpFilesPerDocumentDistLength;
-    double u = pc_erand(clientPtr->seed);
-    float value;
-    int midpoint = DoubleDistFindIndex(HttpFilesPerDocumentDistTable,
-                                       HttpFilesPerDocumentDistLength,
-                                       u);
+    extern const DoubleDistElement*                                 HttpFilesPerDocumentDistTable;
+    extern const int            HttpFilesPerDocumentDistLength;
+    double                      u           = pc_erand( clientPtr->seed );
+    float                       value;
+    int                         midpoint    = DoubleDistFindIndex( HttpFilesPerDocumentDistTable,
+                                                                   HttpFilesPerDocumentDistLength,
+                                                                   u );
 
 #ifdef DEBUG
-    printf("    u = %f\n", u);
-    printf("AppHttpClientDetermineItemCount(of %d) = %d\n",
-           HttpFilesPerDocumentDistLength, midpoint);
+    printf( "    u = %f\n", u );
+    printf( "AppHttpClientDetermineItemCount(of %d) = %d\n",
+            HttpFilesPerDocumentDistLength,
+            midpoint );
 #endif
 
-    if (midpoint < 0)
+    if( midpoint < 0 ) {
         value = HttpFilesPerDocumentDistTable[0].value;
-    else
-        value = DoubleDistEmpiricalIntegralInterpolate(
-                HttpFilesPerDocumentDistTable[midpoint].cdf,
-                HttpFilesPerDocumentDistTable[midpoint+1].cdf,
-                HttpFilesPerDocumentDistTable[midpoint].value,
-                HttpFilesPerDocumentDistTable[midpoint+1].value, u);
+    }else {
+        value = DoubleDistEmpiricalIntegralInterpolate( HttpFilesPerDocumentDistTable[midpoint].cdf,
+                                                        HttpFilesPerDocumentDistTable[midpoint + 1].cdf,
+                                                        HttpFilesPerDocumentDistTable[midpoint].value,
+                                                        HttpFilesPerDocumentDistTable[midpoint + 1].value,
+                                                        u );
+    }
 
 #ifdef DEBUG
-    printf("    midpoint = %d, value = %f\n", midpoint, value);
+    printf( "    midpoint = %d, value = %f\n", midpoint, value );
 #endif
     return value;
 }
@@ -771,34 +693,35 @@ long AppHttpClientDetermineItemCount(GlomoAppHttpClient *clientPtr)
  * PARAMETERS:  clientPtr - pointer to the client's data structure
  * RETURN:      the number of bytes.
  */
-long AppHttpClientDetermineSecondaryRequestLength(
-    GlomoAppHttpClient *clientPtr)
+long AppHttpClientDetermineSecondaryRequestLength( GlomoAppHttpClient* clientPtr )
 {
-    extern const DoubleDistElement *HttpSecondaryRequestDistTable;
-    extern const int HttpSecondaryRequestDistLength;
-    double u = pc_erand(clientPtr->seed);
-    float value;
-    int midpoint = DoubleDistFindIndex(HttpSecondaryRequestDistTable,
-                                       HttpSecondaryRequestDistLength,
-                                       u);
+    extern const DoubleDistElement*                                 HttpSecondaryRequestDistTable;
+    extern const int            HttpSecondaryRequestDistLength;
+    double                      u           = pc_erand( clientPtr->seed );
+    float                       value;
+    int                         midpoint    = DoubleDistFindIndex( HttpSecondaryRequestDistTable,
+                                                                   HttpSecondaryRequestDistLength,
+                                                                   u );
 
 #ifdef DEBUG
-    printf("    u = %f\n", u);
-    printf("AppHttpClientDetermineSecondaryRequestLength(of %d) = %d\n",
-           HttpSecondaryRequestDistLength, midpoint);
+    printf( "    u = %f\n", u );
+    printf( "AppHttpClientDetermineSecondaryRequestLength(of %d) = %d\n",
+            HttpSecondaryRequestDistLength,
+            midpoint );
 #endif
 
-    if (midpoint < 0)
+    if( midpoint < 0 ) {
         value = HttpSecondaryRequestDistTable[0].value;
-    else
-        value = DoubleDistEmpiricalIntegralInterpolate(
-                HttpSecondaryRequestDistTable[midpoint].cdf,
-                HttpSecondaryRequestDistTable[midpoint+1].cdf,
-                HttpSecondaryRequestDistTable[midpoint].value,
-                HttpSecondaryRequestDistTable[midpoint+1].value, u);
+    }else {
+        value = DoubleDistEmpiricalIntegralInterpolate( HttpSecondaryRequestDistTable[midpoint].cdf,
+                                                        HttpSecondaryRequestDistTable[midpoint + 1].cdf,
+                                                        HttpSecondaryRequestDistTable[midpoint].value,
+                                                        HttpSecondaryRequestDistTable[midpoint + 1].value,
+                                                        u );
+    }
 
 #ifdef DEBUG
-    printf("    midpoint = %d, value = %f\n", midpoint, value);
+    printf( "    midpoint = %d, value = %f\n", midpoint, value );
 #endif
 
     return value;
@@ -810,33 +733,34 @@ long AppHttpClientDetermineSecondaryRequestLength(
  * PARAMETERS:  clientPtr - pointer to the client's data structure
  * RETURN:      the number of bytes.
  */
-long AppHttpClientDeterminePrimaryRequestLength(
-    GlomoAppHttpClient *clientPtr)
+long AppHttpClientDeterminePrimaryRequestLength( GlomoAppHttpClient* clientPtr )
 {
-    extern const DoubleDistElement *HttpPrimaryRequestDistTable;
-    extern const int HttpPrimaryRequestDistLength;
-    double u = pc_erand(clientPtr->seed);
-    float value;
-    int midpoint = DoubleDistFindIndex(HttpPrimaryRequestDistTable,
-                                       HttpPrimaryRequestDistLength,
-                                       u);
+    extern const DoubleDistElement*                                 HttpPrimaryRequestDistTable;
+    extern const int            HttpPrimaryRequestDistLength;
+    double                      u           = pc_erand( clientPtr->seed );
+    float                       value;
+    int                         midpoint    = DoubleDistFindIndex( HttpPrimaryRequestDistTable,
+                                                                   HttpPrimaryRequestDistLength,
+                                                                   u );
 
 #ifdef DEBUG
-    printf("    u = %f\n", u);
-    printf("AppHttpClientDeterminePrimaryRequestLength(of %d) = %d\n",
-           HttpPrimaryRequestDistLength, midpoint);
+    printf( "    u = %f\n", u );
+    printf( "AppHttpClientDeterminePrimaryRequestLength(of %d) = %d\n",
+            HttpPrimaryRequestDistLength,
+            midpoint );
 #endif
 
-    if (midpoint < 0)
+    if( midpoint < 0 ) {
         value = HttpPrimaryRequestDistTable[0].value;
-    else
-        value = DoubleDistEmpiricalIntegralInterpolate(
-                HttpPrimaryRequestDistTable[midpoint].cdf,
-                HttpPrimaryRequestDistTable[midpoint+1].cdf,
-                HttpPrimaryRequestDistTable[midpoint].value,
-                HttpPrimaryRequestDistTable[midpoint+1].value, u);
+    }else {
+        value = DoubleDistEmpiricalIntegralInterpolate( HttpPrimaryRequestDistTable[midpoint].cdf,
+                                                        HttpPrimaryRequestDistTable[midpoint + 1].cdf,
+                                                        HttpPrimaryRequestDistTable[midpoint].value,
+                                                        HttpPrimaryRequestDistTable[midpoint + 1].value,
+                                                        u );
+    }
 #ifdef DEBUG
-    printf("    midpoint = %d, value = %f\n", midpoint, value);
+    printf( "    midpoint = %d, value = %f\n", midpoint, value );
 #endif
     return value;
 }
@@ -847,32 +771,30 @@ long AppHttpClientDeterminePrimaryRequestLength(
  * PARAMETERS:  clientPtr - pointer to the client's data structure
  * RETURN:      none.
  */
-void AppHttpClientSendPrimaryRequest(GlomoNode *node,
-                                     GlomoAppHttpClient *clientPtr, 
-                                     long primaryRequestLength)
+void AppHttpClientSendPrimaryRequest( GlomoNode* node,
+                                      GlomoAppHttpClient* clientPtr,
+                                      long primaryRequestLength )
 {
-    char payload[MAX_APP_DATA_UNIT];
-    long sendSize;
+    char    payload[MAX_APP_DATA_UNIT];
+    long    sendSize;
 
-    if (primaryRequestLength == 0)
+    if( primaryRequestLength == 0 ) {
         primaryRequestLength = 1;
+    }
 
-    memset(payload, 0, MAX_APP_DATA_UNIT);
+    memset( payload, 0, MAX_APP_DATA_UNIT );
 
-    sendSize = MIN(primaryRequestLength, MAX_APP_DATA_UNIT);
+    sendSize = MIN( primaryRequestLength, MAX_APP_DATA_UNIT );
     primaryRequestLength -= sendSize;
     clientPtr->stats.itemRequestBytes = primaryRequestLength;
-    if (primaryRequestLength == 0)
-    {
-        payload[sendSize-1] = 'p';
+    if( primaryRequestLength == 0 ) {
+        payload[sendSize - 1] = 'p';
         clientPtr->state = WAIT_PRIMARY_RESPONSE;
-        AppHttpClientSendWaitReplyTimer(node,
-            clientPtr, WAIT_PRIMARY_REPLY_TIMER);
-    }
-    else
+        AppHttpClientSendWaitReplyTimer( node, clientPtr, WAIT_PRIMARY_REPLY_TIMER );
+    }else {
         clientPtr->state = XMIT_PRIMARY_REQUEST;
-    AppTcpSendData(node, TRANSPORT_PROTOCOL_TCP, 
-                   clientPtr->connectionId, payload, sendSize);
+    }
+    AppTcpSendData( node, TRANSPORT_PROTOCOL_TCP, clientPtr->connectionId, payload, sendSize );
 }
 
 /*
@@ -881,33 +803,30 @@ void AppHttpClientSendPrimaryRequest(GlomoNode *node,
  * PARAMETERS:  clientPtr - pointer to the client's data structure
  * RETURN:      none.
  */
-void AppHttpClientSendSecondaryRequest(GlomoNode *node,
-                                     GlomoAppHttpClient *clientPtr,
-                                     long secondaryRequestLength)
+void AppHttpClientSendSecondaryRequest( GlomoNode* node,
+                                        GlomoAppHttpClient* clientPtr,
+                                        long secondaryRequestLength )
 {
-    char payload[MAX_APP_DATA_UNIT];
-    long sendSize;
+    char    payload[MAX_APP_DATA_UNIT];
+    long    sendSize;
 
-    if (secondaryRequestLength == 0)
+    if( secondaryRequestLength == 0 ) {
         secondaryRequestLength = 1;
+    }
 
-    memset(payload, 0, MAX_APP_DATA_UNIT);
+    memset( payload, 0, MAX_APP_DATA_UNIT );
 
-    sendSize = MIN(secondaryRequestLength, MAX_APP_DATA_UNIT);
+    sendSize = MIN( secondaryRequestLength, MAX_APP_DATA_UNIT );
     secondaryRequestLength -= sendSize;
     clientPtr->stats.itemRequestBytes = secondaryRequestLength;
-    if (secondaryRequestLength == 0)
-    {
-        payload[sendSize-1] = 's';
+    if( secondaryRequestLength == 0 ) {
+        payload[sendSize - 1] = 's';
         clientPtr->state = WAIT_SECONDARY_RESPONSE;
-        AppHttpClientSendWaitReplyTimer(node,
-            clientPtr, WAIT_SECONDARY_REPLY_TIMER);
-    }
-    else
+        AppHttpClientSendWaitReplyTimer( node, clientPtr, WAIT_SECONDARY_REPLY_TIMER );
+    }else {
         clientPtr->state = XMIT_SECONDARY_REQUEST;
-    AppTcpSendData(node, TRANSPORT_PROTOCOL_TCP,
-                   clientPtr->connectionId, payload, sendSize);
-
+    }
+    AppTcpSendData( node, TRANSPORT_PROTOCOL_TCP, clientPtr->connectionId, payload, sendSize );
 }
 
 /*
@@ -920,27 +839,26 @@ void AppHttpClientSendSecondaryRequest(GlomoNode *node,
  *              thresh - maximum time before deciding the connection is done .
  * RETURN:      none. 
  */
-void
-AppHttpClientInit(GlomoNode *nodePtr, NODE_ADDR *serverAddrs, 
-                  long numServerAddrs, clocktype startTime,
-                  clocktype thresh)
+void AppHttpClientInit( GlomoNode* nodePtr,
+                        NODE_ADDR* serverAddrs,
+                        long numServerAddrs,
+                        clocktype startTime,
+                        clocktype thresh )
 {
-    GlomoAppHttpClient *clientPtr;
-    NODE_ADDR serverAddr;
-    long i;
+    GlomoAppHttpClient* clientPtr;
+    NODE_ADDR           serverAddr;
+    long                i;
 
 #ifdef DEBUG
-    printf("#%ld: AppHttpClientInit()\n", nodePtr->nodeAddr);
+    printf( "#%ld: AppHttpClientInit()\n", nodePtr->nodeAddr );
 #endif
 
-    clientPtr = AppHttpClientNewHttpClient(nodePtr);
-                                        
-    if (clientPtr == NULL)
-    {
-        printf("HTTP Client: Node %ld cannot allocate "
-               "new http client\n", nodePtr->nodeAddr);
+    clientPtr = AppHttpClientNewHttpClient( nodePtr );
 
-        assert(FALSE);
+    if( clientPtr == NULL ) {
+        printf( "HTTP Client: Node %ld cannot allocate " "new http client\n", nodePtr->nodeAddr );
+
+        assert( FALSE );
     }
 
     clientPtr->threshhold = thresh;
@@ -951,44 +869,44 @@ AppHttpClientInit(GlomoNode *nodePtr, NODE_ADDR *serverAddrs,
 
     // Compute new Zipf value (a constant which is a little expensive to
     // recompute for every invocation).
-    for (i = 1; i <= clientPtr->num_servers; i++) 
-    {
-        clientPtr->Zipf_constant += (1.0 / (double) i);
+    for( i = 1;i <= clientPtr->num_servers;i++ ) {
+        clientPtr->Zipf_constant += ( 1.0 / ( double ) i );
     }
 #ifdef DEBUG
-    printf("  Zipf constant = %f\n", clientPtr->Zipf_constant);
+    printf( "  Zipf constant = %f\n", clientPtr->Zipf_constant );
 #endif
 
     clientPtr->stats.itemRequestBytes = 0;
     clientPtr->stats.pageItems = 0;
 
 #ifdef DEBUG
-    printf("  Servers: ");
-    for (i = 0; i < clientPtr->num_servers; i++)
-        printf(" %ld ", clientPtr->servers[i]);
-    printf("\n");
+    printf( "  Servers: " );
+    for( i = 0;i < clientPtr->num_servers;i++ ) {
+        printf( " %ld ", clientPtr->servers[i] );
+    }
+    printf( "\n" );
 #endif
 
-    serverAddr = AppHttpClientSelectNewServer(clientPtr);
+    serverAddr = AppHttpClientSelectNewServer( clientPtr );
 
     clientPtr->remoteAddr = serverAddr;
 
-    clientPtr->documentsOnCurrentServer = 
-        AppHttpClientConsecutiveDocumentRetrievals(clientPtr);
+    clientPtr->documentsOnCurrentServer = AppHttpClientConsecutiveDocumentRetrievals( clientPtr );
 
 #ifdef DEBUG
-    printf("    Request %d documents on server address %ld\n",
-           clientPtr->documentsOnCurrentServer, serverAddr);
+    printf( "    Request %d documents on server address %ld\n",
+            clientPtr->documentsOnCurrentServer,
+            serverAddr );
 #endif
 
-    AppTcpOpenConnectionWithPriority(nodePtr, 
-                                     TRANSPORT_PROTOCOL_TCP, 
-                                     APP_HTTP_CLIENT,
-                                     serverAddr, 
-                                     (short)APP_HTTP_SERVER,
-                                     clientPtr->uniqueId, 
-                                     startTime, 
-                                     NON_REAL_TIME);
+    AppTcpOpenConnectionWithPriority( nodePtr,
+                                      TRANSPORT_PROTOCOL_TCP,
+                                      APP_HTTP_CLIENT,
+                                      serverAddr,
+                                      ( short ) APP_HTTP_SERVER,
+                                      clientPtr->uniqueId,
+                                      startTime,
+                                      NON_REAL_TIME );
 }
 
 
@@ -1000,39 +918,42 @@ AppHttpClientInit(GlomoNode *nodePtr, NODE_ADDR *serverAddrs,
  * RETURN:      none.
  */
 
-static void
-AppHttpClientPrintStats(GlomoNode *nodePtr, GlomoAppHttpClient *clientPtr)
+static void AppHttpClientPrintStats( GlomoNode* nodePtr, GlomoAppHttpClient* clientPtr )
 {
-    char buf[GLOMO_MAX_STRING_LENGTH];
-    char clockStr[GLOMO_MAX_STRING_LENGTH];
+    char    buf[GLOMO_MAX_STRING_LENGTH];
+    char    clockStr[GLOMO_MAX_STRING_LENGTH];
 
-    sprintf(buf, "(appId %ld): Number of connections = %ld",
-            clientPtr->uniqueId, clientPtr->numSessions);
-    GLOMO_PrintStat(nodePtr, "AppHttpClient", buf);
+    sprintf( buf,
+             "(appId %ld): Number of connections = %ld",
+             clientPtr->uniqueId,
+             clientPtr->numSessions );
+    GLOMO_PrintStat( nodePtr, "AppHttpClient", buf );
 
-    if (clientPtr->numSessions == 0)
+    if( clientPtr->numSessions == 0 ) {
         return;
+    }
 
-    ctoa(clientPtr->avgSessionLength, clockStr);
-    sprintf(buf, "(appId %ld): Avg connection length = %s",
-            clientPtr->uniqueId, clockStr);
-    GLOMO_PrintStat(nodePtr, "AppHttpClient", buf);
+    ctoa( clientPtr->avgSessionLength, clockStr );
+    sprintf( buf, "(appId %ld): Avg connection length = %s", clientPtr->uniqueId, clockStr );
+    GLOMO_PrintStat( nodePtr, "AppHttpClient", buf );
 
-    sprintf(buf, "(appId %ld): Avg num of pages per connection = %ld",
-            clientPtr->uniqueId, 
-            (clientPtr->numPages / clientPtr->numSessions));
-    GLOMO_PrintStat(nodePtr, "AppHttpClient", buf);
+    sprintf( buf,
+             "(appId %ld): Avg num of pages per connection = %ld",
+             clientPtr->uniqueId,
+             ( clientPtr->numPages / clientPtr->numSessions ) );
+    GLOMO_PrintStat( nodePtr, "AppHttpClient", buf );
 
-    sprintf(buf, "(appId %ld): Avg num bytes recvd per conn = %ld",
-            clientPtr->uniqueId,
-            (clientPtr->numBytesRecvd / clientPtr->numSessions));
-    GLOMO_PrintStat(nodePtr, "AppHttpClient", buf);
+    sprintf( buf,
+             "(appId %ld): Avg num bytes recvd per conn = %ld",
+             clientPtr->uniqueId,
+             ( clientPtr->numBytesRecvd / clientPtr->numSessions ) );
+    GLOMO_PrintStat( nodePtr, "AppHttpClient", buf );
 
-    sprintf(buf, "(appId %ld): Avg num bytes sent per conn = %ld",
-            clientPtr->uniqueId,
-            (clientPtr->numBytesSent / clientPtr->numSessions));
-    GLOMO_PrintStat(nodePtr, "AppHttpClient", buf);
-
+    sprintf( buf,
+             "(appId %ld): Avg num bytes sent per conn = %ld",
+             clientPtr->uniqueId,
+             ( clientPtr->numBytesSent / clientPtr->numSessions ) );
+    GLOMO_PrintStat( nodePtr, "AppHttpClient", buf );
 }   
 
 
@@ -1044,20 +965,18 @@ AppHttpClientPrintStats(GlomoNode *nodePtr, GlomoAppHttpClient *clientPtr)
  *              clientPtr - pointer to the http client data structure.
  * RETURN:      none.
  */
-void
-AppHttpClientFinalize(GlomoNode *nodePtr, GlomoAppHttpClient *clientPtr)
+void AppHttpClientFinalize( GlomoNode* nodePtr, GlomoAppHttpClient* clientPtr )
 {
-    if (nodePtr->appData.appStats == TRUE)
-    {
-        clocktype sum;
+    if( nodePtr->appData.appStats == TRUE ) {
+        clocktype   sum;
 
-        sum  = clientPtr->avgSessionLength * clientPtr->numSessions;
+        sum = clientPtr->avgSessionLength * clientPtr->numSessions;
         clientPtr->sessionFinish = simclock();
-        sum += (clientPtr->sessionFinish - clientPtr->sessionStart);
+        sum += ( clientPtr->sessionFinish - clientPtr->sessionStart );
         clientPtr->numSessions++;
         clientPtr->avgSessionLength = sum / clientPtr->numSessions;
 
-        AppHttpClientPrintStats(nodePtr, clientPtr);
+        AppHttpClientPrintStats( nodePtr, clientPtr );
     }
 }
 
@@ -1070,20 +989,16 @@ AppHttpClientFinalize(GlomoNode *nodePtr, GlomoAppHttpClient *clientPtr)
  * RETURN:      the pointer to the http client data structure,
  *              NULL if nothing found.
  */
-static GlomoAppHttpClient *
-AppHttpClientGetHttpClient(GlomoNode *nodePtr, int connId)
+static GlomoAppHttpClient* AppHttpClientGetHttpClient( GlomoNode* nodePtr, int connId )
 {
-    AppInfo *appList = nodePtr->appData.appPtr;
-    GlomoAppHttpClient *httpClient;
-    
-    for (; appList != NULL; appList = appList->appNext) 
-    {
-        if (appList->appType == APP_HTTP_CLIENT)
-        {
-            httpClient = (GlomoAppHttpClient *) appList->appDetail;
+    AppInfo*            appList = nodePtr->appData.appPtr;
+    GlomoAppHttpClient* httpClient;
 
-            if (httpClient->connectionId == connId)
-            {
+    for( ;appList != NULL;appList = appList->appNext ) {
+        if( appList->appType == APP_HTTP_CLIENT ) {
+            httpClient = ( GlomoAppHttpClient * ) appList->appDetail;
+
+            if( httpClient->connectionId == connId ) {
                 return httpClient;
             }
         }
@@ -1102,39 +1017,36 @@ AppHttpClientGetHttpClient(GlomoNode *nodePtr, int connId)
  * RETRUN:      the pointer to the created http client data structure,
  *              NULL if no data structure allocated.
  */
-static GlomoAppHttpClient *
-AppHttpClientUpdateHttpClient(GlomoNode *nodePtr,
-                            TransportToAppOpenResult *openResult)
+static GlomoAppHttpClient* AppHttpClientUpdateHttpClient( GlomoNode* nodePtr,
+                                                          TransportToAppOpenResult* openResult )
 {
-    char clockStr[GLOMO_MAX_STRING_LENGTH];
+    char                clockStr[GLOMO_MAX_STRING_LENGTH];
 
-    AppInfo *appList = nodePtr->appData.appPtr;
-    GlomoAppHttpClient *tmpHttpClient = NULL;
-    GlomoAppHttpClient *httpClient = NULL;
+    AppInfo*            appList         = nodePtr->appData.appPtr;
+    GlomoAppHttpClient* tmpHttpClient   = NULL;
+    GlomoAppHttpClient* httpClient      = NULL;
 
-    for (; appList != NULL; appList = appList->appNext)
-    {
-        if (appList->appType == APP_HTTP_CLIENT)
-        {
-            tmpHttpClient = (GlomoAppHttpClient *) appList->appDetail;
+    for( ;appList != NULL;appList = appList->appNext ) {
+        if( appList->appType == APP_HTTP_CLIENT ) {
+            tmpHttpClient = ( GlomoAppHttpClient * ) appList->appDetail;
 
-            #ifdef DEBUG
-                printf("HTTP Client: Node %ld comparing uniqueId "
-                       "%ld with %ld\n", nodePtr->nodeAddr,
-                       tmpHttpClient->uniqueId, openResult->uniqueId);
-            #endif
+#ifdef DEBUG
+            printf( "HTTP Client: Node %ld comparing uniqueId "
+                    "%ld with %ld\n",
+                    nodePtr->nodeAddr,
+                    tmpHttpClient->uniqueId,
+                    openResult->uniqueId );
+#endif
 
-            if (tmpHttpClient->uniqueId == openResult->uniqueId)
-            {
+            if( tmpHttpClient->uniqueId == openResult->uniqueId ) {
                 httpClient = tmpHttpClient;
                 break;
             }
         }
     }
 
-    if (httpClient == NULL)
-    {
-        assert(FALSE);
+    if( httpClient == NULL ) {
+        assert( FALSE );
     }
 
     httpClient->connectionId = openResult->connectionId;
@@ -1144,14 +1056,13 @@ AppHttpClientUpdateHttpClient(GlomoNode *nodePtr,
     httpClient->sessionFinish = simclock();
     httpClient->sessionIsClosed = FALSE;
 
-    #ifdef DEBUG
-        printf("HTTP Client: Node %ld updating http "
-               "client struture\n", nodePtr->nodeAddr);
+#ifdef DEBUG
+    printf( "HTTP Client: Node %ld updating http " "client struture\n", nodePtr->nodeAddr );
 
-        printf("    connectionId = %d\n", httpClient->connectionId);
-        printf("    localAddr = %d\n", httpClient->localAddr);
-        printf("    remoteAddr = %d\n", httpClient->remoteAddr);
-    #endif
+    printf( "    connectionId = %d\n", httpClient->connectionId );
+    printf( "    localAddr = %d\n", httpClient->localAddr );
+    printf( "    remoteAddr = %d\n", httpClient->remoteAddr );
+#endif
 
     return httpClient;
 }
@@ -1164,24 +1075,21 @@ AppHttpClientUpdateHttpClient(GlomoNode *nodePtr,
  * RETURN:      the pointer to the created http client data structure,
  *
  */
-static GlomoAppHttpClient *
-AppHttpClientNewHttpClient(GlomoNode *nodePtr)
+static GlomoAppHttpClient* AppHttpClientNewHttpClient( GlomoNode* nodePtr )
 {
-    AppInfo *newApp;
-    GlomoAppHttpClient *httpClient;
+    AppInfo*            newApp;
+    GlomoAppHttpClient* httpClient;
 
-    newApp = (AppInfo *) pc_malloc(sizeof(AppInfo));
+    newApp = ( AppInfo * ) pc_malloc( sizeof( AppInfo ) );
 
-    if (newApp == NULL) 
-    {
-        assert(FALSE);
+    if( newApp == NULL ) {
+        assert( FALSE );
     }
 
-    httpClient = (GlomoAppHttpClient *) pc_malloc(sizeof(GlomoAppHttpClient));
+    httpClient = ( GlomoAppHttpClient * ) pc_malloc( sizeof( GlomoAppHttpClient ) );
 
-    if (httpClient == NULL) 
-    {
-        assert(FALSE);
+    if( httpClient == NULL ) {
+        assert( FALSE );
     }
 
     newApp->appType = APP_HTTP_CLIENT;  
@@ -1198,13 +1106,12 @@ AppHttpClientNewHttpClient(GlomoNode *nodePtr)
     httpClient->numPages = 0;
     httpClient->avgSessionLength = 0;
 
-    #ifdef DEBUG
-        printf("HTTP Client: Node %ld creating new http "
-               "client struture\n", nodePtr->nodeAddr);
+#ifdef DEBUG
+    printf( "HTTP Client: Node %ld creating new http " "client struture\n", nodePtr->nodeAddr );
 
-        printf("    connectionId = %d\n", httpClient->connectionId);
-        printf("    localAddr = %d\n", httpClient->localAddr);
-    #endif
+    printf( "    connectionId = %d\n", httpClient->connectionId );
+    printf( "    localAddr = %d\n", httpClient->localAddr );
+#endif
 
     newApp->appDetail = httpClient;
     newApp->appNext = nodePtr->appData.appPtr; 

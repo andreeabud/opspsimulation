@@ -55,18 +55,18 @@ typedef struct glomo_app_cbr_client_str
 {
     NODE_ADDR   localAddr;
     NODE_ADDR   remoteAddr;
-    clocktype interval;
-    clocktype sessionStart;
-    clocktype sessionFinish;
-    clocktype sessionLastSent;
-    clocktype endTime;
-    BOOL sessionIsClosed;
-    long numBytesSent;
-    long numPktsSent;
-    long itemsToSend;
-    long itemSize;
-    long uniqueId;
-    long seqNo;
+    clocktype   interval;
+    clocktype   sessionStart;
+    clocktype   sessionFinish;
+    clocktype   sessionLastSent;
+    clocktype   endTime;
+    BOOL        sessionIsClosed;
+    long        numBytesSent;
+    long        numPktsSent;
+    long        itemsToSend;
+    long        itemSize;
+    long        uniqueId;
+    long        seqNo;
 } GlomoAppCbrClient;
 
 
@@ -78,8 +78,7 @@ typedef struct glomo_app_cbr_client_str
  *              msg - message received by the layer
  * RETURN:      none.
  */
-void
-AppLayerCbrClient(GlomoNode *nodePtr, Message *msg);
+void AppLayerCbrClient( GlomoNode* nodePtr, Message* msg );
 
 
 /*
@@ -94,14 +93,13 @@ AppLayerCbrClient(GlomoNode *nodePtr, Message *msg);
  *              endTime - time until the session end.
  * RETURN:      none.
  */
-void
-AppCbrClientInit(GlomoNode *nodePtr,
-                 NODE_ADDR serverAddr,
-                 long itemsToSend,
-                 long itemSize,
-                 clocktype interval,
-                 clocktype startTime,
-                 clocktype endTime);
+void AppCbrClientInit( GlomoNode* nodePtr,
+                       NODE_ADDR serverAddr,
+                       long itemsToSend,
+                       long itemSize,
+                       clocktype interval,
+                       clocktype startTime,
+                       clocktype endTime );
 
 /*
  * NAME:        AppCbrClientPrintStats.
@@ -110,8 +108,7 @@ AppCbrClientInit(GlomoNode *nodePtr,
  *              clientPtr - pointer to the cbr client data structure.
  * RETURN:      none.
  */
-void
-AppCbrClientPrintStats(GlomoNode *nodePtr, GlomoAppCbrClient *clientPtr);
+void AppCbrClientPrintStats( GlomoNode* nodePtr, GlomoAppCbrClient* clientPtr );
 
 
 /*
@@ -121,8 +118,7 @@ AppCbrClientPrintStats(GlomoNode *nodePtr, GlomoAppCbrClient *clientPtr);
  *              clientPtr - pointer to the cbr client data structure.
  * RETURN:      none.
  */
-void
-AppCbrClientFinalize(GlomoNode *nodePtr, GlomoAppCbrClient *clientPtr);
+void AppCbrClientFinalize( GlomoNode* nodePtr, GlomoAppCbrClient* clientPtr );
 
 
 /*
@@ -133,8 +129,7 @@ AppCbrClientFinalize(GlomoNode *nodePtr, GlomoAppCbrClient *clientPtr);
  * RETURN:      the pointer to the cbr client data structure,
  *              NULL if nothing found.
  */
-static GlomoAppCbrClient *
-AppCbrClientGetCbrClient(GlomoNode *nodePtr, int uniqueId);
+static GlomoAppCbrClient* AppCbrClientGetCbrClient( GlomoNode* nodePtr, int uniqueId );
 
 
 /*
@@ -151,14 +146,13 @@ AppCbrClientGetCbrClient(GlomoNode *nodePtr, int uniqueId);
  * RETURN:      the pointer to the created cbr client data structure,
  *              NULL if no data structure allocated.
  */
-static GlomoAppCbrClient *
-AppCbrClientNewCbrClient(GlomoNode *nodePtr, 
-                         NODE_ADDR remoteAddr,
-                         long itemsToSend,
-                         long itemSize,
-                         clocktype interval,
-                         clocktype startTime,
-                         clocktype endTime);
+static GlomoAppCbrClient* AppCbrClientNewCbrClient( GlomoNode* nodePtr,
+                                                    NODE_ADDR remoteAddr,
+                                                    long itemsToSend,
+                                                    long itemSize,
+                                                    clocktype interval,
+                                                    clocktype startTime,
+                                                    clocktype endTime );
 
 
 /*
@@ -169,8 +163,7 @@ AppCbrClientNewCbrClient(GlomoNode *nodePtr,
  *              clientPtr - pointer to the cbr client data structure.
  * RETRUN:      none.
  */
-static void
-AppCbrClientScheduleNextPkt(GlomoNode *nodePtr, GlomoAppCbrClient *clientPtr);
+static void AppCbrClientScheduleNextPkt( GlomoNode* nodePtr, GlomoAppCbrClient* clientPtr );
 
 
 

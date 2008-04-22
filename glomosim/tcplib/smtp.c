@@ -62,9 +62,8 @@
 #include "tcplib.h"
 #include "smtp.h"
 
-int
-smtp_itemsize(unsigned short seed[3])
+int smtp_itemsize( unsigned short seed[3] )
 {
-  return ((int) tcplib(&smtp_histmap[lookup(smtp_histmap, "itemsize")], itemsize, seed));
+    return ( ( int ) tcplib( &smtp_histmap[lookup( smtp_histmap, "itemsize" )], itemsize, seed ) );
 }
 

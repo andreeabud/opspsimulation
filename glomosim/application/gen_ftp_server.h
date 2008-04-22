@@ -50,15 +50,15 @@
 #define APP_GEN_FTP_SERVER_FILE    "GEN_FTP_SERVER.EXCEL"
 
 
-typedef struct glomo_app_gen_ftp_server_str 
+typedef struct glomo_app_gen_ftp_server_str
 {
-    int connectionId;
-    NODE_ADDR localAddr; 
-    NODE_ADDR remoteAddr;
-    clocktype sessionStart;
-    clocktype sessionFinish;
-    BOOL sessionIsClosed;
-    long numBytesRecvd;
+    int         connectionId;
+    NODE_ADDR   localAddr; 
+    NODE_ADDR   remoteAddr;
+    clocktype   sessionStart;
+    clocktype   sessionFinish;
+    BOOL        sessionIsClosed;
+    long        numBytesRecvd;
 } GlomoAppGenFtpServer;
 
 
@@ -71,8 +71,7 @@ typedef struct glomo_app_gen_ftp_server_str
  *              msg - message received by the layer
  * RETURN:      none.
  */
-void
-AppLayerGenFtpServer(GlomoNode *nodePtr, Message *msg);
+void AppLayerGenFtpServer( GlomoNode* nodePtr, Message* msg );
 
 
 
@@ -82,8 +81,7 @@ AppLayerGenFtpServer(GlomoNode *nodePtr, Message *msg);
  * PARAMETERS:  nodePtr - pointer to the node.
  * RETURN:      none.
  */
-void
-AppGenFtpServerInit(GlomoNode *nodePtr);
+void AppGenFtpServerInit( GlomoNode* nodePtr );
 
 
 
@@ -94,8 +92,7 @@ AppGenFtpServerInit(GlomoNode *nodePtr);
  *              serverPtr - pointer to the ftp server data structure.
  * RETURN:      none.
  */
-static void
-AppGenFtpServerPrintStats(GlomoNode *nodePtr, GlomoAppGenFtpServer *serverPtr);
+static void AppGenFtpServerPrintStats( GlomoNode* nodePtr, GlomoAppGenFtpServer* serverPtr );
 
 
 
@@ -106,8 +103,7 @@ AppGenFtpServerPrintStats(GlomoNode *nodePtr, GlomoAppGenFtpServer *serverPtr);
  *              serverPtr - pointer to the ftp server data structure.
  * RETURN:      none.
  */
-void
-AppGenFtpServerFinalize(GlomoNode *nodePtr, GlomoAppGenFtpServer *serverPtr);
+void AppGenFtpServerFinalize( GlomoNode* nodePtr, GlomoAppGenFtpServer* serverPtr );
 
 
 
@@ -119,8 +115,7 @@ AppGenFtpServerFinalize(GlomoNode *nodePtr, GlomoAppGenFtpServer *serverPtr);
  * RETURN:      the pointer to the ftp server data structure,
  *              NULL if nothing found.
  */
-static GlomoAppGenFtpServer *
-AppGenFtpServerGetGenFtpServer(GlomoNode *nodePtr, int connId);
+static GlomoAppGenFtpServer* AppGenFtpServerGetGenFtpServer( GlomoNode* nodePtr, int connId );
 
 
 
@@ -133,9 +128,8 @@ AppGenFtpServerGetGenFtpServer(GlomoNode *nodePtr, int connId);
  * RETRUN:      the pointer to the created ftp server data structure,
  *              NULL if no data structure allocated.
  */
-static GlomoAppGenFtpServer *
-AppGenFtpServerNewGenFtpServer(GlomoNode *nodePtr,
-                               TransportToAppOpenResult *openResult);
+static GlomoAppGenFtpServer* AppGenFtpServerNewGenFtpServer( GlomoNode* nodePtr,
+                                                             TransportToAppOpenResult* openResult );
 
 
 

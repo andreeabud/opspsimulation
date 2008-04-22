@@ -54,16 +54,16 @@
 /*
  * typedef to GlomoNodeInput in main.h
  */
-struct glomo_node_input_str {
-    int  numLines;
-    char **inputStrings;
+struct glomo_node_input_str
+{
+    int     numLines;
+    char**  inputStrings;
 };
 
 
-void GLOMO_FreeNodeInput(GlomoNodeInput *nodeInput);
-void GLOMO_ReadFile(GlomoNodeInput *nodeInput, const char *filename);
-BOOL GLOMO_ReadCachedFile(const GlomoNodeInput *nodeInput,
-                          char *index, GlomoNodeInput *readVal);
+void GLOMO_FreeNodeInput( GlomoNodeInput* nodeInput );
+void GLOMO_ReadFile( GlomoNodeInput* nodeInput, const char* filename );
+BOOL GLOMO_ReadCachedFile( const GlomoNodeInput* nodeInput, char* index, GlomoNodeInput* readVal );
 
 /*
  * FUNCTION     GLOMO_Read{String,Int,Double}
@@ -81,25 +81,25 @@ BOOL GLOMO_ReadCachedFile(const GlomoNodeInput *nodeInput,
  * Otherwise FALSE is returned.
  */
 
-BOOL GLOMO_ReadString(const NODE_ADDR nodeAddr, 
-                      const GlomoNodeInput *nodeInput, 
-                      const char *index, 
-                      char *readVal);
+BOOL GLOMO_ReadString( const NODE_ADDR nodeAddr,
+                       const GlomoNodeInput* nodeInput,
+                       const char* index,
+                       char* readVal );
 
-BOOL GLOMO_ReadInt(const NODE_ADDR nodeAddr, 
-                   const GlomoNodeInput *nodeInput, 
-                   const char *index, 
-                   int *readVal);
+BOOL GLOMO_ReadInt( const NODE_ADDR nodeAddr,
+                    const GlomoNodeInput* nodeInput,
+                    const char* index,
+                    int* readVal );
 
-BOOL GLOMO_ReadDouble(const NODE_ADDR nodeAddr, 
-                      const GlomoNodeInput *nodeInput, 
-                      const char *index, 
-                      double *readVal);
+BOOL GLOMO_ReadDouble( const NODE_ADDR nodeAddr,
+                       const GlomoNodeInput* nodeInput,
+                       const char* index,
+                       double* readVal );
 
-BOOL GLOMO_ReadTime(const NODE_ADDR nodeAddr, 
-                    const GlomoNodeInput *nodeInput, 
-                    const char *index, 
-                    clocktype *readVal);
+BOOL GLOMO_ReadTime( const NODE_ADDR nodeAddr,
+                     const GlomoNodeInput* nodeInput,
+                     const char* index,
+                     clocktype* readVal );
 
 
 
@@ -131,42 +131,38 @@ BOOL GLOMO_ReadTime(const NODE_ADDR nodeAddr,
  *
  */
 
-void GLOMO_ReadStringInstance(
-    const NODE_ADDR nodeAddr,
-    const GlomoNodeInput *nodeInput, 
-    const char parameterName[],
-    const int parameterInstanceNumber, 
-    const BOOL fallbackToDefault, 
-    BOOL* WasFound,
-    char  parameterValue[]);
+void GLOMO_ReadStringInstance( const NODE_ADDR nodeAddr,
+                               const GlomoNodeInput* nodeInput,
+                               const char parameterName[],
+                               const int parameterInstanceNumber,
+                               const BOOL fallbackToDefault,
+                               BOOL* WasFound,
+                               char  parameterValue[] );
 
-void GLOMO_ReadIntInstance(
-    const NODE_ADDR nodeAddr,
-    const GlomoNodeInput *nodeInput, 
-    const char parameterName[],
-    const int parameterInstanceNumber, 
-    const BOOL fallbackToDefault, 
-    BOOL* WasFound,
-    int*  parameterValue);
+void GLOMO_ReadIntInstance( const NODE_ADDR nodeAddr,
+                            const GlomoNodeInput* nodeInput,
+                            const char parameterName[],
+                            const int parameterInstanceNumber,
+                            const BOOL fallbackToDefault,
+                            BOOL* WasFound,
+                            int* parameterValue );
 
-void GLOMO_ReadDoubleInstance(
-    const NODE_ADDR nodeAddr,
-    const GlomoNodeInput *nodeInput, 
-    const char parameterName[],
-    const int parameterInstanceNumber, 
-    const BOOL fallbackToDefault, 
-    BOOL* WasFound,
-    double* parameterValue);
+void GLOMO_ReadDoubleInstance( const NODE_ADDR nodeAddr,
+                               const GlomoNodeInput* nodeInput,
+                               const char parameterName[],
+                               const int parameterInstanceNumber,
+                               const BOOL fallbackToDefault,
+                               BOOL* WasFound,
+                               double* parameterValue );
 
-void GLOMO_ReadTimeInstance(
-    const NODE_ADDR nodeAddr,
-    const GlomoNodeInput *nodeInput, 
-    const char parameterName[],
-    const int parameterInstanceNumber, 
-    const BOOL fallbackToDefault, 
-    BOOL* WasFound,
-    clocktype* parameterValue);
-                      
+void GLOMO_ReadTimeInstance( const NODE_ADDR nodeAddr,
+                             const GlomoNodeInput* nodeInput,
+                             const char parameterName[],
+                             const int parameterInstanceNumber,
+                             const BOOL fallbackToDefault,
+                             BOOL* WasFound,
+                             clocktype* parameterValue );
+
 #endif /* _FILEIO_H_ */
 
 

@@ -210,8 +210,7 @@ void RoutingAodvDisplayRouteTable( GlomoNode* node )
 //对路由表项做修改和插入
 BOOL RoutingAodvReplaceInsertRouteTable( GlomoNode* node,
                                          NODE_ADDR destAddr,
-                                         int destSeq,
-                                         //GlomoCoordinates Position,
+                                         int destSeq, //GlomoCoordinates Position,
                                          ETXValue etxToDest,
                                          BOOL destSeqValid,
                                          BOOL valid,
@@ -509,8 +508,7 @@ BOOL RoutingAodvReplaceInsertRouteTable( GlomoNode* node,
 //更新路由表项
 void RoutingAodvReplaceRouteTable( GlomoNode* node,
                                    NODE_ADDR destAddr,
-                                   int destSeq,
-                                   //GlomoCoordinates Position,
+                                   int destSeq, //GlomoCoordinates Position,
                                    ETXValue etxToDest,
                                    BOOL destSeqValid,
                                    BOOL valid,
@@ -577,7 +575,7 @@ void RoutingAodvReplaceRouteTable( GlomoNode* node,
 
         //v----------------------------tianke on 2008-4-11 15:35 0.01--------------------------v
         // 收到hello & RREQ 时不更新路由表中的Position & etxToDest
-        if(  etxToDest != -1 ) {
+        if( etxToDest != -1 ) {
             //etxNbr = ETXCalculate(Position, node->position);
             theNodeEntry->etxToDest = etxToDest;
         }
@@ -1900,8 +1898,8 @@ void RoutingAodvHandleRequest( GlomoNode* node, Message* msg, int ttl )
     RoutingAodvReplaceRouteTable( node,
                                   rreqPkt->lastAddr,
                                   -1,
-                                  //-1, //tianke
-                                  -1, //tianke
+                                                                    //-1, //tianke
+                                  - 1, //tianke
                                   FALSE,
                                   TRUE,
                                   1,
@@ -1964,8 +1962,8 @@ void RoutingAodvHandleRequest( GlomoNode* node, Message* msg, int ttl )
         RoutingAodvReplaceRouteTable( node,
                                       rreqPkt->origAddr,
                                       rreqPkt->origSeq,
-                                      //-1,//tianke
-                                      -1, //tianke
+                                                                            //-1,//tianke
+                                      - 1, //tianke
                                       TRUE,
                                       TRUE,
                                       rreqPkt->hopCount,
@@ -2003,8 +2001,9 @@ void RoutingAodvHandleRequest( GlomoNode* node, Message* msg, int ttl )
         revRouteFormed = RoutingAodvReplaceInsertRouteTable( node,
                                                              rreqPkt->origAddr,
                                                              max( seq, rreqPkt->origSeq ),
-                                                             //-1, //tianke
-                                                             -1, //tianke
+                                                                                                                          //-1, //tianke
+                                                             -
+                                                             1, //tianke
                                                              TRUE,
                                                              TRUE,
                                                              rreqPkt->hopCount,
@@ -2158,10 +2157,10 @@ void RoutingAodvHandleReply( GlomoNode* node, Message* msg, NODE_ADDR srcAddr, N
 
 #ifdef AOMDV_DEBUG_TRACE
     printf( "In Handle Reply\n" );
-			//v----------------------------tianke on 2008-4-21 14:44 0.01--------------------------v
-			printf("destAddr: %d\t", destAddr);
-			printf("nodeAddr: %d\n", node->nodeAddr);
-			//^--------------------------- tianke on 2008-4-21 14:44 0.01--------------------------^
+    //v----------------------------tianke on 2008-4-21 14:44 0.01--------------------------v
+    printf( "destAddr: %d\t", destAddr );
+    printf( "nodeAddr: %d\n", node->nodeAddr );
+    //^--------------------------- tianke on 2008-4-21 14:44 0.01--------------------------^
 #endif // AOMDV_DEBUG_TRACE //
 
     if( rrepPkt->ackReqd == TRUE ) {
@@ -2212,14 +2211,15 @@ void RoutingAodvHandleReply( GlomoNode* node, Message* msg, NODE_ADDR srcAddr, N
         RoutingAodvReplaceRouteTable( node,
                                       rrepPkt->destAddr,
                                       rrepPkt->destSeq,
-                                      //rrepPkt->Positon, //tianke
+                                                                            //rrepPkt->Positon, //tianke
                                       rrepPkt->etxToDest, //tianke
                                       TRUE,
                                       TRUE,
                                       rrepPkt->hopCount,
                                       srcAddr,
                                       rrepPkt->nexttolastAddr,
-                                      simclock() + lifetime,
+                                      simclock() +
+                                      lifetime,
                                       FALSE,
                                       FALSE,
                                       FALSE );
@@ -2265,14 +2265,15 @@ void RoutingAodvHandleReply( GlomoNode* node, Message* msg, NODE_ADDR srcAddr, N
             RoutingAodvReplaceRouteTable( node,
                                           rrepPkt->destAddr,
                                           rrepPkt->destSeq,
-                                          //rrepPkt->Positon, //tianke
+                                                                                    //rrepPkt->Positon, //tianke
                                           rrepPkt->etxToDest, //tianke
                                           TRUE,
                                           TRUE,
                                           rrepPkt->hopCount,
                                           srcAddr,
                                           rrepPkt->nexttolastAddr,
-                                          simclock() + lifetime,
+                                          simclock() +
+                                          lifetime,
                                           FALSE,
                                           FALSE,
                                           FALSE );
@@ -2285,14 +2286,15 @@ void RoutingAodvHandleReply( GlomoNode* node, Message* msg, NODE_ADDR srcAddr, N
             causedNewRoute = RoutingAodvReplaceInsertRouteTable( node,
                                                                  rrepPkt->destAddr,
                                                                  rrepPkt->destSeq,
-                                                                 //rrepPkt->Positon, //tianke
+                                                                                                                                  //rrepPkt->Positon, //tianke
                                                                  rrepPkt->etxToDest,  //tianke
                                                                  TRUE,
                                                                  TRUE,
                                                                  rrepPkt->hopCount,
                                                                  srcAddr,
                                                                  rrepPkt->nexttolastAddr,
-                                                                 simclock() + lifetime,
+                                                                 simclock() +
+                                                                 lifetime,
                                                                  FALSE,
                                                                  FALSE,
                                                                  FALSE );
@@ -2415,8 +2417,8 @@ void RoutingAodvHandleHello( GlomoNode* node, Message* msg, NODE_ADDR nbrAddr )
         RoutingAodvReplaceRouteTable( node,
                                       nbrAddr,
                                       helloPkt->destSeq,
-                                      //-1, //tianke
-                                      -1, //tianke
+                                                                            //-1, //tianke
+                                      - 1, //tianke
                                       TRUE,
                                       TRUE,
                                       1,
@@ -2436,14 +2438,16 @@ void RoutingAodvHandleHello( GlomoNode* node, Message* msg, NODE_ADDR nbrAddr )
         RoutingAodvReplaceRouteTable( node,
                                       nbrAddr,
                                       helloPkt->destSeq,
-                                      //helloPkt->Positon, //tianke
-                                      -1, //tianke 
+                                                                            //helloPkt->Positon, //tianke
+                                      -
+                                      1, //tianke 
                                       TRUE,
                                       TRUE,
                                       1,
                                       nbrAddr,
                                       node->nodeAddr,
-                                      simclock() + ( ALLOWED_HELLO_LOSS * HELLO_INTERVAL ),
+                                      simclock() +
+                                      ( ALLOWED_HELLO_LOSS * HELLO_INTERVAL ),
                                       FALSE,
                                       FALSE,
                                       FALSE );
@@ -3869,7 +3873,7 @@ void RoutingAodvHandleProtocolPacket( GlomoNode* node,
 
     case AODV_RREP:
     {
-		if( destAddr == ANY_DEST ) {
+        if( destAddr == ANY_DEST ) {
             assert( ttl == 0 );
             /*
                      * HELLO packets are the only RREPs that are broadcast...
@@ -3881,14 +3885,14 @@ void RoutingAodvHandleProtocolPacket( GlomoNode* node,
             if( destAddr == node->nodeAddr ) {
                 RoutingAodvHandleReply( node, msg, srcAddr, destAddr );
             }else {
-                     #ifdef OPSP_DEBUG
-					 	printf("destAddr != nodeAddr ");
-					 	printf("nodeAddr:  %d\n", node->nodeAddr);
-                     	printf("destAddr:  %d\n", destAddr);
-                     #endif
+#ifdef OPSP_DEBUG
+                printf( "destAddr != nodeAddr " );
+                printf( "nodeAddr:  %d\n", node->nodeAddr );
+                printf( "destAddr:  %d\n", destAddr );
+#endif
                 OpspHandleOverhearRREP( node, msg, srcAddr, destAddr );
             }
-			
+
             if( RoutingAodvCheckNbrExist( node, srcAddr ) ) {
                 //this neighbor did HELLO in the past DELETE_PERIOD
                 RoutingAodvUpdateLastPacketTime( node, srcAddr );
@@ -4121,6 +4125,10 @@ void RoutingAodvRouterFunction( GlomoNode* node,
     IpHeaderType*       ipHeader    = ( IpHeaderType* ) msg->packet;
 
     /* Control packets */
+	#ifdef OPSP_DEBUG
+	printf("IP Header: %d\n",ipHeader->ip_p);
+	#endif
+	
     if( ipHeader->ip_p == IPPROTO_AODV ) {
         return;
     }
@@ -5033,7 +5041,7 @@ ETXValue ETXCalculate( GlomoCoordinates txNodePosition, GlomoCoordinates rxNodeP
 //<-------------tianke on 2008-3-16 25:11 0.01------------
 
 
-void OpspUpdateNbrETX( GlomoCoordinates nbrPosition, GlomoNode *node, NODE_ADDR nbrAddr )
+void OpspUpdateNbrETX( GlomoCoordinates nbrPosition, GlomoNode* node, NODE_ADDR nbrAddr )
 {
     GlomoNetworkIp*     ipLayer     = ( GlomoNetworkIp* ) node->networkData.networkVar;
     GlomoRoutingAodv*   aodv        = ( GlomoRoutingAodv* ) ipLayer->routingProtocol;
@@ -5121,10 +5129,10 @@ void OpspHandleOverhearRREP( GlomoNode* node, Message* msg, NODE_ADDR srcAddr, N
 
     assert( destAddr != node->nodeAddr );
 
-	#ifdef OPSP_DEBUG
-		printf( "in handle overhear reply \n" );
-	#endif
-	
+#ifdef OPSP_DEBUG
+    printf( "in handle overhear reply \n" );
+#endif
+
     if( !RoutingAodvCheckNbrExist( node, srcAddr ) ) {
         RoutingAodvInsertNbrTable( node, srcAddr );
     }
@@ -5145,9 +5153,9 @@ void OpspHandleOverhearRREP( GlomoNode* node, Message* msg, NODE_ADDR srcAddr, N
         OpspUpdateNfrTableLastTime( node, &current->nfrt, destAddr );
     }
 
-	#ifdef OPSP_DEBUG
-        OpspDisplayNfrTable( &current->nfrt );
-	#endif
+#ifdef OPSP_DEBUG
+    OpspDisplayNfrTable( &current->nfrt );
+#endif
 }
 
 
@@ -5171,7 +5179,10 @@ BOOL OpspCheckNfrExist( OPSP_NFRT* nfrTable, NODE_ADDR destAddr )
 } /* OpspCheckNfrExist */
 
 
-void OpspInsertNfrTable( GlomoNode * node, OPSP_NFRT* nfrTable, NODE_ADDR destAddr, ETXValue etxToDest )
+void OpspInsertNfrTable( GlomoNode* node,
+                         OPSP_NFRT* nfrTable,
+                         NODE_ADDR destAddr,
+                         ETXValue etxToDest )
 {
     OPSP_NFRT_Node* current;
     OPSP_NFRT_Node* previous;
@@ -5270,13 +5281,13 @@ void OpspUpdateNfrTableLastTime( GlomoNode* node, OPSP_NFRT* nfrTable, NODE_ADDR
 } /* OpspUpdateNfrTableLastTime*/ 
 
 
-void OpspUpdateNfrTableEtxToDest( GlomoNode *node,
+void OpspUpdateNfrTableEtxToDest( GlomoNode* node,
                                   OPSP_NFRT* nfrTable,
                                   NODE_ADDR destAddr,
                                   ETXValue etxToDest )
 {
     OPSP_NFRT_Node*     current;
-    MsgOpspDestNbrAddr DestNbrAddr;
+    MsgOpspDestNbrAddr  DestNbrAddr;
 
     DestNbrAddr.nfrTable = nfrTable;
 

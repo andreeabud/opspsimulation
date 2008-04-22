@@ -47,26 +47,23 @@
 #include "main.h"
 #include "queue.h"
 
-enum {
-    RESOURCE_CPU,
-    RESOURCE_NIC,
-
-    /*
-     * Any other resources which have to be added should be added before
-     * RESOURCE_DEFAULT. Otherwise the program will not work correctly.
-     */
-    RESOURCE_DEFAULT
-};
+enum { RESOURCE_CPU,
+       RESOURCE_NIC, /*
+                                                                                          * Any other resources which have to be added should be added before
+                                                                                          * RESOURCE_DEFAULT. Otherwise the program will not work correctly.
+                                                                                          */
+       RESOURCE_DEFAULT };
 
 
 /*
  * typedef to GlomoResource in main.h
  */
-struct glomo_resource_str {
-    BOOL    isBusy;
-    Queue   queue;
+struct glomo_resource_str
+{
+    BOOL            isBusy;
+    Queue           queue;
 
-    unsigned char layerField[GLOMO_DEFAULT_LAYER];
+    unsigned char   layerField[GLOMO_DEFAULT_LAYER];
 };
 
 
@@ -81,8 +78,7 @@ struct glomo_resource_str {
  *     layerType:     The layer type which will utilize the resource.
  *     resourceType:  The resource for which we are setting.
  */
-void GLOMO_ResourceShareLayer (GlomoNode *node, int layerType,
-                               int resourceType);
+void GLOMO_ResourceShareLayer( GlomoNode* node, int layerType, int resourceType );
 
 
 /*
@@ -94,8 +90,7 @@ void GLOMO_ResourceShareLayer (GlomoNode *node, int layerType,
  *     delay:         The time duration during which the resource is busy.
  *     resourceType:  The resource which will be utilized.
  */
-void GLOMO_UtilizeResource(GlomoNode *node, clocktype delay,
-                           int resourceType);
+void GLOMO_UtilizeResource( GlomoNode* node, clocktype delay, int resourceType );
 
 
 
@@ -108,7 +103,7 @@ void GLOMO_UtilizeResource(GlomoNode *node, clocktype delay,
  *     msgHdr:       The message which we are considering.
  *     node:         The node for which the message has arrived.
  */
-BOOL GLOMO_ResourceBuffer (Message *msg, GlomoNode *node);
+BOOL GLOMO_ResourceBuffer( Message* msg, GlomoNode* node );
 
 
 /*
@@ -121,7 +116,7 @@ BOOL GLOMO_ResourceBuffer (Message *msg, GlomoNode *node);
  *     msgHdr:       The message for freeing resource.
  *     node:         The node for which resource is being freed.
  */
-void GLOMO_ResourceFree (Message *msg, GlomoNode *node);
+void GLOMO_ResourceFree( Message* msg, GlomoNode* node );
 
 #endif /* _RESOURCE_H_ */
 

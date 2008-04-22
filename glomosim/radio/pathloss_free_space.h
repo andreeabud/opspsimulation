@@ -44,13 +44,12 @@
 
 #include "propagation.h"
 
-void PathlossFreeSpaceInit(GlomoProp *propData,
-                           const GlomoNodeInput *nodeInput);
+void PathlossFreeSpaceInit( GlomoProp* propData, const GlomoNodeInput* nodeInput );
 
-double PathlossFreeSpace(double distance,
-                         double waveLength,
-                         float txAntennaGain,
-                         float rxAntennaGain);
+double PathlossFreeSpace( double distance,
+                          double waveLength,
+                          float txAntennaGain,
+                          float rxAntennaGain );
 
 #endif /* _PATHLOSS_FREE_SPACE_H_ */
 

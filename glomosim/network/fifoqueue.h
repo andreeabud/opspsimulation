@@ -50,62 +50,62 @@
 #include "ipqueue.h"
 
 
-typedef struct {
-   int         maxPackets;
-   Message**   packetArray;
-   int         numPackets;
-   int         headIndex;
-   int         tailIndex;
+typedef struct
+{
+    int         maxPackets;
+    Message**   packetArray;
+    int         numPackets;
+    int         headIndex;
+    int         tailIndex;
 } FifoPacketQueueType;
 
 
-typedef struct {
-   double QueueWeight;
-   int MinThresholdForQueue;
-   int MaxThresholdForQueue;
-   double MaxPacketMarkingProbability;
+typedef struct
+{
+    double          QueueWeight;
+    int             MinThresholdForQueue;
+    int             MaxThresholdForQueue;
+    double          MaxPacketMarkingProbability;
 
-   double AverageQueueSize;
-   clocktype StartOfQueueIdleTime;
-   clocktype TypicalPacketTransmissionTime;
-   
-   int PacketsSinceLastMarkedPacket;
-   
-   unsigned short seed[3];
-   NODE_ADDR nodeAddress;
+    double          AverageQueueSize;
+    clocktype       StartOfQueueIdleTime;
+    clocktype       TypicalPacketTransmissionTime;
+
+    int             PacketsSinceLastMarkedPacket;
+
+    unsigned short  seed[3];
+    NODE_ADDR       nodeAddress;
 } RedInformationType;
 
 
-typedef struct multi_fifo_packet_queue_struct {
-   FifoPacketQueueType fifoqueues[IP_QUEUE_NUM_OF_PRIORITIES]; 
-   RedInformationType* RedInformationPtrs[IP_QUEUE_NUM_OF_PRIORITIES];
+typedef struct multi_fifo_packet_queue_struct
+{
+    FifoPacketQueueType fifoqueues[IP_QUEUE_NUM_OF_PRIORITIES]; 
+    RedInformationType* RedInformationPtrs[IP_QUEUE_NUM_OF_PRIORITIES];
 } MultiFifoPacketQueueType;
 
 
-void MultiFifoPacketQueue_Insert(
-   IpQueuesUnion queue, 
-   Message* msg,
-   NetworkQueueingPriorityType priority,
-   BOOL* QueueIsFull);
+void MultiFifoPacketQueue_Insert( IpQueuesUnion queue,
+                                  Message* msg,
+                                  NetworkQueueingPriorityType priority,
+                                  BOOL* QueueIsFull );
 
 
-void MultiFifoPacketQueue_RetrieveTopAndMaybeDequeue(
-   IpQueuesUnion queue,
-   BOOL specificPriorityOnly,
-   NetworkQueueingPriorityType priority,
-   Message** msg,
-   NetworkQueueingPriorityType* msgpriority,
-   BOOL dequeueTheMessage);
+void MultiFifoPacketQueue_RetrieveTopAndMaybeDequeue( IpQueuesUnion queue,
+                                                      BOOL specificPriorityOnly,
+                                                      NetworkQueueingPriorityType priority,
+                                                      Message** msg,
+                                                      NetworkQueueingPriorityType* msgpriority,
+                                                      BOOL dequeueTheMessage );
 
 
-BOOL MultiFifoPacketQueue_IsEmpty(IpQueuesUnion queue);
+BOOL MultiFifoPacketQueue_IsEmpty( IpQueuesUnion queue );
 
 
-void MultiFifoPacketQueue_Initialize(
-   IpOutputQueueType* queue,
-   GlomoNode* node,
-   int interfaceId,
-   const GlomoNodeInput* nodeInput);
+void MultiFifoPacketQueue_Initialize( IpOutputQueueType* queue,
+                                      GlomoNode* node,
+                                      int interfaceId,
+                                      const GlomoNodeInput* nodeInput );
 
 #endif /* _FIFOQUEUE_H_ */
 

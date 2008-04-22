@@ -43,19 +43,21 @@
 // sorted so we can access its quickly via binary search.  We do
 // linear interpolation between the values in the array.
 
-typedef struct DoubleDistElement_str {
-    double value;
-    double cdf;
+typedef struct DoubleDistElement_str
+{
+    double  value;
+    double  cdf;
 } DoubleDistElement;
 
-double DoubleDistEmpiricalIntegralInterpolate(
-    double x1, double x2, double y1, double y2, double x);
+double DoubleDistEmpiricalIntegralInterpolate( double x1, double x2, double y1, double y2, double x );
 
-double DoubleDistEmpiricalContinuousInterpolate(
-    double x1, double x2, double y1, double y2, double x);
+double DoubleDistEmpiricalContinuousInterpolate( double x1,
+                                                 double x2,
+                                                 double y1,
+                                                 double y2,
+                                                 double x );
 
-int DoubleDistFindIndex(const DoubleDistElement *array, 
-				        const long count, double value);
+int DoubleDistFindIndex( const DoubleDistElement* array, const long count, double value );
 
 #endif
 

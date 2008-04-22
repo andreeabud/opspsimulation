@@ -45,20 +45,22 @@
 #include "driver.h"
 #include "fileio.h"
 
-typedef struct glomo_mobility_trace_dest_str {
-    clocktype time;
-    GlomoCoordinates dest;
+typedef struct glomo_mobility_trace_dest_str
+{
+    clocktype           time;
+    GlomoCoordinates    dest;
 } GlomoMobilityTraceDest;
 
 
-typedef struct glomo_mobility_trace_str {
-    int number_moves_left;
-    clocktype move_interval;
-    
-    GlomoCoordinates move_step;
-    int numItems;
-    int counter;
-    GlomoMobilityTraceDest *destArray;
+typedef struct glomo_mobility_trace_str
+{
+    int                     number_moves_left;
+    clocktype               move_interval;
+
+    GlomoCoordinates        move_step;
+    int                     numItems;
+    int                     counter;
+    GlomoMobilityTraceDest* destArray;
 } GlomoMobilityTrace;
 
 
@@ -69,8 +71,7 @@ typedef struct glomo_mobility_trace_str {
  *     node:      node being initialized.
  *     nodeInput: structure containing contents of input file
  */
-void GLOMO_MobilityTraceInit(GlomoNode *node,
-                             GlomoNodeInput *nodeInput);
+void GLOMO_MobilityTraceInit( GlomoNode* node, GlomoNodeInput* nodeInput );
 
 
 /*
@@ -80,7 +81,7 @@ void GLOMO_MobilityTraceInit(GlomoNode *node,
  *     node:     node which received the message
  *     msg:      message received by the layer
  */
-void GLOMO_MobilityTrace(GlomoNode *node);
+void GLOMO_MobilityTrace( GlomoNode* node );
 
 #endif /* _MOBILITY_TRACE_H_ */
 

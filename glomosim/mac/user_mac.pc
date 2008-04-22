@@ -64,68 +64,59 @@
 #define USER_DEFINED_MAC_PROTOCOL_NUMBER 123
 
 
-void MacInitUserMacProtocol(
-   GlomoNode* node,
-   const GlomoNodeInput* nodeInput,
-   const char* macProtocolName,
-   int interfaceIndex)
+void MacInitUserMacProtocol( GlomoNode* node,
+                             const GlomoNodeInput* nodeInput,
+                             const char* macProtocolName,
+                             int interfaceIndex )
 {
-   if (strcmp(macProtocolName, "USER-DEFINED-PROTOCOL") == 0) {
-      
-      node->macData[interfaceIndex]->macProtocol = 
-         USER_DEFINED_MAC_PROTOCOL_NUMBER;
-      
-      // Put function to create your datastructures and 
-      // initialize your protocol here.  For Example,
-           
-      // YourMacProtocolInit(node, nodeInput, interfaceIndex, 
-      //    (YourMacDataType**)node->macData[interfaceIndex]->macVar);
-   }
-   else {
-      fprintf(stderr, "CONFIG.IN Error: Unknown Mac Protocol Type "
-              "%s.\n", macProtocolName);
-      assert(FALSE); abort();
-   }
+    if( strcmp( macProtocolName, "USER-DEFINED-PROTOCOL" ) == 0 ) {
+        node->macData[interfaceIndex]->macProtocol = USER_DEFINED_MAC_PROTOCOL_NUMBER;
+
+        // Put function to create your datastructures and 
+        // initialize your protocol here.  For Example,
+
+        // YourMacProtocolInit(node, nodeInput, interfaceIndex, 
+        //    (YourMacDataType**)node->macData[interfaceIndex]->macVar);
+    }else {
+        fprintf( stderr, "CONFIG.IN Error: Unknown Mac Protocol Type " "%s.\n", macProtocolName );
+        assert( FALSE ); abort();
+    }
 }
 
 
-void MacHandleUserMacProtocolEvent(
-   GlomoNode* node, int interfaceIndex, Message* msg) 
+void MacHandleUserMacProtocolEvent( GlomoNode* node, int interfaceIndex, Message* msg )
 {
-   switch (msg->protocolType) {
-   case USER_DEFINED_MAC_PROTOCOL_NUMBER: {
-   
-      // Put function to handle GlomoSim Events for your protocol here.  
-      // For Example,
-           
-      // YourRoutingProtocolEventHandler(
-      //    node, (YourMacDataType*)node->macData[interfaceIndex]->macVar, msg);
-   }
-   default:
-      printf("GloMoSim: Mac Protocol %d Not Handled\n", 
-             msg->protocolType);
-      assert(FALSE); abort();
-   }/*switch*/
+    switch( msg->protocolType ) {
+    case USER_DEFINED_MAC_PROTOCOL_NUMBER:
+    {
+        // Put function to handle GlomoSim Events for your protocol here.  
+        // For Example,
+
+        // YourRoutingProtocolEventHandler(
+        //    node, (YourMacDataType*)node->macData[interfaceIndex]->macVar, msg);
+    }
+    default:printf( "GloMoSim: Mac Protocol %d Not Handled\n", msg->protocolType );
+    assert( FALSE ); abort();
+    }/*switch*/
 }
 
 
-void MacFinalizeUserMacProtocol(GlomoNode* node, int interfaceIndex)
+void MacFinalizeUserMacProtocol( GlomoNode* node, int interfaceIndex )
 {
-   switch (node->macData[interfaceIndex]->macProtocol) {
-   case USER_DEFINED_MAC_PROTOCOL_NUMBER: {
-   
-      // Put function call to handle routing protocol finalization here:
-      // For Example,
-      
-      // YourFinalizationRoutine(
-      //    node, (YourMacDataType*)node->macData[interfaceIndex]->macVar);
-   }
-   default:
-      printf("Glomosim Mac Protocol %d Not Handled\n", 
-         node->macData[interfaceIndex]->macProtocol);
-      assert(FALSE); abort();
-   }/*switch*/
+    switch( node->macData[interfaceIndex]->macProtocol ) {
+    case USER_DEFINED_MAC_PROTOCOL_NUMBER:
+    {
+        // Put function call to handle routing protocol finalization here:
+        // For Example,
+
+        // YourFinalizationRoutine(
+        //    node, (YourMacDataType*)node->macData[interfaceIndex]->macVar);
+    }
+    default:printf( "Glomosim Mac Protocol %d Not Handled\n",
+                    node->macData[interfaceIndex]->macProtocol );
+    assert( FALSE ); abort();
+    }/*switch*/
 }
-         
+
 
 

@@ -68,11 +68,7 @@
 /* 
  * Different radio types supported. 
  */
-typedef enum {
-    RADIO_ACCNOISE,
-    RADIO_FOR_SIRCIM,
-    RADIO_NONOISE
-} RADIO_TYPE;
+typedef enum { RADIO_ACCNOISE, RADIO_FOR_SIRCIM, RADIO_NONOISE } RADIO_TYPE;
 
 
 /*
@@ -81,31 +77,32 @@ typedef enum {
  *
  * typedef to GlomoRadio in main.h
  */
-struct glomo_radio_str {
-    RADIO_TYPE radioType;
-    int        radioNumber;
-    int        macInterfaceIndex;
-    double     txPower_mW;
-    double     txPower_dBm;
-    double     rxSensitivity_mW;
-    double     rxSensitivity_dBm;
-    double     rxThreshold_mW;
-    double     rxThreshold_dBm;
-    float      antennaGain_dB;
-    float      antennaHeight;
-    int        bandwidth;
-    double     backgroundNoise_mW;   // Pre-calculated to include bandwidth.
-    double     backgroundNoise_dBm;  // 
-    float      wavelength;
-    
-    BOOL       radioStats;
-    BOOL       guiOption;
+struct glomo_radio_str
+{
+    RADIO_TYPE  radioType;
+    int         radioNumber;
+    int         macInterfaceIndex;
+    double      txPower_mW;
+    double      txPower_dBm;
+    double      rxSensitivity_mW;
+    double      rxSensitivity_dBm;
+    double      rxThreshold_mW;
+    double      rxThreshold_dBm;
+    float       antennaGain_dB;
+    float       antennaHeight;
+    int         bandwidth;
+    double      backgroundNoise_mW;   // Pre-calculated to include bandwidth.
+    double      backgroundNoise_dBm;  // 
+    float       wavelength;
+
+    BOOL        radioStats;
+    BOOL        guiOption;
 
     /*
      * The following varialbe will be interpreted differently
      * by different radio layers.
      */
-    void *radioVar;
+    void*       radioVar;
 };
 
 
@@ -113,21 +110,17 @@ struct glomo_radio_str {
  * Status of the radio: idle, transmitting, or receiving
  */
 
-typedef enum {
-    RADIO_IDLE,
-    RADIO_SENSING,
-    RADIO_RECEIVING,
-    RADIO_TRANSMITTING
-} RadioStatusType;
+typedef enum { RADIO_IDLE, RADIO_SENSING, RADIO_RECEIVING, RADIO_TRANSMITTING }  RadioStatusType;
 
 
 /*
  * Used by Radio layer to report channel status to mac layer.
  */
-typedef struct radio_status_pkt_str {
+typedef struct radio_status_pkt_str
+{
     RadioStatusType status;
-    clocktype receiveDuration;
-    const Message* thePacketIfItGetsThrough;
+    clocktype       receiveDuration;
+    const Message*  thePacketIfItGetsThrough;
 } PacketRadioStatus;
 
 //
@@ -152,11 +145,10 @@ typedef struct radio_status_pkt_str {
 #define BATTERY_TX_POWER_COEFFICIENT (16.0 / SECOND)
 
 
-void GLOMO_RadioCreateARadioForMacLayer(
-    GlomoNode *node, 
-    const GlomoNodeInput *nodeInput,
-    const int interfaceIndex,
-    int* radioNumber);
+void GLOMO_RadioCreateARadioForMacLayer( GlomoNode* node,
+                                         const GlomoNodeInput* nodeInput,
+                                         const int interfaceIndex,
+                                         int* radioNumber );
 
 
 
@@ -166,29 +158,28 @@ void GLOMO_RadioCreateARadioForMacLayer(
 #define GLOMO_RadioAntennaHeight(node, radioNum) \
             ((node)->radioData[(radioNum)]->antennaHeight)
 
-BOOL GLOMO_RadioCanReceive(GlomoNode* node, int radioNum, double rxPower_dBm);
+BOOL GLOMO_RadioCanReceive( GlomoNode* node, int radioNum, double rxPower_dBm );
 
-RadioStatusType GLOMO_RadioGetStatus(GlomoNode *node, int radioNum);
+RadioStatusType GLOMO_RadioGetStatus( GlomoNode* node, int radioNum );
 
-void GLOMO_RadioStartTransmittingPacket(
-   GlomoNode* node, 
-   int radioNum, 
-   Message* msg,
-   NODE_ADDR destinationNode,
-   BOOL macLayerSpecifiesTheDelay,
-   clocktype delayUntilAirborne);
-   
+void GLOMO_RadioStartTransmittingPacket( GlomoNode* node,
+                                         int radioNum,
+                                         Message* msg,
+                                         NODE_ADDR destinationNode,
+                                         BOOL macLayerSpecifiesTheDelay,
+                                         clocktype delayUntilAirborne );
+
 
 // This routine finds which radio is tuned is tuned to a certain
 // frequency. (Returns INVALID_RADIO_NUMBER  when can't find one).
 
 #define INVALID_RADIO_NUMBER -1
 
-int GLOMO_RadioGetRadioNumberForWavelength(GlomoNode* node, double wavelength);
+int GLOMO_RadioGetRadioNumberForWavelength( GlomoNode* node, double wavelength );
 
 
-int GLOMO_RadioGetBandwidthBits(GlomoNode* node, int radioNum);
-                             
+int GLOMO_RadioGetBandwidthBits( GlomoNode* node, int radioNum );
+
 
 #endif /* _RADIO_H_ */
 

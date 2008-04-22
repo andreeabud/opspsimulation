@@ -46,11 +46,12 @@
 
 #include "message.h"
 
-typedef struct glomo_app_nstelnet_client_str {
-    int connectionId;
-    clocktype sessionStart;
-    clocktype sessionFinish;
-    BOOL sessionIsClosed;
+typedef struct glomo_app_nstelnet_client_str
+{
+    int         connectionId;
+    clocktype   sessionStart;
+    clocktype   sessionFinish;
+    BOOL        sessionIsClosed;
 } GlomoAppNstelnetClient;
 
 /*
@@ -61,8 +62,7 @@ typedef struct glomo_app_nstelnet_client_str {
  *              waitTime - time until the session starts.
  * RETURN:      none. 
  */
-void
-AppNstelnetClientInit(GlomoNode *, short, NODE_ADDR, short, int, clocktype);
+void AppNstelnetClientInit( GlomoNode*, short, NODE_ADDR, short, int, clocktype );
 
 /*
  * NAME:        AppLayerNstelnetClient.
@@ -72,8 +72,7 @@ AppNstelnetClientInit(GlomoNode *, short, NODE_ADDR, short, int, clocktype);
  *              msg - message received by the layer
  * RETURN:      none.
  */
-void 
-AppLayerNstelnetClient(GlomoNode *nodePtr, Message *msg);
+void AppLayerNstelnetClient( GlomoNode* nodePtr, Message* msg );
 
 #endif /* _TELNET_CLIENT_H_ */
 

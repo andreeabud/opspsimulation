@@ -53,65 +53,87 @@
 #include "tcp_seq.h"
 #include "tcp_var.h"
 
-extern int get_conid(struct inpcb *);
+extern int get_conid( struct inpcb* );
 
-extern void insque_ti(struct tcpiphdr *, struct tcpiphdr *);
+extern void insque_ti( struct tcpiphdr*, struct tcpiphdr* );
 
-extern int in_cksum(unsigned short *, int);
+extern int in_cksum( unsigned short*, int );
 
-extern int myrand(int, int, unsigned short *);
+extern int myrand( int, int, unsigned short* );
 
-extern void remque_ti(struct tcpiphdr *);
+extern void remque_ti( struct tcpiphdr* );
 
-extern struct inpcb *tcp_attach(struct inpcb *, APP_TYPE, NODE_ADDR, short,
-                                NODE_ADDR, short, long, int);
+extern struct inpcb* tcp_attach( struct inpcb*,
+                                 APP_TYPE,
+                                 NODE_ADDR,
+                                 short,
+                                 NODE_ADDR,
+                                 short,
+                                 long,
+                                 int );
 
-extern void tcp_canceltimers(struct tcpcb *);
+extern void tcp_canceltimers( struct tcpcb* );
 
-extern struct tcpcb *tcp_close(GlomoNode *, struct tcpcb *, struct tcpstat *);
+extern struct tcpcb* tcp_close( GlomoNode*, struct tcpcb*, struct tcpstat* );
 
-extern void tcp_connect(GlomoNode *, struct inpcb *, APP_TYPE, 
-                        NODE_ADDR, short, NODE_ADDR, short,
-                        unsigned long, tcp_seq *, struct tcpstat *,
-                        long, int);
+extern void tcp_connect( GlomoNode*,
+                         struct inpcb*,
+                         APP_TYPE,
+                         NODE_ADDR,
+                         short,
+                         NODE_ADDR,
+                         short,
+                         unsigned long,
+                         tcp_seq*,
+                         struct tcpstat*,
+                         long,
+                         int );
 
-extern void tcp_disconnect(GlomoNode *, struct inpcb *, int,
-                           unsigned long, struct tcpstat *);
+extern void tcp_disconnect( GlomoNode*, struct inpcb*, int, unsigned long, struct tcpstat* );
 
-extern struct tcpcb *tcp_drop(GlomoNode *, struct tcpcb *, unsigned long,
-                              struct tcpstat *);
+extern struct tcpcb* tcp_drop( GlomoNode*, struct tcpcb*, unsigned long, struct tcpstat* );
 
-extern void tcp_fasttimo(GlomoNode *, struct inpcb *, unsigned long,
-                         struct tcpstat *);
+extern void tcp_fasttimo( GlomoNode*, struct inpcb*, unsigned long, struct tcpstat* );
 
-extern void tcp_input(GlomoNode *, unsigned char *, int, int,
-                      struct inpcb *, tcp_seq *, unsigned long,
-                      struct tcpstat *);
+extern void tcp_input( GlomoNode*,
+                       unsigned char*,
+                       int,
+                       int,
+                       struct inpcb*,
+                       tcp_seq*,
+                       unsigned long,
+                       struct tcpstat* );
 
-extern void tcp_listen(GlomoNode *, struct inpcb *, APP_TYPE, NODE_ADDR,
-                       short, int);
+extern void tcp_listen( GlomoNode*, struct inpcb*, APP_TYPE, NODE_ADDR, short, int );
 
 extern int tcp_mssopt();
 
-extern struct tcpcb *tcp_newtcpcb(struct inpcb *);
+extern struct tcpcb* tcp_newtcpcb( struct inpcb* );
 
-extern void tcp_output(GlomoNode *, struct tcpcb *, unsigned long,
-                       struct tcpstat *);
+extern void tcp_output( GlomoNode*, struct tcpcb*, unsigned long, struct tcpstat* );
 
-extern void tcp_respond(GlomoNode *, struct tcpcb *, struct tcpiphdr *,
-                        int, tcp_seq, tcp_seq,
-                        int, struct tcpstat *);
- 
-extern void tcp_send(GlomoNode *, struct inpcb *, int, 
-                     unsigned char *, int, unsigned long,
-                     struct tcpstat *);
+extern void tcp_respond( GlomoNode*,
+                         struct tcpcb*,
+                         struct tcpiphdr*,
+                         int,
+                         tcp_seq,
+                         tcp_seq,
+                         int,
+                         struct tcpstat* );
 
-extern void tcp_setpersist(struct tcpcb *);
+extern void tcp_send( GlomoNode*,
+                      struct inpcb*,
+                      int,
+                      unsigned char*,
+                      int,
+                      unsigned long,
+                      struct tcpstat* );
 
-extern void tcp_slowtimo(GlomoNode *, struct inpcb *, tcp_seq *,
-                         unsigned long *, struct tcpstat *);
+extern void tcp_setpersist( struct tcpcb* );
 
-extern struct tcpiphdr * tcp_template(struct tcpcb *);
+extern void tcp_slowtimo( GlomoNode*, struct inpcb*, tcp_seq*, unsigned long*, struct tcpstat* );
+
+extern struct tcpiphdr* tcp_template( struct tcpcb* );
 
 #endif /* _TCP_PROTO_H_ */
 

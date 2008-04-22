@@ -61,20 +61,21 @@
  *
 */
 
-struct entry { 
-  float value;
-  float prob;
+struct entry
+{
+    float   value;
+    float   prob;
 };
 
-struct histmap {
-  char *h_name;
-  long nbins;
+struct histmap
+{
+    char*   h_name;
+    long    nbins;
 };
 
 #define MAXHIST 5
 #define PRECIS 1000
 
-extern int lookup(struct histmap *hmp, char *h_name);
-extern double tcplib(struct histmap *hmp, struct entry *tbl, 
-                     unsigned short seed[3]);
+extern int lookup( struct histmap* hmp, char* h_name );
+extern double tcplib( struct histmap* hmp, struct entry* tbl, unsigned short seed[3] );
 

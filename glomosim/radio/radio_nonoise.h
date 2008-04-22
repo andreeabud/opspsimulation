@@ -49,34 +49,36 @@
 /*
  * Structure for radio statistics variables
  */
-typedef struct radio_nonoise_stats_str {
-    int totalTxSignals;
-    int totalRxSignalsAboveRX;
-    int totalRxSignalsAboveCS;
-    int totalRxSignalsToMac;
-    int totalCollisions;
-    double energyConsumed;
-    clocktype turnOnTime;
+typedef struct radio_nonoise_stats_str
+{
+    int         totalTxSignals;
+    int         totalRxSignalsAboveRX;
+    int         totalRxSignalsAboveCS;
+    int         totalRxSignalsToMac;
+    int         totalCollisions;
+    double      energyConsumed;
+    clocktype   turnOnTime;
 } RadioNonoiseStats;
 
 
 /*
  * Structure for Radio.
  */
-typedef struct glomo_radio_nonoise_str {
-    double           radioRxSnrThreshold;
-    double           radioRxSnrThreshold_dB;
+typedef struct glomo_radio_nonoise_str
+{
+    double              radioRxSnrThreshold;
+    double              radioRxSnrThreshold_dB;
 
-    Message   *rxMsg;
-    double     rxMsgPower_mW;
-    clocktype  rxMsgTxDuration;
-    clocktype  rxStartTime;
+    Message*            rxMsg;
+    double              rxMsgPower_mW;
+    clocktype           rxMsgTxDuration;
+    clocktype           rxStartTime;
 
-    int numSignals;
-    RadioStatusType mode;
-    RadioStatusType previousMode;
+    int                 numSignals;
+    RadioStatusType     mode;
+    RadioStatusType     previousMode;
 
-    RadioNonoiseStats    stats; /* Stores statistical results */
+    RadioNonoiseStats   stats; /* Stores statistical results */
 } GlomoRadioNonoise;
 
 
@@ -89,24 +91,25 @@ typedef struct glomo_radio_nonoise_str {
  *     node:     node which received the message
  *     msgHdr:   message received by the layer
  */
-void RadioNonoiseLayer(GlomoNode *node, const int radioNum, Message *msgHdr);
+void RadioNonoiseLayer( GlomoNode* node, const int radioNum, Message* msgHdr );
 
-void RadioNonoiseInit(GlomoNode *node, const int radioNum, 
-                 const GlomoNodeInput *nodeInput);
+void RadioNonoiseInit( GlomoNode* node, const int radioNum, const GlomoNodeInput* nodeInput );
 
-void RadioNonoiseFinalize(GlomoNode *node, const int radioNum);
+void RadioNonoiseFinalize( GlomoNode* node, const int radioNum );
 
 static /*inline*/
-RadioStatusType RadioNonoiseGetStatus(GlomoNode *node, int radioNum) {
-    GlomoRadioNonoise* radioNonoise = 
-       (GlomoRadioNonoise *)node->radioData[radioNum]->radioVar;
-    return (radioNonoise->mode);
+RadioStatusType RadioNonoiseGetStatus( GlomoNode* node, int radioNum )
+{
+    GlomoRadioNonoise*  radioNonoise    = ( GlomoRadioNonoise* )
+                                          node->radioData[radioNum]->radioVar;
+    return ( radioNonoise->mode );
 }
 
-void RadioNonoiseStartTransmittingPacket(
-   GlomoNode* node, int radioNum, Message* packet,
-   BOOL useMacLayerSpecifiedDelay,
-   clocktype delayUntilAirborne);
+void RadioNonoiseStartTransmittingPacket( GlomoNode* node,
+                                          int radioNum,
+                                          Message* packet,
+                                          BOOL useMacLayerSpecifiedDelay,
+                                          clocktype delayUntilAirborne );
 
 #endif /* _RADIO_NONOISE_H_ */
 

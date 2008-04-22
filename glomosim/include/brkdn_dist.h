@@ -62,11 +62,12 @@
  *
 */
 
-struct brkdn_dist { 
-    float cdf;
-    char *appname;
+struct brkdn_dist
+{
+    float   cdf;
+    char*   appname;
 };
 
-extern struct brkdn_dist *brkdn_dist(unsigned short seed[3]);
-extern char *next_app(struct brkdn_dist brkdn[], unsigned short seed[3]);
+extern struct brkdn_dist* brkdn_dist( unsigned short seed[3] );
+extern char* next_app( struct brkdn_dist brkdn[], unsigned short seed[3] );
 

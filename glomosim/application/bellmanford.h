@@ -76,33 +76,33 @@
 
 
 /* Describes one entry in routing table. */
-typedef struct  RoutingBellmanfordRoutingTableRow_t 
+typedef struct  RoutingBellmanfordRoutingTableRow_t
 {
     /* Node id of the next hop node. */
-    NODE_ADDR nextHop;
+    NODE_ADDR   nextHop;
 
     /* This distance is measured in terms of number of hops. */
-    short dist;
+    short       dist;
 
     /* Used to determine if routing information is old. */
-    clocktype lastModified;
+    clocktype   lastModified;
 
     /* Used to trigger updates if route info changed. */
-    BOOL routeChanged;
+    BOOL        routeChanged;
 } RoutingBellmanfordRoutingTableRow;
 
 
 /* Describes routing table information for all nodes. */
-typedef struct RoutingBellmanfordRoutingTable_t 
+typedef struct RoutingBellmanfordRoutingTable_t
 {
     /* Time when the next routing table broadcast will take place. */
-    clocktype nextRTBroadcast;
+    clocktype                           nextRTBroadcast;
 
     /* Tells if a triggered update occured. */
-    BOOL triggeredUpdate;
+    BOOL                                triggeredUpdate;
 
     /* One row for each destination. */
-    RoutingBellmanfordRoutingTableRow *row; 
+    RoutingBellmanfordRoutingTableRow*  row;
 } RoutingBellmanfordRoutingTable;
 
 
@@ -110,10 +110,10 @@ typedef struct RoutingBellmanfordRoutingTable_t
  * Describes one entry in routing table that is broadcasted
  * for routing table updates.
  */
-typedef struct RoutingBellmanfordBroadcastRoutingTableRow_t 
+typedef struct RoutingBellmanfordBroadcastRoutingTableRow_t
 {
     /* Destination node. */
-    NODE_ADDR destAddr;
+    NODE_ADDR   destAddr;
 
     /* 
      * Not needed in specification, but needed here
@@ -121,33 +121,33 @@ typedef struct RoutingBellmanfordBroadcastRoutingTableRow_t
      * flooding for wireless networks.  Needed for
      * split horizon with poisoned reverse.
      */
-    NODE_ADDR nextHop;
+    NODE_ADDR   nextHop;
 
     /* Distance to destination node. */
-    int dist;
+    int         dist;
 
     /* Used to pad memory when memory usage of this struct is not aligned. */
-    int padding;
+    int         padding;
 } RoutingBellmanfordBroadcastRoutingTableRow;
 
 
 typedef struct RoutingBellmanfordHeader_t
 {
     /* Source address. */
-    NODE_ADDR sourceAddr;
+    NODE_ADDR   sourceAddr;
 
     /* Destination address. */
-    NODE_ADDR destAddr;
+    NODE_ADDR   destAddr;
 
     /* Size of payload. */
-    int payloadSize;
+    int         payloadSize;
 } RoutingBellmanfordHeader;
 
 
 /*
  * For statistics and measurements.
  */
-typedef struct RoutingBellmanfordRoutingStats_t 
+typedef struct RoutingBellmanfordRoutingStats_t
 {
     /* Total number of routing table broadcasts. */
     int numRTBroadcast;   
@@ -160,18 +160,17 @@ typedef struct RoutingBellmanfordRoutingStats_t
 
     /* Total number of packets received from Transport Layer. */
     int numFromUdp;
-
 } RoutingBellmanfordRoutingStats;
 
 
 /* Bellmanford data structure. */
-typedef struct glomo_routing_bellmanford_str 
+typedef struct glomo_routing_bellmanford_str
 {
     /* Keeps track of routing tables of all nodes. */
-    RoutingBellmanfordRoutingTable routeTable;
+    RoutingBellmanfordRoutingTable  routeTable;
 
     /* Keeps track of different network statistics. */
-    RoutingBellmanfordRoutingStats stats;
+    RoutingBellmanfordRoutingStats  stats;
 } GlomoRoutingBellmanford;
 
 
@@ -190,8 +189,7 @@ typedef struct glomo_routing_bellmanford_str
  * ASSUMPTION:  None.
  */
 
-void RoutingBellmanfordLayer(GlomoNode *nodePtr,
-                             Message *msg);
+void RoutingBellmanfordLayer( GlomoNode* nodePtr, Message* msg );
 
 
 /*
@@ -206,7 +204,7 @@ void RoutingBellmanfordLayer(GlomoNode *nodePtr,
  * ASSUMPTION:  None.
  */
 
-void RoutingBellmanfordInit(GlomoNode *nodePtr);
+void RoutingBellmanfordInit( GlomoNode* nodePtr );
 
 
 /*
@@ -221,7 +219,7 @@ void RoutingBellmanfordInit(GlomoNode *nodePtr);
  * ASSUMPTION:  None.
  */
 
-void RoutingBellmanfordFinalize(GlomoNode *nodePtr);
+void RoutingBellmanfordFinalize( GlomoNode* nodePtr );
 
 
 
@@ -239,9 +237,9 @@ void RoutingBellmanfordFinalize(GlomoNode *nodePtr);
  * ASSUMPTION:  None.
  */
 
-void RoutingBellmanfordHandleRTPacket(GlomoNode *nodePtr, 
-                                      RoutingBellmanfordHeader *header,
-                                      char *payload);
+void RoutingBellmanfordHandleRTPacket( GlomoNode* nodePtr,
+                                       RoutingBellmanfordHeader* header,
+                                       char* payload );
 
 
 /*
@@ -257,8 +255,8 @@ void RoutingBellmanfordHandleRTPacket(GlomoNode *nodePtr,
  * ASSUMPTION:  None.
  */
 
-void RoutingBellmanfordInitRoutingTable(GlomoNode *nodePtr, 
-                            RoutingBellmanfordRoutingTable *routeTablePtr);
+void RoutingBellmanfordInitRoutingTable( GlomoNode* nodePtr,
+                                         RoutingBellmanfordRoutingTable* routeTablePtr );
 
 
 /*
@@ -275,10 +273,9 @@ void RoutingBellmanfordInitRoutingTable(GlomoNode *nodePtr,
  * ASSUMPTION:  None.
  */
 
-RoutingBellmanfordHeader
-RoutingBellmanfordBuildHeader(NODE_ADDR sourceAddr,
-                              NODE_ADDR destAddr,
-                              int payloadSize);
+RoutingBellmanfordHeader RoutingBellmanfordBuildHeader( NODE_ADDR sourceAddr,
+                                                        NODE_ADDR destAddr,
+                                                        int payloadSize );
 
 
 /*
@@ -297,9 +294,9 @@ RoutingBellmanfordBuildHeader(NODE_ADDR sourceAddr,
  * ASSUMPTION:  None.
  */
 
-void RoutingBellmanfordPrintBroadcastRoutingTable(GlomoNode *nodePtr,
-                    RoutingBellmanfordBroadcastRoutingTableRow *neighRTPtr,
-                    int numOfRTEntries);
+void RoutingBellmanfordPrintBroadcastRoutingTable( GlomoNode* nodePtr,
+                                                   RoutingBellmanfordBroadcastRoutingTableRow* neighRTPtr,
+                                                   int numOfRTEntries );
 
 
 /*
@@ -316,8 +313,8 @@ void RoutingBellmanfordPrintBroadcastRoutingTable(GlomoNode *nodePtr,
  * ASSUMPTION:  None.
  */
 
-void RoutingBellmanfordPrintRoutingTable(GlomoNode *nodePtr, 
-                            RoutingBellmanfordRoutingTable *routeTablePtr);
+void RoutingBellmanfordPrintRoutingTable( GlomoNode* nodePtr,
+                                          RoutingBellmanfordRoutingTable* routeTablePtr );
 
 
 /*
@@ -333,8 +330,8 @@ void RoutingBellmanfordPrintRoutingTable(GlomoNode *nodePtr,
  * ASSUMPTION:  None.
  */
 
-void RoutingBellmanfordBroadcastTriggerUpdate(GlomoNode *nodePtr,
-                            RoutingBellmanfordRoutingTable *routeTablePtr);
+void RoutingBellmanfordBroadcastTriggerUpdate( GlomoNode* nodePtr,
+                                               RoutingBellmanfordRoutingTable* routeTablePtr );
 
 
 /*
@@ -350,8 +347,8 @@ void RoutingBellmanfordBroadcastTriggerUpdate(GlomoNode *nodePtr,
  * ASSUMPTION:  None.
  */
 
-void RoutingBellmanfordBroadcastRoutingTable(GlomoNode *nodePtr,
-                           RoutingBellmanfordRoutingTable *routeTablePtr);
+void RoutingBellmanfordBroadcastRoutingTable( GlomoNode* nodePtr,
+                                              RoutingBellmanfordRoutingTable* routeTablePtr );
 
 
 /*
@@ -368,8 +365,8 @@ void RoutingBellmanfordBroadcastRoutingTable(GlomoNode *nodePtr,
  * ASSUMPTION:  None.
  */
 
-void RoutingBellmanfordHandleRoutingTableTO(GlomoNode *nodePtr,
-                            RoutingBellmanfordRoutingTable *routeTablePtr);
+void RoutingBellmanfordHandleRoutingTableTO( GlomoNode* nodePtr,
+                                             RoutingBellmanfordRoutingTable* routeTablePtr );
 
 
 /*
@@ -392,11 +389,11 @@ void RoutingBellmanfordHandleRoutingTableTO(GlomoNode *nodePtr,
  * ASSUMPTION:  None.
  */
 
-void RoutingBellmanfordUpdateRoutingTable(GlomoNode *nodePtr, 
-                    NODE_ADDR neighborAddr,
-                    int numOfRTEntries, 
-                    RoutingBellmanfordRoutingTable *routeTablePtr, 
-                    RoutingBellmanfordBroadcastRoutingTableRow *neighRTPtr);
+void RoutingBellmanfordUpdateRoutingTable( GlomoNode* nodePtr,
+                                           NODE_ADDR neighborAddr,
+                                           int numOfRTEntries,
+                                           RoutingBellmanfordRoutingTable* routeTablePtr,
+                                           RoutingBellmanfordBroadcastRoutingTableRow* neighRTPtr );
 
 /*
  * NAME:        RoutingBellmanfordHandleRouteChange.
@@ -412,8 +409,8 @@ void RoutingBellmanfordUpdateRoutingTable(GlomoNode *nodePtr,
  * ASSUMPTION:  None.
  */
 
-void RoutingBellmanfordHandleRouteChange(GlomoNode *nodePtr,
-                            RoutingBellmanfordRoutingTable *routeTablePtr);
+void RoutingBellmanfordHandleRouteChange( GlomoNode* nodePtr,
+                                          RoutingBellmanfordRoutingTable* routeTablePtr );
 
 
 /*
@@ -432,8 +429,8 @@ void RoutingBellmanfordHandleRouteChange(GlomoNode *nodePtr,
  * ASSUMPTION:  None.
  */
 
-int RoutingBellmanfordRoutingTableLookUp(NODE_ADDR destAddr,
-                                RoutingBellmanfordRoutingTable *routeTablePtr);
+int RoutingBellmanfordRoutingTableLookUp( NODE_ADDR destAddr,
+                                          RoutingBellmanfordRoutingTable* routeTablePtr );
 
 
 
@@ -449,7 +446,7 @@ int RoutingBellmanfordRoutingTableLookUp(NODE_ADDR destAddr,
  * ASSUMPTION:  None.
  */
 
-void RoutingBellmanfordInitRoutingStats(GlomoNode *node);
+void RoutingBellmanfordInitRoutingStats( GlomoNode* node );
 
 
 /*
@@ -464,7 +461,7 @@ void RoutingBellmanfordInitRoutingStats(GlomoNode *node);
  * ASSUMPTION:  None.
  */
 
-void RoutingBellmanfordPrintRoutingStats(GlomoNode *nodePtr);
+void RoutingBellmanfordPrintRoutingStats( GlomoNode* nodePtr );
 
 
 #endif /* _BELLMANFORD_H_ */

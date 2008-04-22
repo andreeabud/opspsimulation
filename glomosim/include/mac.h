@@ -52,70 +52,63 @@
  * Different MAC layers supported
  */
 
-typedef enum 
-{
-    MAC_PROTOCOL_CSMA,
-    MAC_PROTOCOL_MACA,
-    MAC_PROTOCOL_FAMA,
-    MAC_PROTOCOL_802_11,
-    MAC_PROTOCOL_TSMA,
-    MAC_PROTOCOL_WIRED
-} MAC_PROTOCOL;
+typedef enum { MAC_PROTOCOL_CSMA,
+               MAC_PROTOCOL_MACA,
+               MAC_PROTOCOL_FAMA,
+               MAC_PROTOCOL_802_11,
+               MAC_PROTOCOL_TSMA,
+               MAC_PROTOCOL_WIRED } MAC_PROTOCOL;
 
 /*
  * typedef to GlomoMac in main.h
  */
-struct glomo_mac_str 
+struct glomo_mac_str
 {
-    MAC_PROTOCOL macProtocol;
-    int          interfaceIndex;
-    BOOL         macStats;
+    MAC_PROTOCOL    macProtocol;
+    int             interfaceIndex;
+    BOOL            macStats;
 
-    BOOL         promiscuousMode;
-    int          bandwidth;   // In bytes.
-    clocktype    propDelay;
-    
-    int radioNumber;
-    
-    void         *macVar;
+    BOOL            promiscuousMode;
+    int             bandwidth;   // In bytes.
+    clocktype       propDelay;
+
+    int             radioNumber;
+
+    void*           macVar;
 };
 
 
-void GLOMO_MacNetworkLayerHasPacketToSend(
-   GlomoNode *node, InterfaceIdType interfaceIndex);
+void GLOMO_MacNetworkLayerHasPacketToSend( GlomoNode* node, InterfaceIdType interfaceIndex );
 
-void GLOMO_MacReceivePacketFromRadio(
-   GlomoNode *node, 
-   InterfaceIdType interfaceIndex,
-   Message* packet);
+void GLOMO_MacReceivePacketFromRadio( GlomoNode* node,
+                                      InterfaceIdType interfaceIndex,
+                                      Message* packet );
 
-void GLOMO_MacReceiveRadioStatusChangeNotification(
-   GlomoNode *node, 
-   InterfaceIdType interfaceIndex,
-   RadioStatusType oldRadioStatus,
-   RadioStatusType newRadioStatus,
-   clocktype receiveDuration,
-   const Message* potentialIncomingPacket);
+void GLOMO_MacReceiveRadioStatusChangeNotification( GlomoNode* node,
+                                                    InterfaceIdType interfaceIndex,
+                                                    RadioStatusType oldRadioStatus,
+                                                    RadioStatusType newRadioStatus,
+                                                    clocktype receiveDuration,
+                                                    const Message* potentialIncomingPacket );
 
 
 
 
-typedef struct {
-    clocktype theDelayUntilAirborn;
+typedef struct
+{
+    clocktype   theDelayUntilAirborn;
 } MacToRadioPacketDelayInfoType; 
 
 
-void MacInitUserMacProtocol(
-   GlomoNode* node,
-   const GlomoNodeInput* nodeInput,
-   const char* macProtocolName,
-   int interfaceIndex);
+void MacInitUserMacProtocol( GlomoNode* node,
+                             const GlomoNodeInput* nodeInput,
+                             const char* macProtocolName,
+                             int interfaceIndex );
 
-void MacFinalizeUserMacProtocol(GlomoNode* node, int interfaceIndex);
-   
+void MacFinalizeUserMacProtocol( GlomoNode* node, int interfaceIndex );
 
-void MacHandleUserMacProtocolEvent(
-   GlomoNode* node, int interfaceIndex, Message* packet);
+
+void MacHandleUserMacProtocolEvent( GlomoNode* node, int interfaceIndex, Message* packet );
 
 
 

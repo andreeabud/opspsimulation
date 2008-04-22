@@ -40,55 +40,51 @@
 
 #include "structmsg.h"
 
-typedef enum {
-	IDLE,
-    XMIT_PRIMARY_REQUEST,
-	XMIT_SECONDARY_REQUEST,
-	WAIT_PRIMARY_RESPONSE,
-	WAIT_SECONDARY_RESPONSE
-} HttpClientState;
+typedef enum { IDLE,
+               XMIT_PRIMARY_REQUEST,
+               XMIT_SECONDARY_REQUEST,
+               WAIT_PRIMARY_RESPONSE,
+               WAIT_SECONDARY_RESPONSE }  HttpClientState;
 
-typedef enum {
-    THINK_TIMER,
-	WAIT_PRIMARY_REPLY_TIMER,
-	WAIT_SECONDARY_REPLY_TIMER
-} HttpClientTimerType;
+typedef enum { THINK_TIMER, WAIT_PRIMARY_REPLY_TIMER, WAIT_SECONDARY_REPLY_TIMER }   HttpClientTimerType;
 
-typedef struct http_client_timer_str {
+typedef struct http_client_timer_str
+{
     HttpClientTimerType timerType;
-	long clientId;
+    long                clientId;
 } HttpClientTimer;
 
-typedef struct http_client_stats_str {
+typedef struct http_client_stats_str
+{
     int itemRequestBytes;   // number of bytes this item
     int pageItems;      // number of items this page
 } HttpClientStats;
 
-typedef struct glomo_app_http_client_str 
+typedef struct glomo_app_http_client_str
 {
-    int connectionId;
-    NODE_ADDR localAddr; 
-    NODE_ADDR remoteAddr;
-    clocktype sessionStart;         // start time of current session
-    clocktype sessionFinish;        // end time of current session
-	clocktype avgSessionLength;     // average session length
-	long numSessions;               // total number of sessions
-	long numPages;                  // total num of pages recvd
-	NODE_ADDR *servers;
-	long num_servers;
-	double Zipf_constant;
-	clocktype threshhold;
-	clocktype lastReceiveTime;
-	HttpClientStats stats;
-	unsigned short *seed;
-	HttpClientState state;
-    BOOL sessionIsClosed;
-    long documentsOnCurrentServer;
-    int itemSizeLeft;
-    long numBytesSent;
-    long numBytesRecvd;
+    int             connectionId;
+    NODE_ADDR       localAddr; 
+    NODE_ADDR       remoteAddr;
+    clocktype       sessionStart;         // start time of current session
+    clocktype       sessionFinish;        // end time of current session
+    clocktype       avgSessionLength;     // average session length
+    long            numSessions;               // total number of sessions
+    long            numPages;                  // total num of pages recvd
+    NODE_ADDR*      servers;
+    long            num_servers;
+    double          Zipf_constant;
+    clocktype       threshhold;
+    clocktype       lastReceiveTime;
+    HttpClientStats stats;
+    unsigned short* seed;
+    HttpClientState state;
+    BOOL            sessionIsClosed;
+    long            documentsOnCurrentServer;
+    int             itemSizeLeft;
+    long            numBytesSent;
+    long            numBytesRecvd;
 
-    long uniqueId;
+    long            uniqueId;
 } GlomoAppHttpClient;
 
 /*
@@ -99,8 +95,7 @@ typedef struct glomo_app_http_client_str
  *              msg - message received by the layer
  * RETURN:      none.
  */
-void
-AppLayerHttpClient(GlomoNode *nodePtr, Message *msg);
+void AppLayerHttpClient( GlomoNode* nodePtr, Message* msg );
 
 /*
  * NAME:        AppHttpClientInit.
@@ -110,13 +105,14 @@ AppLayerHttpClient(GlomoNode *nodePtr, Message *msg);
  *              numServerAddrs - number of addresses in above array,
  *              startTime - the time to start the first connection
  *              thresh - maximum time before deciding the connection is
- *       		done .
+ *              done .
  * RETURN:      none.
  */
-void
-AppHttpClientInit(GlomoNode *nodePtr, NODE_ADDR *serverAddrs,
-				  long numServerAddrs, clocktype startTime,
-				  clocktype thresh);
+void AppHttpClientInit( GlomoNode* nodePtr,
+                        NODE_ADDR* serverAddrs,
+                        long numServerAddrs,
+                        clocktype startTime,
+                        clocktype thresh );
 
 /*
  * NAME:        AppHttpClientFinalize.
@@ -126,8 +122,7 @@ AppHttpClientInit(GlomoNode *nodePtr, NODE_ADDR *serverAddrs,
  * RETURN:      none.
  */
 
-void
-AppHttpClientFinalize(GlomoNode *nodePtr, GlomoAppHttpClient *clientPtr);
+void AppHttpClientFinalize( GlomoNode* nodePtr, GlomoAppHttpClient* clientPtr );
 
 
 /*
@@ -138,8 +133,7 @@ AppHttpClientFinalize(GlomoNode *nodePtr, GlomoAppHttpClient *clientPtr);
  * RETURN:      the pointer to the created http client data structure,
  *
  */
-static GlomoAppHttpClient *
-AppHttpClientNewHttpClient(GlomoNode *nodePtr);
+static GlomoAppHttpClient* AppHttpClientNewHttpClient( GlomoNode* nodePtr );
 
 /*
  * NAME:        AppHttpClientSendThinkTimer.
@@ -150,9 +144,9 @@ AppHttpClientNewHttpClient(GlomoNode *nodePtr);
  *              thinkTime - determined thinking period
  * RETURN:      none.
  */
-void AppHttpClientSendThinkTimer(GlomoNode *nodePtr,
-                                 GlomoAppHttpClient *clientPtr,
-                                 clocktype thinkTime);
+void AppHttpClientSendThinkTimer( GlomoNode* nodePtr,
+                                  GlomoAppHttpClient* clientPtr,
+                                  clocktype thinkTime );
 
 /*
  * NAME:        AppHttpClientSendWaitReplyTimer.
@@ -165,9 +159,9 @@ void AppHttpClientSendThinkTimer(GlomoNode *nodePtr,
  *                                 WAIT_SECONDARY_RESPONSE
  * RETURN:      none.
  */
-void AppHttpClientSendWaitReplyTimer(GlomoNode *nodePtr,
-                                     GlomoAppHttpClient *clientPtr,
-                                     HttpClientTimerType timerType);
+void AppHttpClientSendWaitReplyTimer( GlomoNode* nodePtr,
+                                      GlomoAppHttpClient* clientPtr,
+                                      HttpClientTimerType timerType );
 
 /*
  * NAME:        AppHttpClientProcessDoneThinking.
@@ -177,8 +171,7 @@ void AppHttpClientSendWaitReplyTimer(GlomoNode *nodePtr,
  *              clientPtr - pointer to the client's data structure
  * RETURN:      none.
  */
-void AppHttpClientProcessDoneThinking(GlomoNode *node,
-                                      GlomoAppHttpClient *clientPtr);
+void AppHttpClientProcessDoneThinking( GlomoNode* node, GlomoAppHttpClient* clientPtr );
 
 /*
  * NAME:        AppHttpClientProcessWaitReplyTimer.
@@ -190,8 +183,7 @@ void AppHttpClientProcessDoneThinking(GlomoNode *node,
  *              clientPtr - pointer to the client's data structure
  * RETURN:      none.
  */
-void AppHttpClientProcessWaitReplyTimer(GlomoNode *node,
-                                   GlomoAppHttpClient *clientPtr);
+void AppHttpClientProcessWaitReplyTimer( GlomoNode* node, GlomoAppHttpClient* clientPtr );
 
 /*
  * NAME:        AppHttpClientProcessReplyPacket.
@@ -201,8 +193,7 @@ void AppHttpClientProcessWaitReplyTimer(GlomoNode *node,
  *              clientPtr - pointer to the client's data structure
  * RETURN:      none.
  */
-void AppHttpClientProcessReplyPacket(GlomoNode *node,
-                                     GlomoAppHttpClient *clientPtr);
+void AppHttpClientProcessReplyPacket( GlomoNode* node, GlomoAppHttpClient* clientPtr );
 
 /*
  * NAME:        AppHttpClientConsecutiveDocumentRetrievals.
@@ -211,7 +202,7 @@ void AppHttpClientProcessReplyPacket(GlomoNode *node,
  * PARAMETERS:  clientPtr - pointer to the client's data structure
  * RETURN:      the number of consecutive document retrievals.
  */
-long AppHttpClientConsecutiveDocumentRetrievals(GlomoAppHttpClient *clientPtr);
+long AppHttpClientConsecutiveDocumentRetrievals( GlomoAppHttpClient* clientPtr );
 
 /*
  * NAME:        AppHttpClientSelectNewServer.
@@ -219,7 +210,7 @@ long AppHttpClientConsecutiveDocumentRetrievals(GlomoAppHttpClient *clientPtr);
  * PARAMETERS:  clientPtr - pointer to the client's data structure
  * RETURN:      the node address for the next server to communicate with.
  */
-NODE_ADDR AppHttpClientSelectNewServer(GlomoAppHttpClient *clientPtr);
+NODE_ADDR AppHttpClientSelectNewServer( GlomoAppHttpClient* clientPtr );
 
 /*
  * NAME:        AppHttpClientDetermineThinkTime.
@@ -228,7 +219,7 @@ NODE_ADDR AppHttpClientSelectNewServer(GlomoAppHttpClient *clientPtr);
  * PARAMETERS:  clientPtr - pointer to the client's data structure
  * RETURN:      the amount of time to wait.
  */
-double AppHttpClientDetermineThinkTime(GlomoAppHttpClient *clientPtr);
+double AppHttpClientDetermineThinkTime( GlomoAppHttpClient* clientPtr );
 
 
 /*
@@ -237,7 +228,7 @@ double AppHttpClientDetermineThinkTime(GlomoAppHttpClient *clientPtr);
  * PARAMETERS:  clientPtr - pointer to the client's data structure
  * RETURN:      the number of items.
  */
-long AppHttpClientDetermineItemCount(GlomoAppHttpClient *clientPtr);
+long AppHttpClientDetermineItemCount( GlomoAppHttpClient* clientPtr );
 
 /*
  * NAME:        AppHttpClientDetermineSecondaryRequestLength.
@@ -245,8 +236,7 @@ long AppHttpClientDetermineItemCount(GlomoAppHttpClient *clientPtr);
  * PARAMETERS:  clientPtr - pointer to the client's data structure
  * RETURN:      the number of bytes.
  */
-long AppHttpClientDetermineSecondaryRequestLength(
-				    GlomoAppHttpClient *clientPtr);
+long AppHttpClientDetermineSecondaryRequestLength( GlomoAppHttpClient* clientPtr );
 
 /*
  * NAME:        AppHttpClientDeterminePrimaryRequestLength.
@@ -254,8 +244,7 @@ long AppHttpClientDetermineSecondaryRequestLength(
  * PARAMETERS:  clientPtr - pointer to the client's data structure
  * RETURN:      the number of bytes.
  */
-long AppHttpClientDeterminePrimaryRequestLength(
-				    GlomoAppHttpClient *clientPtr);
+long AppHttpClientDeterminePrimaryRequestLength( GlomoAppHttpClient* clientPtr );
 
 /*
  * NAME:        AppHttpClientSendPrimaryRequest.
@@ -263,9 +252,9 @@ long AppHttpClientDeterminePrimaryRequestLength(
  * PARAMETERS:  clientPtr - pointer to the client's data structure
  * RETURN:      none.
  */
-void AppHttpClientSendPrimaryRequest(GlomoNode *node,
-				                     GlomoAppHttpClient *clientPtr,
-									 long primaryRequestLength);
+void AppHttpClientSendPrimaryRequest( GlomoNode* node,
+                                      GlomoAppHttpClient* clientPtr,
+                                      long primaryRequestLength );
 
 /*
  * NAME:        AppHttpClientSendSecondaryRequest.
@@ -273,9 +262,9 @@ void AppHttpClientSendPrimaryRequest(GlomoNode *node,
  * PARAMETERS:  clientPtr - pointer to the client's data structure
  * RETURN:      none.
  */
-void AppHttpClientSendSecondaryRequest(GlomoNode *node,
-				                       GlomoAppHttpClient *clientPtr,
-									   long secondaryRequestLength);
+void AppHttpClientSendSecondaryRequest( GlomoNode* node,
+                                        GlomoAppHttpClient* clientPtr,
+                                        long secondaryRequestLength );
 
 
 /*
@@ -285,8 +274,7 @@ void AppHttpClientSendSecondaryRequest(GlomoNode *node,
  *              clientPtr - pointer to the http client data structure.
  * RETURN:      none.
  */
-static void
-AppHttpClientPrintStats(GlomoNode *nodePtr, GlomoAppHttpClient *clientPtr);
+static void AppHttpClientPrintStats( GlomoNode* nodePtr, GlomoAppHttpClient* clientPtr );
 
 /*
  * NAME:        AppHttpClientGetHttpClient.
@@ -296,8 +284,7 @@ AppHttpClientPrintStats(GlomoNode *nodePtr, GlomoAppHttpClient *clientPtr);
  * RETURN:      the pointer to the http client data structure,
  *              NULL if nothing found.
  */
-static GlomoAppHttpClient *
-AppHttpClientGetHttpClient(GlomoNode *nodePtr, int connId);
+static GlomoAppHttpClient* AppHttpClientGetHttpClient( GlomoNode* nodePtr, int connId );
 
 /*
  * NAME:        AppHttpClientUpdateHttpClient.
@@ -308,9 +295,8 @@ AppHttpClientGetHttpClient(GlomoNode *nodePtr, int connId);
  * RETRUN:      the pointer to the created http client data structure,
  *              NULL if no data structure allocated.
  */
-static GlomoAppHttpClient *
-AppHttpClientUpdateHttpClient(GlomoNode *nodePtr,
-				              TransportToAppOpenResult *openResult);
+static GlomoAppHttpClient* AppHttpClientUpdateHttpClient( GlomoNode* nodePtr,
+                                                          TransportToAppOpenResult* openResult );
 
 /*
  * NAME:        AppHttpClientNewHttpClient.
@@ -320,8 +306,7 @@ AppHttpClientUpdateHttpClient(GlomoNode *nodePtr,
  * RETURN:      the pointer to the created http client data structure,
  *
  */
-static GlomoAppHttpClient *
-AppHttpClientNewHttpClient(GlomoNode *nodePtr);
+static GlomoAppHttpClient* AppHttpClientNewHttpClient( GlomoNode* nodePtr );
 
 
 #endif /* _HTTP_CLIENT_H_ */

@@ -46,18 +46,19 @@
 
 #include "message.h"
 
-typedef struct glomo_app_telnet_client_str {
-    int connectionId;
-    NODE_ADDR localAddr; 
-    NODE_ADDR remoteAddr;
-    clocktype sessionStart;
-    clocktype sessionFinish;
-    clocktype sessDuration;
-    BOOL sessionIsClosed;
-    long numBytesSent;
-    long numBytesRecvd;
+typedef struct glomo_app_telnet_client_str
+{
+    int         connectionId;
+    NODE_ADDR   localAddr; 
+    NODE_ADDR   remoteAddr;
+    clocktype   sessionStart;
+    clocktype   sessionFinish;
+    clocktype   sessDuration;
+    BOOL        sessionIsClosed;
+    long        numBytesSent;
+    long        numBytesRecvd;
 
-    long uniqueId;
+    long        uniqueId;
 } GlomoAppTelnetClient;
 
 
@@ -70,8 +71,7 @@ typedef struct glomo_app_telnet_client_str {
  *              msg - message received by the layer
  * RETURN:      none.
  */
-void
-AppLayerTelnetClient(GlomoNode *nodePtr, Message *msg);
+void AppLayerTelnetClient( GlomoNode* nodePtr, Message* msg );
 
 
 /*
@@ -83,9 +83,10 @@ AppLayerTelnetClient(GlomoNode *nodePtr, Message *msg);
  *              waitTime - time until the session starts.
  * RETURN:      none.
  */
-void
-AppTelnetClientInit(GlomoNode *nodePtr, NODE_ADDR serverAddr,
-                    clocktype sessDuration, clocktype waitTime);
+void AppTelnetClientInit( GlomoNode* nodePtr,
+                          NODE_ADDR serverAddr,
+                          clocktype sessDuration,
+                          clocktype waitTime );
 
 
 
@@ -96,8 +97,7 @@ AppTelnetClientInit(GlomoNode *nodePtr, NODE_ADDR serverAddr,
  *              clientPtr - pointer to the telnet client data structure.
  * RETURN:      none.
  */
-void
-AppTelnetClientFinalize(GlomoNode *nodePtr, GlomoAppTelnetClient *clientPtr);
+void AppTelnetClientFinalize( GlomoNode* nodePtr, GlomoAppTelnetClient* clientPtr );
 
 
 
@@ -109,8 +109,7 @@ AppTelnetClientFinalize(GlomoNode *nodePtr, GlomoAppTelnetClient *clientPtr);
  * RETURN:      the pointer to the telnet client data structure,
  *              NULL if nothing found.
  */
-static GlomoAppTelnetClient *
-AppTelnetClientGetTelnetClient(GlomoNode *nodePtr, int connId);
+static GlomoAppTelnetClient* AppTelnetClientGetTelnetClient( GlomoNode* nodePtr, int connId );
 
 
 
@@ -124,9 +123,8 @@ AppTelnetClientGetTelnetClient(GlomoNode *nodePtr, int connId);
  * RETRUN:      the pointer to the created telnet client data structure,
  *              NULL if no data structure allocated.
  */
-static GlomoAppTelnetClient *
-AppTelnetClientUpdateTelnetClient(GlomoNode *nodePtr,
-                                  TransportToAppOpenResult *openResult);
+static GlomoAppTelnetClient* AppTelnetClientUpdateTelnetClient( GlomoNode* nodePtr,
+                                                                TransportToAppOpenResult* openResult );
 
 
 
@@ -140,10 +138,9 @@ AppTelnetClientUpdateTelnetClient(GlomoNode *nodePtr,
  * RETRUN:      the pointer to the created telnet client data structure,
  *              NULL if no data structure allocated.
  */
-static GlomoAppTelnetClient *
-AppTelnetClientNewTelnetClient(GlomoNode *nodePtr,
-                               NODE_ADDR serverAddr,
-                               clocktype sessDuration);
+static GlomoAppTelnetClient* AppTelnetClientNewTelnetClient( GlomoNode* nodePtr,
+                                                             NODE_ADDR serverAddr,
+                                                             clocktype sessDuration );
 
 
 /*
@@ -154,9 +151,7 @@ AppTelnetClientNewTelnetClient(GlomoNode *nodePtr,
  *              clientPtr - pointer to the telnet client data structure.
  * RETRUN:      none.
  */
-static void
-AppTelnetClientScheduleNextPkt(GlomoNode *nodePtr, 
-                               GlomoAppTelnetClient *clientPtr);
+static void AppTelnetClientScheduleNextPkt( GlomoNode* nodePtr, GlomoAppTelnetClient* clientPtr );
 
 
 
@@ -167,8 +162,7 @@ AppTelnetClientScheduleNextPkt(GlomoNode *nodePtr,
  * PARAMETERS:  nodePtr - pointer to the node.
  * RETRUN:      session duration in clocktype.
  */
-static clocktype
-AppTelnetClientSessDuration(GlomoNode *nodePtr);
+static clocktype AppTelnetClientSessDuration( GlomoNode* nodePtr );
 
 
 /*
@@ -178,8 +172,7 @@ AppTelnetClientSessDuration(GlomoNode *nodePtr);
  * PARAMETERS:  nodePtr - pointer to the node.
  * RETRUN:      interarrival time in clocktype.
  */
-static clocktype
-AppTelnetClientPktInterval(GlomoNode *nodePtr);
+static clocktype AppTelnetClientPktInterval( GlomoNode* nodePtr );
 
 
 

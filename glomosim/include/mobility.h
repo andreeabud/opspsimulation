@@ -48,31 +48,30 @@
 #define UPPER_BOUND_ON_MOBILITY_VELOCITY 50
 
 
-typedef enum {
-    MOBILITY_NONE = 20,
-    MOBILITY_RANDOM_WAYPOINT,
-    MOBILITY_TRACE,
-    MOBILITY_PATHLOSS_MATRIX
-} MOBILITY_TYPE;
+typedef enum { MOBILITY_NONE = 20,
+               MOBILITY_RANDOM_WAYPOINT,
+               MOBILITY_TRACE,
+               MOBILITY_PATHLOSS_MATRIX }  MOBILITY_TYPE;
 
 
 /*
  * typedef to GlomoMobility in main.h
  */
-struct glomo_mobility_str {
-    MOBILITY_TYPE mobilityType;
-    GlomoCoordinates next;
+struct glomo_mobility_str
+{
+    MOBILITY_TYPE       mobilityType;
+    GlomoCoordinates    next;
 
-    double distance_granularity;
+    double              distance_granularity;
 
-    clocktype nextMoveTime;
-    
-    unsigned short seed[3];
-    void *mobilityVar;
-    double avgSpeed;
-    int totalMoves;
-    BOOL mobilityStats;
-    BOOL guiOption;
+    clocktype           nextMoveTime;
+
+    unsigned short      seed[3];
+    void*               mobilityVar;
+    double              avgSpeed;
+    int                 totalMoves;
+    BOOL                mobilityStats;
+    BOOL                guiOption;
 };
 
 
@@ -84,7 +83,7 @@ struct glomo_mobility_str {
  *     node:      node being initialized.
  *     nodeInput: structure containing contents of input file
  */
-void GLOMO_MobilityInit(GlomoNode *node, GlomoNodeInput *nodeInput);
+void GLOMO_MobilityInit( GlomoNode* node, GlomoNodeInput* nodeInput );
 
 
 /*
@@ -95,7 +94,7 @@ void GLOMO_MobilityInit(GlomoNode *node, GlomoNodeInput *nodeInput);
  * Parameter:
  *     node:     node for which results are to be collected.
  */
-void GLOMO_MobilityFinalize(GlomoNode *node);
+void GLOMO_MobilityFinalize( GlomoNode* node );
 
 
 /*
@@ -107,7 +106,7 @@ void GLOMO_MobilityFinalize(GlomoNode *node);
  *     node:     node which received the message
  *     msg:      message received by the layer
  */
-void GLOMO_Mobility(GlomoNode *node);
+void GLOMO_Mobility( GlomoNode* node );
 
 
 /*
@@ -117,7 +116,7 @@ void GLOMO_Mobility(GlomoNode *node);
  * Parameters:
  *     node:     node needs to report the average speed
  */
-double GLOMO_MobilityReturnAvgSpd(GlomoNode *node);
+double GLOMO_MobilityReturnAvgSpd( GlomoNode* node );
 
 
 /*
@@ -127,7 +126,7 @@ double GLOMO_MobilityReturnAvgSpd(GlomoNode *node);
  * Parameters:
  *     node:      node needs to report its x coord (GPS)
  */
-double GLOMO_MobilityReturnPositionX(GlomoNode *node);
+double GLOMO_MobilityReturnPositionX( GlomoNode* node );
 
 /*
  * FUNCTION    GLOMO_MobilityReturnPositionY
@@ -136,7 +135,7 @@ double GLOMO_MobilityReturnPositionX(GlomoNode *node);
  * Parameters:
  *     node:      node needs to report its y coord (GPS)
  */
-double GLOMO_MobilityReturnPositionY(GlomoNode *node);
+double GLOMO_MobilityReturnPositionY( GlomoNode* node );
 
 #endif /* _MOBILITY_H_ */
 

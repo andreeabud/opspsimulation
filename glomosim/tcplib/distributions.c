@@ -62,44 +62,46 @@
 #include <math.h>
 #include "distributions.h"
 
-extern double pc_erand(unsigned short seed[3]);
+extern double pc_erand( unsigned short seed[3] );
 
 /* Numerical Recipes in C, p. 220. */
-float gam_dist(float n, float n2, float s, unsigned short seed[3])
+float gam_dist( float n, float n2, float s, unsigned short seed[3] )
 {
-    int i, r;
-    double g, rm, rs, v1, v2, y, e;
+    int     i, r;
+    double  g, rm, rs, v1, v2, y, e;
 
-		if (!s) return 0.0;
-
- 		r = (int)((double) n2/s + 0.5); /* Kleinrock, p. 124 */
-    if (r < 1) { 
-			perror("gam_dist: bad r\n");
-			exit(1);
-		}
-
-    if (r < 6) { 
-      g = 1.0;
-      for (i = 0; i <= r; i++)  {
-				g *= (float) pc_erand(seed);
-			}
-      g = -log((double) g);
-    } else {
-      do {
-        do {
-          do {
-						v1 = 2.0*pc_erand(seed)-1.0;
-            v2 = 2.0*pc_erand(seed)-1.0;
-          } while (v1*v2+v1*v2 > 1.0);
-          y = v2/v1;
-          rm = r - 1;
-          rs = sqrt(2.0*rm+1.0);
-          g = rs*y+rm;
-        } while (g <= 0.0);
-        e = (1.0+y*y)*exp(rm*log((double) g/rm)-rs*y);
-      } while (pc_erand(seed) > e);
+    if( !s ) {
+        return 0.0;
     }
-    g = (double) ((g*(double)n)/(double)r);
-		return((float) g);
+
+    r = ( int ) ( ( double ) n2 / s + 0.5 ); /* Kleinrock, p. 124 */
+    if( r < 1 ) {
+        perror( "gam_dist: bad r\n" );
+        exit( 1 );
+    }
+
+    if( r < 6 ) {
+        g = 1.0;
+        for( i = 0;i <= r;i++ ) {
+            g *= ( float ) pc_erand( seed );
+        }
+        g = -log( ( double ) g );
+    }else {
+        do {
+            do {
+                do {
+                    v1 = 2.0 * pc_erand( seed ) - 1.0;
+                    v2 = 2.0 * pc_erand( seed ) - 1.0;
+                }while( v1 * v2 + v1 * v2 > 1.0 );
+                y = v2 / v1;
+                rm = r - 1;
+                rs = sqrt( 2.0 * rm + 1.0 );
+                g = rs * y + rm;
+            }while( g <= 0.0 );
+            e = ( 1.0 + y * y ) * exp( rm * log( ( double ) g / rm ) - rs * y );
+        }while( pc_erand( seed ) > e );
+    }
+    g = ( double ) ( ( g * ( double ) n ) / ( double ) r );
+    return( ( float ) g );
 } 
 

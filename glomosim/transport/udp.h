@@ -50,22 +50,26 @@
 
 #include "main.h"
 
-typedef struct TransportUdpHeader_ {  /* UDP header */
-    short sourcePort;                 /* source port */
-    short destPort;                   /* destination port */
-    short length;                     /* length of the packet */
-    short checksum;                   /* checksum */
+typedef struct TransportUdpHeader_
+{
+    /* UDP header */
+    short   sourcePort;                 /* source port */
+    short   destPort;                   /* destination port */
+    short   length;                     /* length of the packet */
+    short   checksum;                   /* checksum */
 } TransportUdpHeader;
 
 
-typedef struct TransprotUdpStat_ {
+typedef struct TransprotUdpStat_
+{
     int numPktFromApp; 
     int numPktToApp;
 } TransportUdpStat;
 
-struct GlomoTransportUdpStruct {
-    BOOL udpStatsEnabled;    /* whether to collect stats */
-    TransportUdpStat *statistics; /*statistics */
+struct GlomoTransportUdpStruct
+{
+    BOOL                udpStatsEnabled;    /* whether to collect stats */
+    TransportUdpStat*   statistics; /*statistics */
 };
 
 
@@ -77,7 +81,7 @@ struct GlomoTransportUdpStruct {
  *     node:      node being initialized.
  *     nodeInput: structure containing contents of input file
  */
-void TransportUdpInit(GlomoNode *node, const GlomoNodeInput *nodeInput); 
+void TransportUdpInit( GlomoNode* node, const GlomoNodeInput* nodeInput ); 
 
 
 /*
@@ -89,7 +93,7 @@ void TransportUdpInit(GlomoNode *node, const GlomoNodeInput *nodeInput);
  *     node:     node which received the message
  *     msg:   message received by the layer
  */
-void TransportUdpLayer(GlomoNode *node, Message *msg);
+void TransportUdpLayer( GlomoNode* node, Message* msg );
 
 
 /*
@@ -100,11 +104,11 @@ void TransportUdpLayer(GlomoNode *node, Message *msg);
  * Parameter:
  *     node:     node for which results are to be collected.
  */
-void TransportUdpFinalize(GlomoNode *node);
+void TransportUdpFinalize( GlomoNode* node );
 
 
-void TransportUdpSendToApp(GlomoNode *node, Message *msg);
-void TransportUdpSendToNetwork(GlomoNode *node, Message *msg);
+void TransportUdpSendToApp( GlomoNode* node, Message* msg );
+void TransportUdpSendToNetwork( GlomoNode* node, Message* msg );
 
 #endif /* _UDP_H_ */
 

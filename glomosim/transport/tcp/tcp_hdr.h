@@ -81,23 +81,24 @@
  * $Id: tcp_hdr.h,v 1.2 1999/09/05 05:24:21 jmartin Exp $
  */
 
-typedef unsigned long  tcp_seq;
+typedef unsigned long   tcp_seq;
 
 /*
  * TCP header.
  * Per RFC 793, September, 1981.
  */
-struct tcphdr {
-    unsigned short th_sport;       /* source port */
-    unsigned short th_dport;       /* destination port */
-    tcp_seq th_seq;                /* sequence number */
-    tcp_seq th_ack;                /* acknowledgement number */
-    unsigned int  th_x2:4,         /* (unused) */
-                  th_off:4,        /* data offset */
-                  th_flags:8,
-                  th_win:16;       /* window */
-    unsigned short th_sum;         /* checksum */
-    unsigned short th_urp;         /* urgent pointer */
+struct tcphdr
+{
+    unsigned short  th_sport;       /* source port */
+    unsigned short  th_dport;       /* destination port */
+    tcp_seq         th_seq;                /* sequence number */
+    tcp_seq         th_ack;                /* acknowledgement number */
+    unsigned int    th_x2   : 4,         /* (unused) */
+                      th_off : 4,        /* data offset */
+                      th_flags : 8,
+                      th_win : 16;       /* window */
+    unsigned short  th_sum;         /* checksum */
+    unsigned short  th_urp;         /* urgent pointer */
 };
 
 /* 
@@ -144,7 +145,7 @@ struct tcphdr {
 
 #define TCP_MAXHLEN (0xf<<2)        /* max length of header in bytes */
 #define TCP_MAXOLEN (TCP_MAXHLEN - sizeof(struct tcphdr))
-                                    /* max space left for options */
+/* max space left for options */
 
 #endif /* _TCP_HDR_H_ */ 
 

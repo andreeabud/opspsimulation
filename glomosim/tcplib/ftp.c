@@ -63,21 +63,18 @@
 #include "tcplib.h"
 #include "ftp.h"
 
-int
-ftp_nitems(unsigned short seed[3])
+int ftp_nitems( unsigned short seed[3] )
 {
-  return ((int) tcplib(&ftp_histmap[lookup(ftp_histmap, "nitems")], nitems, seed));
+    return ( ( int ) tcplib( &ftp_histmap[lookup( ftp_histmap, "nitems" )], nitems, seed ) );
 }
 
-int
-ftp_itemsize(unsigned short seed[3])
+int ftp_itemsize( unsigned short seed[3] )
 {
-  return ((int) tcplib(&ftp_histmap[lookup(ftp_histmap, "itemsize")], itemsize, seed));
+    return ( ( int ) tcplib( &ftp_histmap[lookup( ftp_histmap, "itemsize" )], itemsize, seed ) );
 }
 
-int
-ftp_ctlsize(unsigned short seed[3])
+int ftp_ctlsize( unsigned short seed[3] )
 {
-  return ((int) tcplib(&ftp_histmap[lookup(ftp_histmap, "ctlsize")], ctlsize, seed));
+    return ( ( int ) tcplib( &ftp_histmap[lookup( ftp_histmap, "ctlsize" )], ctlsize, seed ) );
 }
 

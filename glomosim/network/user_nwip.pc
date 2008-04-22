@@ -83,113 +83,112 @@
 
 
 
-void NetworkIpUserProtocolInit(
-   GlomoNode *node,
-   const GlomoNodeInput *nodeInput,
-   const char* routingProtocolString, 
-   NetworkRoutingProtocolType* routingProtocolChoice,
-   void** routingProtocolData)
+void NetworkIpUserProtocolInit( GlomoNode* node,
+                                const GlomoNodeInput* nodeInput,
+                                const char* routingProtocolString,
+                                NetworkRoutingProtocolType* routingProtocolChoice,
+                                void** routingProtocolData )
 {
-   if (strcmp(routingProtocolString, "USER-DEFINED-PROTOCOL") == 0) {
-      *routingProtocolChoice = USER_DEFINED_GLOMOSIM_PROTOCOL_NUMBER;
-      
-      // Put function to create your datastructures and 
-      // initialize your protocol here.  For Example,
-           
-      // YourRoutingProtocolInit(node, nodeInput, 
-      //    (YourType**)routingProtocolData);
-   }
-//----------------------------------tianke-------------------begin
-   else if (strcmp(routingProtocolString, "AOMDV") == 0) {
-   	*routingProtocolChoice = ROUTING_PROTOCOL_AOMDV;
-      
-      // Put function to create your datastructures and 
-      // initialize your protocol here.  For Example,
-           
-      // YourRoutingProtocolInit(node, nodeInput, 
-      //    (YourType**)routingProtocolData);
-   }
+    if( strcmp( routingProtocolString, "USER-DEFINED-PROTOCOL" ) == 0 ) {
+        *routingProtocolChoice = USER_DEFINED_GLOMOSIM_PROTOCOL_NUMBER;
 
-/*
-   else if (strcmp(routingProtocolString, "ETX") == 0) {
-   	*routingProtocolChoice = ROUTING_PROTOCOL_ETX;
-      
-      // Put function to create your datastructures and 
-      // initialize your protocol here.  For Example,
-           
-      MetricETXInit(node);
-   }
-*/
+        // Put function to create your datastructures and 
+        // initialize your protocol here.  For Example,
 
-//----------------------------------tianke-----------------------end
-   else {
-      fprintf(stderr, "CONFIG.IN Error: Unknown Routing ProtocolType "
-              "Type %s.\n", routingProtocolString);
-      assert(FALSE); abort();
-   }
+        // YourRoutingProtocolInit(node, nodeInput, 
+        //    (YourType**)routingProtocolData);
+    }
+    //----------------------------------tianke-------------------begin
+    else if( strcmp( routingProtocolString, "AOMDV" ) == 0 ) {
+        *routingProtocolChoice = ROUTING_PROTOCOL_AOMDV;
+
+        // Put function to create your datastructures and 
+        // initialize your protocol here.  For Example,
+
+        // YourRoutingProtocolInit(node, nodeInput, 
+        //    (YourType**)routingProtocolData);
+    }
+
+    /*
+       else if (strcmp(routingProtocolString, "ETX") == 0) {
+        *routingProtocolChoice = ROUTING_PROTOCOL_ETX;
+          
+          // Put function to create your datastructures and 
+          // initialize your protocol here.  For Example,
+               
+          MetricETXInit(node);
+       }
+    */
+
+    //----------------------------------tianke-----------------------end
+    else {
+        fprintf( stderr,
+                 "CONFIG.IN Error: Unknown Routing ProtocolType "
+                 "Type %s.\n",
+                 routingProtocolString );
+        assert( FALSE ); abort();
+    }
 }
 
-void NetworkIpUserHandleProtocolEvent(GlomoNode* node, Message* msg) {
-   switch (msg->protocolType) {
-   case USER_DEFINED_GLOMOSIM_PROTOCOL_NUMBER: {
-   
-      // Put function to handle GlomoSim Events for your protocol here.  
-      // For Example,
-           
-      // YourRoutingProtocolEventHandler(node, msg);
-      break;
-   }
-//--------------------------tianke------------------------------begin
-   case ROUTING_PROTOCOL_AOMDV: {
-   
-      // Put function to handle GlomoSim Events for your protocol here.  
-      // For Example,
-           
-      // YourRoutingProtocolEventHandler(node, msg);
-      break;
-   }
-   
-/*   ETX不作为路由协议处理
-   case ROUTING_PROTOCOL_ETX: {
-   
-      // Put function to handle GlomoSim Events for your protocol here.  
-      // For Example,
-           
-      MetricETXEventHandler(node, msg);
-      break;
-   }
-  */
-  
-//--------------------------tianke-------------------------------end
-   default:
-      printf("GloMoSim: Network IP Protocol %d Not Handled\n", 
-             msg->protocolType);
-      assert(FALSE); abort();
-   }/*switch*/
+void NetworkIpUserHandleProtocolEvent( GlomoNode* node, Message* msg )
+{
+    switch( msg->protocolType ) {
+    case USER_DEFINED_GLOMOSIM_PROTOCOL_NUMBER:
+    {
+        // Put function to handle GlomoSim Events for your protocol here.  
+        // For Example,
+
+        // YourRoutingProtocolEventHandler(node, msg);
+        break;
+    }
+    //--------------------------tianke------------------------------begin
+    case ROUTING_PROTOCOL_AOMDV:
+    {
+        // Put function to handle GlomoSim Events for your protocol here.  
+        // For Example,
+
+        // YourRoutingProtocolEventHandler(node, msg);
+        break;
+    }
+
+    /*   ETX不作为路由协议处理
+       case ROUTING_PROTOCOL_ETX: {
+       
+          // Put function to handle GlomoSim Events for your protocol here.  
+          // For Example,
+               
+          MetricETXEventHandler(node, msg);
+          break;
+       }
+      */
+
+    //--------------------------tianke-------------------------------end
+    default:printf( "GloMoSim: Network IP Protocol %d Not Handled\n", msg->protocolType );
+    assert( FALSE ); abort();
+    }/*switch*/
 }
 
 
-void NetworkIpUserHandleProtocolPacket(
-   GlomoNode* node, 
-   Message* msg, 
-   unsigned char ipProtocol,
-   NODE_ADDR sourceAddress,
-   NODE_ADDR destinationAddress, 
-   int ttl)
+void NetworkIpUserHandleProtocolPacket( GlomoNode* node,
+                                        Message* msg,
+                                        unsigned char ipProtocol,
+                                        NODE_ADDR sourceAddress,
+                                        NODE_ADDR destinationAddress,
+                                        int ttl )
 {
-   switch (ipProtocol) {
-   case USER_DEFINED_IP_PROTOCOL_NUMBER: {
-   
-      // Put function call to handle Ip protocol packets (with IP header
-      // already stripped). 
-      // For Example,
-      
-      // YourIpPacketHandlingFunction(node, msg, sourceAddress, 
-      //    destinationAddress, ttl);
-      
-      break;
-   }
-	 
+    switch( ipProtocol ) {
+    case USER_DEFINED_IP_PROTOCOL_NUMBER:
+    {
+        // Put function call to handle Ip protocol packets (with IP header
+        // already stripped). 
+        // For Example,
+
+        // YourIpPacketHandlingFunction(node, msg, sourceAddress, 
+        //    destinationAddress, ttl);
+
+        break;
+    }
+
 #if 0
 //-----------------------------tianke------------------------------begin
    case IPPROTO_AOMDV: {
@@ -205,7 +204,7 @@ void NetworkIpUserHandleProtocolPacket(
    }
    
 /*
-	 case IPPROTO_ETX: {
+     case IPPROTO_ETX: {
    
       // Put function call to handle Ip protocol packets (with IP header
       // already stripped). 
@@ -220,51 +219,47 @@ void NetworkIpUserHandleProtocolPacket(
 //------------------------tianke-----------------------------------end
 #endif
 
-   default:
-      printf("Ip Protocol %d Not Handled\n", ipProtocol);
-      assert(FALSE); abort();
-   }/*switch*/
+    default:printf( "Ip Protocol %d Not Handled\n", ipProtocol );
+    assert( FALSE ); abort();
+    }/*switch*/
 }
 
 
-void NetworkIpUserProtocolFinalize(
-   GlomoNode* node, 
-   int userProtocolNumber)
+void NetworkIpUserProtocolFinalize( GlomoNode* node, int userProtocolNumber )
 {
-   switch (userProtocolNumber) {
-   case USER_DEFINED_GLOMOSIM_PROTOCOL_NUMBER: {
-   
-      // Put function call to handle routing protocol finalization here:
-      // For Example,
-      
-      // YourFinalizationRoutine(node);
-      break;
-   }
-//-----------------------------tianke-------------------------begin
-   case ROUTING_PROTOCOL_AOMDV: {
-   
-      // Put function call to handle routing protocol finalization here:
-      // For Example,
-      
-      // YourFinalizationRoutine(node);
-      break;
-   }
-   
-/*
-   case ROUTING_PROTOCOL_ETX: {
-   
-      // Put function call to handle routing protocol finalization here:
-      // For Example,
-      
-     MetricETXFinalize(node);
-      break;
-   }
- */
- 
-//-----------------------------tianke-------------------------end
-   default:
-      printf("Glomosim Protocol %d Not Handled\n", userProtocolNumber);
-      assert(FALSE); abort();
-   }/*switch*/
+    switch( userProtocolNumber ) {
+    case USER_DEFINED_GLOMOSIM_PROTOCOL_NUMBER:
+    {
+        // Put function call to handle routing protocol finalization here:
+        // For Example,
+
+        // YourFinalizationRoutine(node);
+        break;
+    }
+    //-----------------------------tianke-------------------------begin
+    case ROUTING_PROTOCOL_AOMDV:
+    {
+        // Put function call to handle routing protocol finalization here:
+        // For Example,
+
+        // YourFinalizationRoutine(node);
+        break;
+    }
+
+    /*
+       case ROUTING_PROTOCOL_ETX: {
+       
+          // Put function call to handle routing protocol finalization here:
+          // For Example,
+          
+         MetricETXFinalize(node);
+          break;
+       }
+     */
+
+    //-----------------------------tianke-------------------------end
+    default:printf( "Glomosim Protocol %d Not Handled\n", userProtocolNumber );
+    assert( FALSE ); abort();
+    }/*switch*/
 }
 

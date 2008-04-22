@@ -46,50 +46,48 @@
 
 #include "network.h"
 
-struct multi_fifo_packet_queue_struct;
+struct  multi_fifo_packet_queue_struct;
 
-typedef union {
-   struct multi_fifo_packet_queue_struct* multiFifo;
-   void* userQueue;
-   //IpFairQueueType*  fair;
+typedef union
+{
+    struct multi_fifo_packet_queue_struct*  multiFifo;
+    void*                                   userQueue;
+    //IpFairQueueType*  fair;
 } IpQueuesUnion;
 
 
 // Nasty Function Pointer type definitions
 
-typedef void (*IpQueueInsertFunctionType)(
-   IpQueuesUnion queue, 
-   Message* msg,
-   NetworkQueueingPriorityType priority,
-   BOOL* QueueIsFull);
+typedef void ( *IpQueueInsertFunctionType )( IpQueuesUnion queue,
+                                             Message* msg,
+                                             NetworkQueueingPriorityType priority,
+                                             BOOL* QueueIsFull );
 
-typedef void (*IpQueueRetrieveAndMaybeDequeueFunctionType)(
-   IpQueuesUnion queue,
-   BOOL specificPriorityOnly,
-   NetworkQueueingPriorityType priority,
-   int messageIndex, 
-   Message** msg,
-   NetworkQueueingPriorityType* msgPriority,
-   BOOL dequeueTheMessage);
+typedef void ( *IpQueueRetrieveAndMaybeDequeueFunctionType )( IpQueuesUnion queue,
+                                                              BOOL specificPriorityOnly,
+                                                              NetworkQueueingPriorityType priority,
+                                                              int messageIndex,
+                                                              Message** msg,
+                                                              NetworkQueueingPriorityType* msgPriority,
+                                                              BOOL dequeueTheMessage );
 
 
-typedef BOOL (*IpQueueIsEmptyFunctionType)(IpQueuesUnion queue);
+typedef BOOL ( *IpQueueIsEmptyFunctionType )( IpQueuesUnion queue );
 
-typedef int (*IpQueueNumberInQueueFunctionType)(
-   IpQueuesUnion queue,
-   NetworkQueueingPriorityType priority);
+typedef int ( *IpQueueNumberInQueueFunctionType )( IpQueuesUnion queue,
+                                                   NetworkQueueingPriorityType priority );
 
 
-typedef struct {
-   IpQueueInsertFunctionType insertFunction;
-   IpQueueRetrieveAndMaybeDequeueFunctionType 
-       retrieveAndMaybeDequeueFunction;
-   IpQueueIsEmptyFunctionType isEmptyFunction;
-   IpQueueNumberInQueueFunctionType numberInQueueFunction;
-   
-   IpQueuesUnion queueUnion;
-   
-   int packetsLostToOverflow;
+typedef struct
+{
+    IpQueueInsertFunctionType                   insertFunction;
+    IpQueueRetrieveAndMaybeDequeueFunctionType  retrieveAndMaybeDequeueFunction;
+    IpQueueIsEmptyFunctionType                  isEmptyFunction;
+    IpQueueNumberInQueueFunctionType            numberInQueueFunction;
+
+    IpQueuesUnion                               queueUnion;
+
+    int                                         packetsLostToOverflow;
 } IpOutputQueueType;
 
 

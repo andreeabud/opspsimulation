@@ -59,58 +59,61 @@
  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 */
 #ifndef lint
-static char rcsid[] =
-"@(#) $Id: brkdn_dist.c,v 1.4 1999/09/05 05:20:34 jmartin Exp $ (USC)";
+static char rcsid[] = "@(#) $Id: brkdn_dist.c,v 1.4 1999/09/05 05:20:34 jmartin Exp $ (USC)";
 #endif
 
 #include <stdlib.h>
 #include <math.h>
 #include "distributions.h"
 
-struct app_brkdn {
-	char *appname;
-	float mean;
-	float mean_sqr;
-	float var;
+struct app_brkdn
+{
+    char*   appname;
+    float   mean;
+    float   mean_sqr;
+    float   var;
 };
 
 #include "app_brkdn.h"
 #include "brkdn_dist.h"
 #include "distributions.h"
 
-extern double pc_erand(unsigned short seed[3]);
+extern double pc_erand( unsigned short seed[3] );
 
-struct brkdn_dist *
-brkdn_dist(unsigned short seed[3])
+struct brkdn_dist* brkdn_dist( unsigned short seed[3] )
 {
-	int i;
-	struct brkdn_dist *apps = (struct brkdn_dist *) malloc(NUMAPP*sizeof(struct brkdn_dist));
-	float normalizer = 0.0;
+    int                 i;
+    struct brkdn_dist*  apps        = ( struct brkdn_dist* )
+                                      malloc( NUMAPP*sizeof( struct brkdn_dist ) );
+    float               normalizer  = 0.0;
 
-	for (i = 0; i < NUMAPP; i++) {
-		apps[i].appname = apps_brkdn[i].appname;
-		apps[i].cdf = gam_dist(apps_brkdn[i].mean, apps_brkdn[i].mean_sqr, apps_brkdn[i].var, seed);
-		normalizer += apps[i].cdf;
-	}
+    for( i = 0;i < NUMAPP;i++ ) {
+        apps[i].appname = apps_brkdn[i].appname;
+        apps[i].cdf = gam_dist( apps_brkdn[i].mean, apps_brkdn[i].mean_sqr, apps_brkdn[i].var, seed );
+        normalizer += apps[i].cdf;
+    }
 
-	apps[0].cdf /= normalizer;
-	for (i = 1; i < NUMAPP; i++) {
-		apps[i].cdf /= normalizer;
-		apps[i].cdf += apps[i-1].cdf;
-	}
+    apps[0].cdf /= normalizer;
+    for( i = 1;i < NUMAPP;i++ ) {
+        apps[i].cdf /= normalizer;
+        apps[i].cdf += apps[i - 1].cdf;
+    }
 
-	return apps;
+    return apps;
 }
 
 
-char *next_app(struct brkdn_dist brkdn[], unsigned short seed[3])
+char* next_app( struct brkdn_dist brkdn[], unsigned short seed[3] )
 {
-	int i = 0;
-	float prob = (float) pc_erand(seed);
+    int     i       = 0;
+    float   prob    = ( float ) pc_erand( seed );
 
-	while (i < NUMAPP && brkdn[i].cdf < prob) i++;
-	if (i == NUMAPP)
-		perror("next_app: bad prob");
-	return brkdn[i].appname;
+    while( i < NUMAPP && brkdn[i].cdf < prob ) {
+        i++;
+    }
+    if( i == NUMAPP ) {
+        perror( "next_app: bad prob" );
+    }
+    return brkdn[i].appname;
 }
 

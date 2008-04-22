@@ -49,10 +49,7 @@
  * Field to indicate if the item being inserted into the queue
  * should be inserted in the front or the end of the queue.
  */
-enum {
-    QUEUE_INSERT_END = 10,
-    QUEUE_INSERT_FRONT
-};
+enum { QUEUE_INSERT_END = 10, QUEUE_INSERT_FRONT };
 
 
 /*
@@ -61,10 +58,11 @@ enum {
  * The "next" and "prev" field refer to the next
  * and previous item in the queue.
  */
-typedef struct qitem_str {
-    struct qitem_str *next;
-    struct qitem_str *prev;
-    void *item;
+typedef struct qitem_str
+{
+    struct qitem_str*   next;
+    struct qitem_str*   prev;
+    void*               item;
 } QueueItem;
 
 
@@ -73,11 +71,12 @@ typedef struct qitem_str {
  * We keep pointers to the first and last items in queue.
  * We also keep a count of the number of items in queue.
  */
-typedef struct q_str {
-    QueueItem *first;
-    QueueItem *last;
-    int itemsInQueue;
-    QueueItem* freeListPtr;
+typedef struct q_str
+{
+    QueueItem*  first;
+    QueueItem*  last;
+    int         itemsInQueue;
+    QueueItem*  freeListPtr;
 } Queue;
 
 
@@ -91,8 +90,7 @@ typedef struct q_str {
  *    inMsg:      the message being enqueued
  *    insertPos:  the position where the item will be inserted
  */
-void GLOMO_MessageEnqueue(Queue *inQueue, int insertPos,
-                          void *inMsg);
+void GLOMO_MessageEnqueue( Queue* inQueue, int insertPos, void* inMsg );
 
 /*
  * FUNCTION      GLOMO_MessageDequeue
@@ -104,7 +102,7 @@ void GLOMO_MessageEnqueue(Queue *inQueue, int insertPos,
  * The actual message is returned. If there are no meessages
  * currently stored in the queue NULL is returned back.
  */
-void* GLOMO_MessageDequeue(Queue *outQueue);
+void* GLOMO_MessageDequeue( Queue* outQueue );
 
 
 #endif /* _QUEUE_H_ */

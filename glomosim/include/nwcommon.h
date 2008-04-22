@@ -50,7 +50,7 @@
 #define _NWCOMMON_H_
 
 #include "message.h"
- 
+
 /* protocol number for IP */
 #define IPPROTO_TCP  6
 #define IPPROTO_UDP  17
@@ -74,7 +74,7 @@
  *  PARAMETER   node
  *  RETURN      None.
  */
-void NetworkInitForwardingTable(GlomoNode *node);
+void NetworkInitForwardingTable( GlomoNode* node );
 
 /*  FUNCTION    NetworkEmptyFowardingTable
  *  PURPOSE     empty out all the entries in the routing table 
@@ -83,9 +83,9 @@ void NetworkInitForwardingTable(GlomoNode *node);
  *  RETURN      None. 
  */
 
-void NetworkEmptyForwardingTable(GlomoNode *node);
+void NetworkEmptyForwardingTable( GlomoNode* node );
 
-                                  
+
 /*  FUNCTION    NetworkGetInterfaceAndNextHopFromForwardingTable
  *  PURPOSE     get the interface Id node that lead to destId. 
  *  PARAMETER   node - its own node.
@@ -95,14 +95,13 @@ void NetworkEmptyForwardingTable(GlomoNode *node);
  *                               Returns NETWORK_UNREACHABLE when the next
  *                               hop cannot be found in the table.
  */
- 
-void NetworkGetInterfaceAndNextHopFromForwardingTable(
-    GlomoNode *node,
-    NODE_ADDR destId,
-    InterfaceIdType* interfaceId,
-    NODE_ADDR* nextHopAddress);
 
-                                        
+void NetworkGetInterfaceAndNextHopFromForwardingTable( GlomoNode* node,
+                                                       NODE_ADDR destId,
+                                                       InterfaceIdType* interfaceId,
+                                                       NODE_ADDR* nextHopAddress );
+
+
 
 /*  FUNCTION    NetworkUpdateForwardingTable 
  *  PURPOSE     update entry with destId,
@@ -116,11 +115,10 @@ void NetworkGetInterfaceAndNextHopFromForwardingTable(
  *              FALSE, if original row existed (only update).
  */
 
-void NetworkUpdateForwardingTable(
-    GlomoNode *node, 
-    NODE_ADDR destId,
-    InterfaceIdType interfaceId,
-    NODE_ADDR nextHopAddress);
+void NetworkUpdateForwardingTable( GlomoNode* node,
+                                   NODE_ADDR destId,
+                                   InterfaceIdType interfaceId,
+                                   NODE_ADDR nextHopAddress );
 
 
 /*  FUNCTION    NetworkPrintForwardingTable
@@ -128,7 +126,7 @@ void NetworkUpdateForwardingTable(
  *  PARAMETER   node
  *  RETURN      None.
  */
-void NetworkPrintForwardingTable(GlomoNode *node);
+void NetworkPrintForwardingTable( GlomoNode* node );
 
 
 /*  FUNCTION    NetworkPrintIpHeader
@@ -143,7 +141,7 @@ void NetworkPrintForwardingTable(GlomoNode *node);
  *  PARAMETER   msg - message encapsulated by IP header.
  *  RETURN      None.
  */
-void NetworkPrintIpHeader(Message *msg);
+void NetworkPrintIpHeader( Message* msg );
 
 
 #endif /* _NWCOMMON_H_ */

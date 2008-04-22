@@ -99,203 +99,200 @@
 #define IPOPT_ODMRP  219
 
 /* ODMRP option fields for IP header */
-typedef struct{
-    unsigned char query;
-    NODE_ADDR lastAddr;
-    unsigned char seqNumber;
-    unsigned char hopCount;
+typedef struct
+{
+    unsigned char   query;
+    NODE_ADDR       lastAddr;
+    unsigned char   seqNumber;
+    unsigned char   hopCount;
 } OdmrpIpOptionType;
 
-typedef enum 
-{
-    ODMRP_JOIN_REPLY,
-    ODMRP_ACK
-} ODMRP_PacketType;
+typedef enum { ODMRP_JOIN_REPLY, ODMRP_ACK } ODMRP_PacketType;
 
 typedef struct
 {
-    ODMRP_PacketType pktType;
+    ODMRP_PacketType    pktType;
 
     /* Was last node a FG? */
-    BOOL IAmFG;
+    BOOL                IAmFG;
 
     /* Number of entries in the table. */
-    int count;
+    int                 count;
 
-    NODE_ADDR srcAddr[ODMRP_MAX_SOURCE]; 
-    NODE_ADDR nextAddr[ODMRP_MAX_SOURCE];  
-    BOOL ackReq[ODMRP_MAX_SOURCE];  
+    NODE_ADDR           srcAddr[ODMRP_MAX_SOURCE]; 
+    NODE_ADDR           nextAddr[ODMRP_MAX_SOURCE];  
+    BOOL                ackReq[ODMRP_MAX_SOURCE];
 } ODMRP_JoinReply;
 
 typedef struct
 {
-    ODMRP_PacketType pktType;
-    NODE_ADDR mcastAddr;
-    NODE_ADDR srcAddr;
+    ODMRP_PacketType    pktType;
+    NODE_ADDR           mcastAddr;
+    NODE_ADDR           srcAddr;
 } ODMRP_Ack;
 
 typedef struct odmrpATEE
 {
-    NODE_ADDR srcAddr;
-    NODE_ADDR nextAddr;
-    int numTx;
-    struct odmrpATEE *prev;
-    struct odmrpATEE *next;
+    NODE_ADDR           srcAddr;
+    NODE_ADDR           nextAddr;
+    int                 numTx;
+    struct odmrpATEE*   prev;
+    struct odmrpATEE*   next;
 } ODMRP_AT_Snode;
 
 typedef struct odmrpATE
 {
-    NODE_ADDR mcastAddr;
-    clocktype lastSent;
-    ODMRP_AT_Snode *head;
-    int size;
-    struct odmrpATE *next;
+    NODE_ADDR           mcastAddr;
+    clocktype           lastSent;
+    ODMRP_AT_Snode*     head;
+    int                 size;
+    struct odmrpATE*    next;
 } ODMRP_AT_Node;
 
 typedef struct
 {
-    ODMRP_AT_Node *head;
-    int size;
+    ODMRP_AT_Node*  head;
+    int             size;
 } ODMRP_AT;
 
 typedef struct odmrpME
 {
-    NODE_ADDR mcastAddr;
-    clocktype timestamp;
-    struct odmrpME *next;
+    NODE_ADDR       mcastAddr;
+    clocktype       timestamp;
+    struct odmrpME* next;
 } ODMRP_M_Node;
 
 typedef struct
 {
-    ODMRP_M_Node *head;
-    int size;
+    ODMRP_M_Node*   head;
+    int             size;
 } ODMRP_Membership;
 
 typedef struct odmrpFFE
 {
-    NODE_ADDR mcastAddr;
-    clocktype timestamp;
-    struct odmrpFFE *next;
+    NODE_ADDR           mcastAddr;
+    clocktype           timestamp;
+    struct odmrpFFE*    next;
 } ODMRP_FF_Node;
 
 typedef struct
 {
-    ODMRP_FF_Node *head;
-    int size;
+    ODMRP_FF_Node*  head;
+    int             size;
 } ODMRP_FgFlag;
 
 typedef struct odmrpMTEE
 {
-    NODE_ADDR srcAddr;
-    clocktype timestamp;
-    struct odmrpMTEE *prev;
-    struct odmrpMTEE *next;
+    NODE_ADDR           srcAddr;
+    clocktype           timestamp;
+    struct odmrpMTEE*   prev;
+    struct odmrpMTEE*   next;
 } ODMRP_MT_Snode;
 
 typedef struct odmrpMTE
 {
-    NODE_ADDR mcastAddr;
-    BOOL sent;                      /* Flag to indicate join reply sent. */
-    clocktype lastSent;             /* Last time that sent join reply. */
-    clocktype queryLastReceived;    /* Join Query last received time */
-    ODMRP_MT_Snode *head;
-    int size;
-    struct odmrpMTE *next;
+    NODE_ADDR           mcastAddr;
+    BOOL                sent;                      /* Flag to indicate join reply sent. */
+    clocktype           lastSent;             /* Last time that sent join reply. */
+    clocktype           queryLastReceived;    /* Join Query last received time */
+    ODMRP_MT_Snode*     head;
+    int                 size;
+    struct odmrpMTE*    next;
 } ODMRP_MT_Node;
 
 typedef struct        /* Member Table */
 {
-    ODMRP_MT_Node *head;
-    int size;
+    ODMRP_MT_Node*  head;
+    int             size;
 } ODMRP_MT;
 
 typedef struct odmrpRPTEE
 {
-    NODE_ADDR srcAddr;
-    struct odmrpRPTEE *next;
+    NODE_ADDR           srcAddr;
+    struct odmrpRPTEE*  next;
 } ODMRP_RPT_Snode;
 
 typedef struct odmrpRPTE
 {
-    NODE_ADDR mcastAddr;
-    ODMRP_RPT_Snode *head;
-    int size;
-    struct odmrpRPTE *next;
+    NODE_ADDR           mcastAddr;
+    ODMRP_RPT_Snode*    head;
+    int                 size;
+    struct odmrpRPTE*   next;
 } ODMRP_RPT_Node;
 
 typedef struct     /* Response Table: to keep track of which source to reply */
 {
-    ODMRP_RPT_Node *head;
-    int size;
+    ODMRP_RPT_Node* head;
+    int             size;
 } ODMRP_RPT;
 
 typedef struct odmrpTTEE
 {
-    NODE_ADDR srcAddr;
-    clocktype timestamp;
-    clocktype FGExpireTime;
-    struct odmrpTTEE *prev;
-    struct odmrpTTEE *next;
+    NODE_ADDR           srcAddr;
+    clocktype           timestamp;
+    clocktype           FGExpireTime;
+    struct odmrpTTEE*   prev;
+    struct odmrpTTEE*   next;
 } ODMRP_TT_Snode;
 
 typedef struct odmrpTTE
 {
-    NODE_ADDR mcastAddr;
-    BOOL sent;                /* whether Join Reply has been sent */
-    ODMRP_TT_Snode *head;
-    int size;
-    struct odmrpTTE *next;
+    NODE_ADDR           mcastAddr;
+    BOOL                sent;                /* whether Join Reply has been sent */
+    ODMRP_TT_Snode*     head;
+    int                 size;
+    struct odmrpTTE*    next;
 } ODMRP_TT_Node;
 
 typedef struct   /* Temp Table: maintained to build join replies */
 {
-    ODMRP_TT_Node *head;
-    int size; 
+    ODMRP_TT_Node*  head;
+    int             size;
 } ODMRP_TT;
 
 typedef struct odmrpRTE
 {
-    NODE_ADDR destAddr;
-    NODE_ADDR nextAddr;
-    int hopCount;
-    clocktype timestamp;
-    struct odmrpRTE *next;
+    NODE_ADDR           destAddr;
+    NODE_ADDR           nextAddr;
+    int                 hopCount;
+    clocktype           timestamp;
+    struct odmrpRTE*    next;
 } ODMRP_RT_Node;
 
 typedef struct  /* Route Table */
 {
-    ODMRP_RT_Node *head;
-    int size;
+    ODMRP_RT_Node*  head;
+    int             size;
 } ODMRP_RT;
 
 typedef struct odmrpMCE
 {
-    NODE_ADDR srcAddr;
-    int seqNumber;
-    BOOL sent; 
-    struct odmrpMCE *next;
+    NODE_ADDR           srcAddr;
+    int                 seqNumber;
+    BOOL                sent; 
+    struct odmrpMCE*    next;
 } ODMRP_MC_Node;
 
 typedef struct /* Message Cache */
 {
-    ODMRP_MC_Node *front;
-    ODMRP_MC_Node *rear;
-    int size;
+    ODMRP_MC_Node*  front;
+    ODMRP_MC_Node*  rear;
+    int             size;
 } ODMRP_MC;
 
 typedef struct odmrpSSE
 {
-    NODE_ADDR mcastAddr;
-    clocktype minExpireTime;
-    clocktype lastSent;
-    BOOL nextQuerySend;       /* Send Join Query for next data? */
-    struct odmrpSSE *next;
+    NODE_ADDR           mcastAddr;
+    clocktype           minExpireTime;
+    clocktype           lastSent;
+    BOOL                nextQuerySend;       /* Send Join Query for next data? */
+    struct odmrpSSE*    next;
 } ODMRP_SS_Node;
 
 typedef struct  /* Source Sent */
 {
-    ODMRP_SS_Node *head;
-    int size;
+    ODMRP_SS_Node*  head;
+    int             size;
 } ODMRP_SS;
 
 typedef struct
@@ -320,284 +317,264 @@ typedef struct
 
     /* Total number of data packets transmitted by each node. */
     int numDataTxed;
-
 } ODMRP_Stats;
 
-typedef struct glomo_network_odmrp_str 
+typedef struct glomo_network_odmrp_str
 {
-    ODMRP_Membership memberFlag;
-    ODMRP_FgFlag fgFlag;
-    ODMRP_MT memberTable;
-    ODMRP_TT tempTable;
-    ODMRP_RT routeTable;
-    ODMRP_MC messageCache;
-    int seqTable;
-    ODMRP_SS sentTable;
-    ODMRP_Stats stats;    
-    ODMRP_AT ackTable;
-    ODMRP_RPT responseTable;
+    ODMRP_Membership    memberFlag;
+    ODMRP_FgFlag        fgFlag;
+    ODMRP_MT            memberTable;
+    ODMRP_TT            tempTable;
+    ODMRP_RT            routeTable;
+    ODMRP_MC            messageCache;
+    int                 seqTable;
+    ODMRP_SS            sentTable;
+    ODMRP_Stats         stats;    
+    ODMRP_AT            ackTable;
+    ODMRP_RPT           responseTable;
 } GlomoRoutingOdmrp;
 
-void RoutingOdmrpHandleProtocolEvent(GlomoNode *node, Message *msg);
+void RoutingOdmrpHandleProtocolEvent( GlomoNode* node, Message* msg );
 
-void RoutingOdmrpHandleProtocolPacket(GlomoNode *node,
-                                      Message *msg,
-                                      NODE_ADDR srcAddr,
-                                      NODE_ADDR destAddr);
+void RoutingOdmrpHandleProtocolPacket( GlomoNode* node,
+                                       Message* msg,
+                                       NODE_ADDR srcAddr,
+                                       NODE_ADDR destAddr );
 
-void RoutingOdmrpRouterFunction(GlomoNode *node,
-                                Message *msg,
-                                NODE_ADDR destAddr,
-                                BOOL *packetWasRouted);
+void RoutingOdmrpRouterFunction( GlomoNode* node,
+                                 Message* msg,
+                                 NODE_ADDR destAddr,
+                                 BOOL* packetWasRouted );
 
-void RoutingOdmrpInit(GlomoNode *node,
-                      GlomoRoutingOdmrp **odmrpPtr,
-                      const GlomoNodeInput *nodeInput);
+void RoutingOdmrpInit( GlomoNode* node,
+                       GlomoRoutingOdmrp** odmrpPtr,
+                       const GlomoNodeInput* nodeInput );
 
-void RoutingOdmrpFinalize(GlomoNode *node);
+void RoutingOdmrpFinalize( GlomoNode* node );
 
-void RoutingOdmrpHandleData(GlomoNode *node, Message *msg);
+void RoutingOdmrpHandleData( GlomoNode* node, Message* msg );
 
-void RoutingOdmrpHandleJoinQuery(GlomoNode *node, Message *msg);
+void RoutingOdmrpHandleJoinQuery( GlomoNode* node, Message* msg );
 
-void RoutingOdmrpHandleReply(
-       GlomoNode *node, Message *msg, NODE_ADDR lastAddr, NODE_ADDR mcastAddr);
+void RoutingOdmrpHandleReply( GlomoNode* node, Message* msg, NODE_ADDR lastAddr, NODE_ADDR mcastAddr );
 
-void RoutingOdmrpHandleAck(
-       GlomoNode *node, Message *msg, NODE_ADDR lastAddr, NODE_ADDR targetAddr);
+void RoutingOdmrpHandleAck( GlomoNode* node, Message* msg, NODE_ADDR lastAddr, NODE_ADDR targetAddr );
 
-void RoutingOdmrpInitMembership(ODMRP_Membership *memberFlag);
+void RoutingOdmrpInitMembership( ODMRP_Membership* memberFlag );
 
-void RoutingOdmrpInitFgFlag(ODMRP_FgFlag *fgFlag);
+void RoutingOdmrpInitFgFlag( ODMRP_FgFlag* fgFlag );
 
-void RoutingOdmrpInitMemberTable(ODMRP_MT *memberTable);
+void RoutingOdmrpInitMemberTable( ODMRP_MT* memberTable );
 
-void RoutingOdmrpInitResponseTable(ODMRP_RPT *responseTable);
+void RoutingOdmrpInitResponseTable( ODMRP_RPT* responseTable );
 
-void RoutingOdmrpInitTempTable(ODMRP_TT *tempTable);
+void RoutingOdmrpInitTempTable( ODMRP_TT* tempTable );
 
-void RoutingOdmrpInitRouteTable(ODMRP_RT *routeTable);
+void RoutingOdmrpInitRouteTable( ODMRP_RT* routeTable );
 
-void RoutingOdmrpInitMessageCache(ODMRP_MC *messageCache);
+void RoutingOdmrpInitMessageCache( ODMRP_MC* messageCache );
 
-void RoutingOdmrpInitSeqTable(GlomoNode *node);
+void RoutingOdmrpInitSeqTable( GlomoNode* node );
 
-void RoutingOdmrpInitSent(ODMRP_SS *sentTable);
+void RoutingOdmrpInitSent( ODMRP_SS* sentTable );
 
-void RoutingOdmrpInitStats(GlomoNode *node);
+void RoutingOdmrpInitStats( GlomoNode* node );
 
-void RoutingOdmrpDeleteMsgCache(ODMRP_MC *messageCache);
+void RoutingOdmrpDeleteMsgCache( ODMRP_MC* messageCache );
 
-BOOL RoutingOdmrpLookupMessageCache(
-                 NODE_ADDR srcAddr, int seqNumber, ODMRP_MC *messageCache);
+BOOL RoutingOdmrpLookupMessageCache( NODE_ADDR srcAddr, int seqNumber, ODMRP_MC* messageCache );
 
-BOOL RoutingOdmrpLookupMembership(NODE_ADDR mcastAddr,
-                                  ODMRP_Membership *memberFlag);
+BOOL RoutingOdmrpLookupMembership( NODE_ADDR mcastAddr, ODMRP_Membership* memberFlag );
 
-BOOL RoutingOdmrpLookupFgFlag(NODE_ADDR mcastAddr,
-                              ODMRP_FgFlag *fgFlag);
+BOOL RoutingOdmrpLookupFgFlag( NODE_ADDR mcastAddr, ODMRP_FgFlag* fgFlag );
 
-BOOL RoutingOdmrpLookupMemberTable(NODE_ADDR mcastAddr,
-                                   ODMRP_MT *memberTable);
+BOOL RoutingOdmrpLookupMemberTable( NODE_ADDR mcastAddr, ODMRP_MT* memberTable );
 
-BOOL RoutingOdmrpLookupSentTable(NODE_ADDR mcastAddr,
-                                 ODMRP_SS *sentTable);
+BOOL RoutingOdmrpLookupSentTable( NODE_ADDR mcastAddr, ODMRP_SS* sentTable );
 
-BOOL RoutingOdmrpCheckFgExpired(NODE_ADDR mcastAddr,
-                                ODMRP_FgFlag *fgFlag);
+BOOL RoutingOdmrpCheckFgExpired( NODE_ADDR mcastAddr, ODMRP_FgFlag* fgFlag );
 
-void RoutingOdmrpSetMemberFlag(NODE_ADDR mcastAddr,
-                               ODMRP_Membership *memberFlag);
+void RoutingOdmrpSetMemberFlag( NODE_ADDR mcastAddr, ODMRP_Membership* memberFlag );
 
-ODMRP_M_Node *RoutingOdmrpSetMemFlagInOrder(
-                             NODE_ADDR mcastAddr, ODMRP_M_Node *old);
+ODMRP_M_Node* RoutingOdmrpSetMemFlagInOrder( NODE_ADDR mcastAddr, ODMRP_M_Node* old );
 
-void RoutingOdmrpResetMemberFlag(NODE_ADDR mcastAddr,
-                                 ODMRP_Membership *memberFlag);
+void RoutingOdmrpResetMemberFlag( NODE_ADDR mcastAddr, ODMRP_Membership* memberFlag );
 
-void RoutingOdmrpUpdateFgFlag(NODE_ADDR mcastAddr, ODMRP_FgFlag *fgFlag);
+void RoutingOdmrpUpdateFgFlag( NODE_ADDR mcastAddr, ODMRP_FgFlag* fgFlag );
 
-void RoutingOdmrpSetFgFlag(NODE_ADDR mcastAddr, ODMRP_FgFlag *fgFlag);
+void RoutingOdmrpSetFgFlag( NODE_ADDR mcastAddr, ODMRP_FgFlag* fgFlag );
 
-ODMRP_FF_Node *RoutingOdmrpSetFgFlagInOrder(
-                                NODE_ADDR mcastAddr, ODMRP_FF_Node *old);
+ODMRP_FF_Node* RoutingOdmrpSetFgFlagInOrder( NODE_ADDR mcastAddr, ODMRP_FF_Node* old );
 
-void RoutingOdmrpResetFgFlag(NODE_ADDR mcastAddr,
-                             ODMRP_FgFlag *fgFlag);
+void RoutingOdmrpResetFgFlag( NODE_ADDR mcastAddr, ODMRP_FgFlag* fgFlag );
 
-void RoutingOdmrpSetSent(NODE_ADDR mcastAddr, ODMRP_SS *sentTable);
+void RoutingOdmrpSetSent( NODE_ADDR mcastAddr, ODMRP_SS* sentTable );
 
-ODMRP_SS_Node *RoutingOdmrpSetSentInOrder(
-                                NODE_ADDR mcastAddr, ODMRP_SS_Node *old);
+ODMRP_SS_Node* RoutingOdmrpSetSentInOrder( NODE_ADDR mcastAddr, ODMRP_SS_Node* old );
 
-void RoutingOdmrpDeleteSourceSent(NODE_ADDR mcastAddr, ODMRP_SS *sentTable);
+void RoutingOdmrpDeleteSourceSent( NODE_ADDR mcastAddr, ODMRP_SS* sentTable );
 
-ODMRP_MT_Node *RoutingOdmrpGetMTEntry(
-                  NODE_ADDR mcastAddr, ODMRP_MT *memberTable);
+ODMRP_MT_Node* RoutingOdmrpGetMTEntry( NODE_ADDR mcastAddr, ODMRP_MT* memberTable );
 
-void RoutingOdmrpInsertMemberTable(NODE_ADDR mcastAddr,
-                                   NODE_ADDR srcAddr,
-                                   ODMRP_MT *memberTable);
+void RoutingOdmrpInsertMemberTable( NODE_ADDR mcastAddr, NODE_ADDR srcAddr, ODMRP_MT* memberTable );
 
-ODMRP_MT_Node *RoutingOdmrpInsertMTInOrder(
-                   NODE_ADDR mcastAddr, NODE_ADDR srcAddr, ODMRP_MT_Node *old);
+ODMRP_MT_Node* RoutingOdmrpInsertMTInOrder( NODE_ADDR mcastAddr,
+                                            NODE_ADDR srcAddr,
+                                            ODMRP_MT_Node* old );
 
-BOOL RoutingOdmrpCheckMSExist(NODE_ADDR srcAddr, ODMRP_MT_Node *mcast);
+BOOL RoutingOdmrpCheckMSExist( NODE_ADDR srcAddr, ODMRP_MT_Node* mcast );
 
-ODMRP_MT_Snode *RoutingOdmrpInsertMemberSource(
-                                    NODE_ADDR srcAddr, ODMRP_MT_Node *mcast);
+ODMRP_MT_Snode* RoutingOdmrpInsertMemberSource( NODE_ADDR srcAddr, ODMRP_MT_Node* mcast );
 
-ODMRP_MT_Snode *RoutingOdmrpInsertMSInOrder(
-                  NODE_ADDR srcAddr, ODMRP_MT_Snode *old, ODMRP_MT_Snode *last);
+ODMRP_MT_Snode* RoutingOdmrpInsertMSInOrder( NODE_ADDR srcAddr,
+                                             ODMRP_MT_Snode* old,
+                                             ODMRP_MT_Snode* last );
 
-void RoutingOdmrpCheckSourceExpired(NODE_ADDR mcastAddr, ODMRP_MT *memberTable);
+void RoutingOdmrpCheckSourceExpired( NODE_ADDR mcastAddr, ODMRP_MT* memberTable );
 
-ODMRP_TT_Node *RoutingOdmrpGetTTEntry(NODE_ADDR mcastAddr, ODMRP_TT *tempTable);
+ODMRP_TT_Node* RoutingOdmrpGetTTEntry( NODE_ADDR mcastAddr, ODMRP_TT* tempTable );
 
-void RoutingOdmrpInsertTempTable(NODE_ADDR mcastAddr,
+void RoutingOdmrpInsertTempTable( NODE_ADDR mcastAddr, NODE_ADDR srcAddr, ODMRP_TT* tempTable );
+
+ODMRP_TT_Node* RoutingOdmrpInsertTTInOrder( NODE_ADDR mcastAddr,
+                                            NODE_ADDR srcAddr,
+                                            ODMRP_TT_Node* old );
+
+BOOL RoutingOdmrpCheckTSExist( NODE_ADDR srcAddr, ODMRP_TT_Node* mcast );
+
+ODMRP_TT_Snode* RoutingOdmrpInsertTempSource( NODE_ADDR srcAddr, ODMRP_TT_Node* mcast );
+
+ODMRP_TT_Snode* RoutingOdmrpInsertTSInOrder( NODE_ADDR srcAddr,
+                                             ODMRP_TT_Snode* old,
+                                             ODMRP_TT_Snode* last );
+
+BOOL RoutingOdmrpCheckTempChanged( NODE_ADDR mcastAddr, ODMRP_TT* tempTable );
+
+void RoutingOdmrpCheckTempExpired( NODE_ADDR mcastAddr, ODMRP_TT* tempTable );
+
+ODMRP_RPT_Node* RoutingOdmrpGetRPTEntry( NODE_ADDR mcastAddr, ODMRP_RPT* rspnsTable );
+
+void RoutingOdmrpInsertResponseTable( NODE_ADDR mcastAddr, NODE_ADDR srcAddr, ODMRP_RPT* rspnsTable );
+
+ODMRP_RPT_Node* RoutingOdmrpInsertRPTInOrder( NODE_ADDR mcastAddr,
+                                              NODE_ADDR srcAddr,
+                                              ODMRP_RPT_Node* old );
+
+BOOL RoutingOdmrpCheckRPSExist( NODE_ADDR srcAddr, ODMRP_RPT_Node* mcast );
+
+ODMRP_RPT_Snode* RoutingOdmrpInsertResponseSource( NODE_ADDR srcAddr, ODMRP_RPT_Node* mcast );
+
+ODMRP_RPT_Snode* RoutingOdmrpInsertRPSInOrder( NODE_ADDR srcAddr, ODMRP_RPT_Snode* old );
+
+ODMRP_AT_Node* RoutingOdmrpGetATEntry( NODE_ADDR mcastAddr, ODMRP_AT* ackTable );
+
+void RoutingOdmrpInsertAckTable( NODE_ADDR mcastAddr, ODMRP_AT* ackTable, ODMRP_JoinReply* reply );
+
+ODMRP_AT_Node* RoutingOdmrpInsertATInOrder( NODE_ADDR mcastAddr,
+                                            ODMRP_AT_Node* old,
+                                            ODMRP_JoinReply* reply );
+
+BOOL RoutingOdmrpCheckASExist( NODE_ADDR srcAddr, ODMRP_AT_Node* mcast );
+
+ODMRP_AT_Snode* RoutingOdmrpInsertAckSource( NODE_ADDR srcAddr,
+                                             NODE_ADDR nextAddr,
+                                             ODMRP_AT_Node* mcast );
+
+ODMRP_AT_Snode* RoutingOdmrpInsertASInOrder( NODE_ADDR srcAddr,
+                                             NODE_ADDR nextAddr,
+                                             ODMRP_AT_Snode* old,
+                                             ODMRP_AT_Snode* last );
+
+void RoutingOdmrpInsertRouteTable( NODE_ADDR destAddr,
+                                   NODE_ADDR nextAddr,
+                                   int hopCount,
+                                   ODMRP_RT* routeTable );
+
+ODMRP_RT_Node* RoutingOdmrpInsertRTInOrder( NODE_ADDR destAddr,
+                                            NODE_ADDR nextAddr,
+                                            int hopCount,
+                                            ODMRP_RT_Node* old );
+
+BOOL RoutingOdmrpCheckRouteExist( NODE_ADDR destAddr, ODMRP_RT* routeTable );
+
+void RoutingOdmrpInsertMessageCache( GlomoNode* node,
+                                     NODE_ADDR srcAddr,
+                                     int seqNumber,
+                                     ODMRP_MC* messageCache );
+
+int RoutingOdmrpGetSeq( GlomoNode* node );
+
+NODE_ADDR RoutingOdmrpGetNextNode( NODE_ADDR destAddr, ODMRP_RT* routeTable );
+
+int RoutingOdmrpGetTempCount( NODE_ADDR mcastAddr, ODMRP_TT* tempTable );
+
+int RoutingOdmrpGetMemberCount( NODE_ADDR mcastAddr, ODMRP_MT* memberTable );
+
+int RoutingOdmrpGetAckCount( NODE_ADDR mcastAddr, ODMRP_AT* ackTable );
+
+void RoutingOdmrpJoinGroup( GlomoNode* node, NODE_ADDR mcastAddr );
+
+void RoutingOdmrpLeaveGroup( GlomoNode* node, NODE_ADDR mcastAddr );
+
+BOOL RoutingOdmrpCheckLastSent( NODE_ADDR mcastAddr, ODMRP_MT* memberTable );
+
+void RoutingOdmrpUpdateLastSent( NODE_ADDR mcastAddr, ODMRP_MT* memberTable );
+
+BOOL RoutingOdmrpCheckAckTable( NODE_ADDR mcastAddr, ODMRP_AT* ackTable );
+
+void RoutingOdmrpDeleteAckTable( NODE_ADDR mcastAddr,
                                  NODE_ADDR srcAddr,
-                                 ODMRP_TT *tempTable);
+                                 NODE_ADDR lastAddr,
+                                 ODMRP_AT* ackTable );
 
-ODMRP_TT_Node *RoutingOdmrpInsertTTInOrder(
-                   NODE_ADDR mcastAddr, NODE_ADDR srcAddr, ODMRP_TT_Node *old);
+void RoutingOdmrpInitAckTable( ODMRP_AT* ackTable );
 
-BOOL RoutingOdmrpCheckTSExist(NODE_ADDR srcAddr, ODMRP_TT_Node *mcast);
+void RoutingOdmrpDeleteMemberTable( NODE_ADDR mcastAddr, ODMRP_MT* memberTable );
 
-ODMRP_TT_Snode *RoutingOdmrpInsertTempSource(
-                                     NODE_ADDR srcAddr, ODMRP_TT_Node *mcast);
+void RoutingOdmrpDeleteTempTable( NODE_ADDR mcastAddr, ODMRP_TT* tempTable );
 
-ODMRP_TT_Snode *RoutingOdmrpInsertTSInOrder(
-                  NODE_ADDR srcAddr, ODMRP_TT_Snode *old, ODMRP_TT_Snode *last);
+void RoutingOdmrpDeleteResponseTable( NODE_ADDR mcastAddr, ODMRP_RPT* rspnsTable );
 
-BOOL RoutingOdmrpCheckTempChanged(NODE_ADDR mcastAddr, ODMRP_TT *tempTable);
+BOOL RoutingOdmrpCheckResponseMatch( NODE_ADDR mcastAddr, NODE_ADDR srcAddr, ODMRP_RPT* rspnsTable );
 
-void RoutingOdmrpCheckTempExpired(NODE_ADDR mcastAddr, ODMRP_TT *tempTable);
+BOOL RoutingOdmrpCheckMinExpTime( NODE_ADDR mcastAddr, ODMRP_SS* sentTable );
 
-ODMRP_RPT_Node *RoutingOdmrpGetRPTEntry(
-                                NODE_ADDR mcastAddr, ODMRP_RPT *rspnsTable);
+BOOL RoutingOdmrpCheckCongestionTime( NODE_ADDR mcastAddr, ODMRP_MT* memberTable );
 
-void RoutingOdmrpInsertResponseTable(
-             NODE_ADDR mcastAddr, NODE_ADDR srcAddr, ODMRP_RPT *rspnsTable);
+BOOL RoutingOdmrpCheckSendQuery( NODE_ADDR mcastAddr, ODMRP_SS* sentTable );
 
-ODMRP_RPT_Node *RoutingOdmrpInsertRPTInOrder(
-                   NODE_ADDR mcastAddr, NODE_ADDR srcAddr, ODMRP_RPT_Node *old);
+void RoutingOdmrpSetSendQuery( NODE_ADDR mcastAddr, ODMRP_SS* sentTable );
 
-BOOL RoutingOdmrpCheckRPSExist(NODE_ADDR srcAddr, ODMRP_RPT_Node *mcast);
+void RoutingOdmrpUnsetSendQuery( NODE_ADDR mcastAddr, ODMRP_SS* sentTable );
 
-ODMRP_RPT_Snode *RoutingOdmrpInsertResponseSource(
-                                    NODE_ADDR srcAddr, ODMRP_RPT_Node *mcast);
+void RoutingOdmrpSetMinExpireTime( NODE_ADDR mcastAddr, ODMRP_SS* sentTable );
 
-ODMRP_RPT_Snode *RoutingOdmrpInsertRPSInOrder(
-                                   NODE_ADDR srcAddr, ODMRP_RPT_Snode *old);
+BOOL RoutingOdmrpCheckTempSent( NODE_ADDR mcastAddr, ODMRP_TT* tempTable );
 
-ODMRP_AT_Node *RoutingOdmrpGetATEntry(NODE_ADDR mcastAddr, ODMRP_AT *ackTable);
+void RoutingOdmrpSetTempSent( NODE_ADDR mcastAddr, ODMRP_TT* tempTable );
 
-void RoutingOdmrpInsertAckTable(
-              NODE_ADDR mcastAddr, ODMRP_AT *ackTable, ODMRP_JoinReply *reply);
+void RoutingOdmrpUnsetTempSent( NODE_ADDR mcastAddr, ODMRP_TT* tempTable );
 
-ODMRP_AT_Node *RoutingOdmrpInsertATInOrder(
-              NODE_ADDR mcastAddr, ODMRP_AT_Node *old, ODMRP_JoinReply *reply);
+void RoutingOdmrpSetMemberSent( NODE_ADDR mcastAddr, ODMRP_MT* memberTable );
 
-BOOL RoutingOdmrpCheckASExist(NODE_ADDR srcAddr, ODMRP_AT_Node *mcast);
+void RoutingOdmrpSetTimer( GlomoNode* node, long eventType, NODE_ADDR mcastAddr, clocktype delay );
 
-ODMRP_AT_Snode *RoutingOdmrpInsertAckSource(
-                  NODE_ADDR srcAddr, NODE_ADDR nextAddr, ODMRP_AT_Node *mcast);
+void RoutingOdmrpSendReply( GlomoNode* node,
+                            NODE_ADDR mcastAddr,
+                            ODMRP_MT* memberTable,
+                            ODMRP_TT* tempTable );
 
-ODMRP_AT_Snode *RoutingOdmrpInsertASInOrder(NODE_ADDR srcAddr,
-                 NODE_ADDR nextAddr, ODMRP_AT_Snode *old, ODMRP_AT_Snode *last);
+void RoutingOdmrpRetxReply( GlomoNode* node, NODE_ADDR mcastAddr, ODMRP_AT* ackTable );
 
-void RoutingOdmrpInsertRouteTable(NODE_ADDR destAddr,
-                                  NODE_ADDR nextAddr,
-                                  int hopCount,
-                                  ODMRP_RT *routeTable);
+void RoutingOdmrpSendData( GlomoNode* node, Message* msg, NODE_ADDR mcastAddr );
 
-ODMRP_RT_Node *RoutingOdmrpInsertRTInOrder(
-    NODE_ADDR destAddr, NODE_ADDR nextAddr, int hopCount, ODMRP_RT_Node *old);
+void RoutingOdmrpSendQuery( GlomoNode* node, Message* msg, NODE_ADDR mcastAddr );
 
-BOOL RoutingOdmrpCheckRouteExist(NODE_ADDR destAddr, ODMRP_RT *routeTable);
+void AddCustomOdmrpIpOptionFields( GlomoNode* node, Message* msg );
 
-void RoutingOdmrpInsertMessageCache(GlomoNode *node,
-                               NODE_ADDR srcAddr,
-                               int seqNumber,
-                               ODMRP_MC *messageCache);
+OdmrpIpOptionType GetOdmrpIpOptionField( const Message* msg );
 
-int RoutingOdmrpGetSeq(GlomoNode *node);
-
-NODE_ADDR RoutingOdmrpGetNextNode(NODE_ADDR destAddr, ODMRP_RT *routeTable);
-
-int RoutingOdmrpGetTempCount(NODE_ADDR mcastAddr, ODMRP_TT *tempTable);
-
-int RoutingOdmrpGetMemberCount(NODE_ADDR mcastAddr, ODMRP_MT *memberTable);
-
-int RoutingOdmrpGetAckCount(NODE_ADDR mcastAddr, ODMRP_AT *ackTable);
-
-void RoutingOdmrpJoinGroup(GlomoNode *node, NODE_ADDR mcastAddr);
-
-void RoutingOdmrpLeaveGroup(GlomoNode *node, NODE_ADDR mcastAddr);
-
-BOOL RoutingOdmrpCheckLastSent(NODE_ADDR mcastAddr,
-                               ODMRP_MT *memberTable);
-
-void RoutingOdmrpUpdateLastSent(NODE_ADDR mcastAddr,
-                                ODMRP_MT *memberTable);
-
-BOOL RoutingOdmrpCheckAckTable(NODE_ADDR mcastAddr, ODMRP_AT *ackTable);
-
-void RoutingOdmrpDeleteAckTable(NODE_ADDR mcastAddr, NODE_ADDR srcAddr, 
-                                NODE_ADDR lastAddr, ODMRP_AT *ackTable);
-
-void RoutingOdmrpInitAckTable(ODMRP_AT *ackTable);
-
-void RoutingOdmrpDeleteMemberTable(NODE_ADDR mcastAddr, ODMRP_MT *memberTable);
-
-void RoutingOdmrpDeleteTempTable(NODE_ADDR mcastAddr, ODMRP_TT *tempTable);
-
-void RoutingOdmrpDeleteResponseTable(
-                               NODE_ADDR mcastAddr, ODMRP_RPT *rspnsTable);
-
-BOOL RoutingOdmrpCheckResponseMatch(
-                NODE_ADDR mcastAddr, NODE_ADDR srcAddr, ODMRP_RPT *rspnsTable);
-
-BOOL RoutingOdmrpCheckMinExpTime(NODE_ADDR mcastAddr, ODMRP_SS *sentTable);
-
-BOOL RoutingOdmrpCheckCongestionTime(
-                               NODE_ADDR mcastAddr, ODMRP_MT *memberTable);
-
-BOOL RoutingOdmrpCheckSendQuery(NODE_ADDR mcastAddr, ODMRP_SS *sentTable);
-
-void RoutingOdmrpSetSendQuery(NODE_ADDR mcastAddr, ODMRP_SS *sentTable);
-
-void RoutingOdmrpUnsetSendQuery(NODE_ADDR mcastAddr, ODMRP_SS *sentTable);
-
-void RoutingOdmrpSetMinExpireTime(NODE_ADDR mcastAddr, ODMRP_SS *sentTable);
-
-BOOL RoutingOdmrpCheckTempSent(NODE_ADDR mcastAddr, ODMRP_TT *tempTable);
-
-void RoutingOdmrpSetTempSent(NODE_ADDR mcastAddr, ODMRP_TT *tempTable);
-
-void RoutingOdmrpUnsetTempSent(NODE_ADDR mcastAddr, ODMRP_TT *tempTable);
-
-void RoutingOdmrpSetMemberSent(NODE_ADDR mcastAddr, ODMRP_MT *memberTable);
-
-void RoutingOdmrpSetTimer(
-    GlomoNode *node, long eventType, NODE_ADDR mcastAddr, clocktype delay);
-
-void RoutingOdmrpSendReply(GlomoNode *node, NODE_ADDR mcastAddr, 
-                           ODMRP_MT *memberTable, ODMRP_TT *tempTable);
-
-void RoutingOdmrpRetxReply(
-                    GlomoNode *node, NODE_ADDR mcastAddr, ODMRP_AT *ackTable);
-
-void RoutingOdmrpSendData(GlomoNode *node, Message *msg, NODE_ADDR mcastAddr);
-
-void RoutingOdmrpSendQuery(GlomoNode *node, Message *msg, NODE_ADDR mcastAddr);
-
-void AddCustomOdmrpIpOptionFields(GlomoNode* node, Message* msg);
-
-OdmrpIpOptionType GetOdmrpIpOptionField(const Message* msg);
-
-void SetOdmrpIpOptionField(
-        Message* msg, const OdmrpIpOptionType* OdmrpIpOption);
+void SetOdmrpIpOptionField( Message* msg, const OdmrpIpOptionType* OdmrpIpOption );
 
 #endif /* _ODMRP_H_ */
 

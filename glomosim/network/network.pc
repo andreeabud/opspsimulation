@@ -63,24 +63,24 @@
  *     nodeInput: structure containing contents of input file
  */
 
-void GLOMO_NetworkPreInit(GlomoNode *node, const GlomoNodeInput *nodeInput)
+void GLOMO_NetworkPreInit( GlomoNode* node, const GlomoNodeInput* nodeInput )
 {
-    char buf[GLOMO_MAX_STRING_LENGTH];
-    BOOL retVal;
+    char    buf[GLOMO_MAX_STRING_LENGTH];
+    BOOL    retVal;
 
-    retVal = GLOMO_ReadString(node->nodeAddr, nodeInput, "NETWORK-PROTOCOL", buf);
+    retVal = GLOMO_ReadString( node->nodeAddr, nodeInput, "NETWORK-PROTOCOL", buf );
 
-    if (retVal == FALSE) {
-        printf("CONFIG.IN Error: NETWORK-PROTOCOL not specified!\n");
-        assert(FALSE); abort();
+    if( retVal == FALSE ) {
+        printf( "CONFIG.IN Error: NETWORK-PROTOCOL not specified!\n" );
+        assert( FALSE ); abort();
     }
 
-    if (strcmp(buf, "IP") != 0) {
-        fprintf(stderr, "CONFIG.IN Error: Unknown Network Protocol %s.\n", buf);
-        assert(FALSE); abort();
+    if( strcmp( buf, "IP" ) != 0 ) {
+        fprintf( stderr, "CONFIG.IN Error: Unknown Network Protocol %s.\n", buf );
+        assert( FALSE ); abort();
     }
-    
-    NetworkIpPreInit(node);
+
+    NetworkIpPreInit( node );
 }
 
 
@@ -93,63 +93,56 @@ void GLOMO_NetworkPreInit(GlomoNode *node, const GlomoNodeInput *nodeInput)
  *     nodeInput: structure containing contents of input file
  */
 
-void GLOMO_NetworkInit(GlomoNode *node, const GlomoNodeInput *nodeInput)
+void GLOMO_NetworkInit( GlomoNode* node, const GlomoNodeInput* nodeInput )
 {
-    char buf[GLOMO_MAX_STRING_LENGTH];
-    BOOL retVal;
+    char    buf[GLOMO_MAX_STRING_LENGTH];
+    BOOL    retVal;
 
-    retVal = GLOMO_ReadString(node->nodeAddr, nodeInput, "NETWORK-PROTOCOL", buf);
+    retVal = GLOMO_ReadString( node->nodeAddr, nodeInput, "NETWORK-PROTOCOL", buf );
 
-    if (retVal == FALSE) {
-        printf("CONFIG.IN Error: NETWORK-PROTOCOL not specified!\n");
-        assert(FALSE);
+    if( retVal == FALSE ) {
+        printf( "CONFIG.IN Error: NETWORK-PROTOCOL not specified!\n" );
+        assert( FALSE );
     }
 
-    if (strcmp(buf, "IP") == 0) {
+    if( strcmp( buf, "IP" ) == 0 ) {
         //node->networkData.networkProtocol = NETWORK_PROTOCOL_IP;
-    }
-    else {
-        fprintf(stderr, "CONFIG.IN Error: Unknown Network Protocol %s.\n", buf);
-        assert(FALSE);
-  
+    }else {
+        fprintf( stderr, "CONFIG.IN Error: Unknown Network Protocol %s.\n", buf );
+        assert( FALSE );
     }
 
-    retVal = GLOMO_ReadString(node->nodeAddr, nodeInput, "NETWORK-LAYER-STATISTICS", buf);
-            
-    if (retVal == FALSE) {
-        printf("GLOMO Error: NETWORK-LAYER-STATISTICS not specified!\n");
-        assert(FALSE);
+    retVal = GLOMO_ReadString( node->nodeAddr, nodeInput, "NETWORK-LAYER-STATISTICS", buf );
+
+    if( retVal == FALSE ) {
+        printf( "GLOMO Error: NETWORK-LAYER-STATISTICS not specified!\n" );
+        assert( FALSE );
     }
 
-    if (strcmp(buf, "YES") == 0) { 
+    if( strcmp( buf, "YES" ) == 0 ) {
         node->networkData.networkStats = TRUE;
-    }
-    else if (strcmp(buf, "NO") == 0) {
+    }else if( strcmp( buf, "NO" ) == 0 ) {
         node->networkData.networkStats = FALSE;
-    }
-    else {
-        fprintf(stderr, "CONFIG.IN Error: %s is not a valid choice.\n", buf);
-        assert(FALSE);
+    }else {
+        fprintf( stderr, "CONFIG.IN Error: %s is not a valid choice.\n", buf );
+        assert( FALSE );
     }
 
-    retVal = GLOMO_ReadString(node->nodeAddr, nodeInput, "GUI-ROUTING", buf);
-    if (retVal == TRUE) {
-        if (strcmp(buf, "YES") == 0) {
+    retVal = GLOMO_ReadString( node->nodeAddr, nodeInput, "GUI-ROUTING", buf );
+    if( retVal == TRUE ) {
+        if( strcmp( buf, "YES" ) == 0 ) {
             node->networkData.guiOption = TRUE;
-        }
-        else if (strcmp(buf, "NO") == 0) {
+        }else if( strcmp( buf, "NO" ) == 0 ) {
             node->networkData.guiOption = FALSE;
+        }else {
+            fprintf( stderr, "CONFIG.IN Error: %s is not a valid choice.\n", buf );
+            assert( FALSE );
         }
-        else {
-            fprintf(stderr, "CONFIG.IN Error: %s is not a valid choice.\n", buf);
-            assert(FALSE);
-        }
-    }
-    else {
+    }else {
         node->networkData.guiOption = FALSE;
     }
 
-    NetworkIpInit(node, nodeInput);
+    NetworkIpInit( node, nodeInput );
 }
 
 
@@ -161,10 +154,10 @@ void GLOMO_NetworkInit(GlomoNode *node, const GlomoNodeInput *nodeInput)
  * Parameter:
  *     node:     node for which results are to be collected.
  */
-void GLOMO_NetworkFinalize(GlomoNode *node)
+void GLOMO_NetworkFinalize( GlomoNode* node )
 {
-    if (node->networkData.networkStats == TRUE) {
-        NetworkIpFinalize(node);
+    if( node->networkData.networkStats == TRUE ) {
+        NetworkIpFinalize( node );
     }
 
     //switch (node->networkData.networkProtocol)
@@ -177,7 +170,7 @@ void GLOMO_NetworkFinalize(GlomoNode *node)
     //    default: 
     //        assert(FALSE);
     //        break;
-    //}      
+    //}
 }
 
 
@@ -190,9 +183,9 @@ void GLOMO_NetworkFinalize(GlomoNode *node)
  *     node:     node which received the message
  *     msg:      message received by the layer
  */
-void GLOMO_NetworkLayer(GlomoNode *node, Message *msg)
+void GLOMO_NetworkLayer( GlomoNode* node, Message* msg )
 {
-    NetworkIpLayer(node, msg);
+    NetworkIpLayer( node, msg );
 
     //switch (node->networkData.networkProtocol)
     //{

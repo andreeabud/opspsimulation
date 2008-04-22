@@ -66,11 +66,11 @@
  *  PARAMETER   node
  *  RETURN      None.
  */
-void NetworkInitForwardingTable(GlomoNode *node)
+void NetworkInitForwardingTable( GlomoNode* node )
 {
-    GlomoNetworkIp *ip;
-     
-    ip = (GlomoNetworkIp *) node->networkData.networkVar;
+    GlomoNetworkIp* ip;
+
+    ip = ( GlomoNetworkIp * ) node->networkData.networkVar;
 
 
     ip->forwardTable.size = 0;
@@ -84,11 +84,11 @@ void NetworkInitForwardingTable(GlomoNode *node)
  *  PARAMETER   node
  *  RETURN      None.
  */
-void NetworkEmptyForwardingTable(GlomoNode *node)
+void NetworkEmptyForwardingTable( GlomoNode* node )
 {
-    GlomoNetworkIp *ip;
-     
-    ip = (GlomoNetworkIp *) node->networkData.networkVar;
+    GlomoNetworkIp* ip;
+
+    ip = ( GlomoNetworkIp * ) node->networkData.networkVar;
     ip->forwardTable.size = 0;
 }
 
@@ -100,19 +100,20 @@ void NetworkEmptyForwardingTable(GlomoNode *node)
  *  RETURN      interface Id from node to destAddr, or
  *              NETWORK_UNREACHABLE (no such entry is found)
  */
-void NetworkGetInterfaceAndNextHopFromForwardingTable(
-   GlomoNode *node, NODE_ADDR destinationAddress, 
-   InterfaceIdType* interfaceId, NODE_ADDR* nextHopAddress)
+void NetworkGetInterfaceAndNextHopFromForwardingTable( GlomoNode* node,
+                                                       NODE_ADDR destinationAddress,
+                                                       InterfaceIdType* interfaceId,
+                                                       NODE_ADDR* nextHopAddress )
 {
-    GlomoNetworkIp* ipLayer = (GlomoNetworkIp *)node->networkData.networkVar;
-    NetworkForwardingTable* routingTable = &(ipLayer->forwardTable);
-    int i;
-    
+    GlomoNetworkIp*         ipLayer         = ( GlomoNetworkIp* ) node->networkData.networkVar;
+    NetworkForwardingTable* routingTable    = &( ipLayer->forwardTable );
+    int                     i;
+
     *interfaceId = NETWORK_UNREACHABLE;
     *nextHopAddress = NETWORK_UNREACHABLE;
 
-    for (i=0; (i < routingTable->size); i++) {
-        if (routingTable->row[i].destAddress == destinationAddress) {
+    for( i = 0;( i < routingTable->size );i++ ) {
+        if( routingTable->row[i].destAddress == destinationAddress ) {
             *interfaceId = routingTable->row[i].interfaceId;
             *nextHopAddress = routingTable->row[i].nextHopAddress;
             break;
@@ -132,118 +133,118 @@ void NetworkGetInterfaceAndNextHopFromForwardingTable(
  *              destAddress - destination Id to match in the table
  *              interfaceAddress - new interface.
  */
- 
-void NetworkUpdateForwardingTable(
-    GlomoNode *node, 
-    NODE_ADDR destAddress, 
-    InterfaceIdType interfaceId, 
-    NODE_ADDR nextHopAddress)
+
+void NetworkUpdateForwardingTable( GlomoNode* node,
+                                   NODE_ADDR destAddress,
+                                   InterfaceIdType interfaceId,
+                                   NODE_ADDR nextHopAddress )
 {
-    GlomoNetworkIp* ipLayer = (GlomoNetworkIp *)node->networkData.networkVar;
-    NetworkForwardingTable* routingTable = &(ipLayer->forwardTable);
-    int i;
+    GlomoNetworkIp*         ipLayer         = ( GlomoNetworkIp* ) node->networkData.networkVar;
+    NetworkForwardingTable* routingTable    = &( ipLayer->forwardTable );
+    int                     i;
 
 
 
 
-    for(i=0; ((i < routingTable->size) && 
-              (routingTable->row[i].destAddress != destAddress)); i++)
-    {
+    for( i = 0;
+         ( ( i < routingTable->size ) && ( routingTable->row[i].destAddress != destAddress ) );
+         i++ ) {
         // Nothing
     }//for//
-    
-    if (i == routingTable->size) {
+
+    if( i == routingTable->size ) {
         routingTable->size++;
-        assert (routingTable->size <= node->numNodes);
-        if (routingTable->size > routingTable->allocatedSize) {
-            if (routingTable->allocatedSize == 0) {
+        assert( routingTable->size <= node->numNodes );
+        if( routingTable->size > routingTable->allocatedSize ) {
+            if( routingTable->allocatedSize == 0 ) {
                 routingTable->allocatedSize = FORWARDING_TABLE_ROW_START_SIZE;
-                routingTable->row = (NetworkForwardingTableRow*)
-                    checked_pc_malloc(
-                        routingTable->allocatedSize * 
-                        sizeof(NetworkForwardingTableRow));
-            } else {
-                int newSize = (routingTable->allocatedSize * 2);
-                NetworkForwardingTableRow* newTableRow = 
-                    (NetworkForwardingTableRow*)checked_pc_malloc(
-                        newSize * sizeof(NetworkForwardingTableRow));
+                routingTable->row = ( NetworkForwardingTableRow * )
+                                    checked_pc_malloc( routingTable->allocatedSize * sizeof( NetworkForwardingTableRow ) );
+            }else {
+                int                         newSize     = ( routingTable->allocatedSize * 2 );
+                NetworkForwardingTableRow*  newTableRow = ( NetworkForwardingTableRow* )
+                                                          checked_pc_malloc( newSize * sizeof( NetworkForwardingTableRow ) );
 
-                memcpy(newTableRow, routingTable->row,
-                       (routingTable->allocatedSize * 
-                        sizeof(NetworkForwardingTableRow)));
+                memcpy( newTableRow,
+                        routingTable->row,
+                        ( routingTable->allocatedSize * sizeof( NetworkForwardingTableRow ) ) );
 
-                pc_free(routingTable->row);
+                pc_free( routingTable->row );
                 routingTable->row = newTableRow;
                 routingTable->allocatedSize = newSize;
             }
         }
     }
-    
+
     routingTable->row[i].destAddress = destAddress;
     routingTable->row[i].interfaceId = interfaceId;
     routingTable->row[i].nextHopAddress = nextHopAddress;
 }
-   
 
- 
+
+
 /*  FUNCTION    NetworkPrintForwardingTable
  *  PURPOSE     display all entries in routing table of the node.
  *  PARAMETER   node 
  *  RETURN      None.
  */
-void NetworkPrintForwardingTable(GlomoNode *node)
+void NetworkPrintForwardingTable( GlomoNode* node )
 {
-    int i;
-    GlomoNetworkIp *ip;
-    NetworkForwardingTable *rt;
-     
-    ip = (GlomoNetworkIp *) node->networkData.networkVar;
-    rt = &(ip->forwardTable);
+    int                     i;
+    GlomoNetworkIp*         ip;
+    NetworkForwardingTable* rt;
 
-    printf ("Forwarding Table for node %u\n", node->nodeAddr);
-    for (i=0; i<rt->size; i++) {
-        printf ("destAddress %u interfaceId %u nextHop %u\n",
-                rt->row[i].destAddress, rt->row[i].interfaceId,
-                rt->row[i].nextHopAddress);
+    ip = ( GlomoNetworkIp * ) node->networkData.networkVar;
+    rt = &( ip->forwardTable );
+
+    printf( "Forwarding Table for node %u\n", node->nodeAddr );
+    for( i = 0;i < rt->size;i++ ) {
+        printf( "destAddress %u interfaceId %u nextHop %u\n",
+                rt->row[i].destAddress,
+                rt->row[i].interfaceId,
+                rt->row[i].nextHopAddress );
     }
-    printf ("\n");
+    printf( "\n" );
 }
 
-void NetworkPrintIpHeader(Message *msg)
+void NetworkPrintIpHeader( Message* msg )
 {
-    struct ip *ipHdr;
-    struct ip_options *opt;
-    char *dataptr = msg->packet;
-    int i;
+    struct ip*          ipHdr;
+    struct ip_options*  opt;
+    char*               dataptr = msg->packet;
+    int                 i;
 
-    ipHdr = (struct ip *) (msg->packet);
+    ipHdr = ( struct ip * ) ( msg->packet );
 
-    printf("IP header\n");
-    printf("totalLength %d headerLength %d moreFragment %d fragmentOffset %d"
-           "  timeToLive %d ",
-           ipHdr->ip_len, ipHdr->ip_hl, ipHdr->ip_more_fragments,
-           ipHdr->ip_fragment_offset,
-           ipHdr->ip_ttl);
-    printf("protocol %d sourceId %ld destId %ld identity %d\n",
-           ipHdr->ip_p, ipHdr->ip_src, ipHdr->ip_dst, ipHdr->ip_id);
+    printf( "IP header\n" );
+    printf( "totalLength %d headerLength %d moreFragment %d fragmentOffset %d"
+            "  timeToLive %d ",
+            ipHdr->ip_len,
+            ipHdr->ip_hl,
+            ipHdr->ip_more_fragments,
+            ipHdr->ip_fragment_offset,
+            ipHdr->ip_ttl );
+    printf( "protocol %d sourceId %ld destId %ld identity %d\n",
+            ipHdr->ip_p,
+            ipHdr->ip_src,
+            ipHdr->ip_dst,
+            ipHdr->ip_id );
 
-    dataptr += sizeof(struct ip);
-    opt = (struct ip_options *) dataptr;
+    dataptr += sizeof( struct ip );
+    opt = ( struct ip_options * ) dataptr;
 
-    printf ("code %d, len %d, ptr %d\n", opt->code, opt->len, opt->ptr);
+    printf( "code %d, len %d, ptr %d\n", opt->code, opt->len, opt->ptr );
 
-    if (ipHdr->ip_hl * 4 > sizeof(struct ip)) {
-        if ( opt->code == IPOPT_SSRR) {
-            for (i=1; i<= (opt->len - 3) / 4; i++) {
-                NODE_ADDR nodePtr;
-                memcpy(&nodePtr, (dataptr + i*4 - 1), sizeof(NODE_ADDR));
-                printf ("%d, ", nodePtr);
-
+    if( ipHdr->ip_hl * 4 > sizeof( struct ip ) ) {
+        if( opt->code == IPOPT_SSRR ) {
+            for( i = 1;i <= ( opt->len - 3 ) / 4;i++ ) {
+                NODE_ADDR   nodePtr;
+                memcpy( &nodePtr, ( dataptr + i * 4 - 1 ), sizeof( NODE_ADDR ) );
+                printf( "%d, ", nodePtr );
             }
-            printf ("\n");
+            printf( "\n" );
         }
     }
     /*printf ("payload %s\n", (dataptr + opt->len)); */
-
 }
 

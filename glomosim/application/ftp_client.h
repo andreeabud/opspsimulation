@@ -46,21 +46,21 @@
 
 #include "structmsg.h"
 
-typedef struct glomo_app_ftp_client_str 
+typedef struct glomo_app_ftp_client_str
 {
-    int connectionId;
-    NODE_ADDR localAddr; 
-    NODE_ADDR remoteAddr;
-    clocktype sessionStart;
-    clocktype sessionFinish;
-    BOOL sessionIsClosed;
-    int itemsToSend;
-    int itemSizeLeft;
-    int numBytesSent;
-    int numBytesRecvd;
+    int             connectionId;
+    NODE_ADDR       localAddr; 
+    NODE_ADDR       remoteAddr;
+    clocktype       sessionStart;
+    clocktype       sessionFinish;
+    BOOL            sessionIsClosed;
+    int             itemsToSend;
+    int             itemSizeLeft;
+    int             numBytesSent;
+    int             numBytesRecvd;
 
-    int uniqueId;
-    unsigned short seed[3];
+    int             uniqueId;
+    unsigned short  seed[3];
 } GlomoAppFtpClient;
 
 
@@ -73,8 +73,7 @@ typedef struct glomo_app_ftp_client_str
  *              msg - message received by the layer
  * RETURN:      none.
  */
-void
-AppLayerFtpClient(GlomoNode *nodePtr, Message *msg);
+void AppLayerFtpClient( GlomoNode* nodePtr, Message* msg );
 
 
 
@@ -87,9 +86,7 @@ AppLayerFtpClient(GlomoNode *nodePtr, Message *msg);
  *              waitTime - time until the session starts.
  * RETURN:      none.
  */
-void
-AppFtpClientInit(GlomoNode *nodePtr, NODE_ADDR serverAddr,
-                 int itemsToSend, clocktype waitTime);
+void AppFtpClientInit( GlomoNode* nodePtr, NODE_ADDR serverAddr, int itemsToSend, clocktype waitTime );
 
 
 
@@ -100,8 +97,7 @@ AppFtpClientInit(GlomoNode *nodePtr, NODE_ADDR serverAddr,
  *              clientPtr - pointer to the ftp client data structure.
  * RETURN:      none.
  */
-static void
-AppFtpClientPrintStats(GlomoNode *nodePtr, GlomoAppFtpClient *clientPtr);
+static void AppFtpClientPrintStats( GlomoNode* nodePtr, GlomoAppFtpClient* clientPtr );
 
 
 /*
@@ -111,8 +107,7 @@ AppFtpClientPrintStats(GlomoNode *nodePtr, GlomoAppFtpClient *clientPtr);
  *              clientPtr - pointer to the ftp client data structure.
  * RETURN:      none.
  */
-void
-AppFtpClientFinalize(GlomoNode *nodePtr, GlomoAppFtpClient *clientPtr);
+void AppFtpClientFinalize( GlomoNode* nodePtr, GlomoAppFtpClient* clientPtr );
 
 
 
@@ -126,8 +121,7 @@ AppFtpClientFinalize(GlomoNode *nodePtr, GlomoAppFtpClient *clientPtr);
  * RETURN:      the pointer to the ftp client data structure,
  *              NULL if nothing found.
  */
-static GlomoAppFtpClient *
-AppFtpClientGetFtpClient(GlomoNode *nodePtr, int connId);
+static GlomoAppFtpClient* AppFtpClientGetFtpClient( GlomoNode* nodePtr, int connId );
 
 
 /*
@@ -139,9 +133,8 @@ AppFtpClientGetFtpClient(GlomoNode *nodePtr, int connId);
  * RETRUN:      the pointer to the created ftp client data structure,
  *              NULL if no data structure allocated.
  */
-static GlomoAppFtpClient *
-AppFtpClientUpdateFtpClient(GlomoNode *nodePtr,
-                            TransportToAppOpenResult *openResult);
+static GlomoAppFtpClient* AppFtpClientUpdateFtpClient( GlomoNode* nodePtr,
+                                                       TransportToAppOpenResult* openResult );
 
 
 
@@ -155,10 +148,9 @@ AppFtpClientUpdateFtpClient(GlomoNode *nodePtr,
  * RETRUN:      the pointer to the created ftp client data structure,
  *              NULL if no data structure allocated.
  */
-static GlomoAppFtpClient *
-AppFtpClientNewFtpClient(GlomoNode *nodePtr,
-                         NODE_ADDR serverAddr,
-                         int itemsToSend);
+static GlomoAppFtpClient* AppFtpClientNewFtpClient( GlomoNode* nodePtr,
+                                                    NODE_ADDR serverAddr,
+                                                    int itemsToSend );
 
 
 
@@ -169,8 +161,7 @@ AppFtpClientNewFtpClient(GlomoNode *nodePtr,
  *              clientPtr - pointer to the ftp client data structure.
  * RETRUN:      none.
  */
-static void
-AppFtpClientSendNextItem(GlomoNode *nodePtr, GlomoAppFtpClient *clientPtr);
+static void AppFtpClientSendNextItem( GlomoNode* nodePtr, GlomoAppFtpClient* clientPtr );
 
 
 
@@ -181,8 +172,7 @@ AppFtpClientSendNextItem(GlomoNode *nodePtr, GlomoAppFtpClient *clientPtr);
  *              clientPtr - pointer to the ftp client data structure.
  * RETRUN:      none.
  */
-static void
-AppFtpClientSendNextPacket(GlomoNode *nodePtr, GlomoAppFtpClient *clientPtr);
+static void AppFtpClientSendNextPacket( GlomoNode* nodePtr, GlomoAppFtpClient* clientPtr );
 
 
 
@@ -193,8 +183,7 @@ AppFtpClientSendNextPacket(GlomoNode *nodePtr, GlomoAppFtpClient *clientPtr);
  * PARAMETERS:  nodePtr - pointer to the node.
  * RETRUN:      amount of items to send.
  */
-static int
-AppFtpClientItemsToSend(GlomoAppFtpClient *clientPtr);
+static int AppFtpClientItemsToSend( GlomoAppFtpClient* clientPtr );
 
 
 
@@ -206,8 +195,7 @@ AppFtpClientItemsToSend(GlomoAppFtpClient *clientPtr);
  * PARAMETERS:  nodePtr - pointer to the node.
  * RETRUN:      size of an item.
  */
-static int
-AppFtpClientItemSize(GlomoAppFtpClient *clientPtr);
+static int AppFtpClientItemSize( GlomoAppFtpClient* clientPtr );
 
 
 /*
@@ -216,8 +204,7 @@ AppFtpClientItemSize(GlomoAppFtpClient *clientPtr);
  * PARAMETERS:  nodePtr - pointer to the node.
  * RETRUN:      ftp control packet size.
  */
-int
-AppFtpClientCtrlPktSize(GlomoAppFtpClient *clientPtr);
+int AppFtpClientCtrlPktSize( GlomoAppFtpClient* clientPtr );
 
 
 

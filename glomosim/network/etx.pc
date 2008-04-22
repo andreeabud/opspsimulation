@@ -1,36 +1,31 @@
-void MetricEtxInitProbeNumTable(ETX_PNT *etxProbeNumTable)
+void MetricEtxInitProbeNumTable( ETX_PNT* etxProbeNumTable )
 {
     etxProbeNumTable->head = NULL;
     etxProbeNumTable->size = 0;
-
 } 
 
-void MetricEtxInitProbeAckNumTable(ETX_PANT *etxProbeAckNumTable)
+void MetricEtxInitProbeAckNumTable( ETX_PANT* etxProbeAckNumTable )
 {
     etxProbeAckNumTable->head = NULL;
     etxProbeAckNumTable->size = 0;
-
 } 
 
-void MetricEtxInitNeighborTable(ETX_NT *etxNbrTable)
+void MetricEtxInitNeighborTable( ETX_NT* etxNbrTable )
 {
     etxNbrTable->head = NULL;
     etxNbrTable->size = 0;
-
 }
 
-void MetricEtxInitLinkTable(ETX_LT *etxLinkTable)
+void MetricEtxInitLinkTable( ETX_LT* etxLinkTable )
 {
     etxLinkTable->head = NULL;
     etxLinkTable->size = 0;
-
 }
 
-void MetricEtxInitSegmentTable(ETX_ST *etxSegmentTable)
+void MetricEtxInitSegmentTable( ETX_ST* etxSegmentTable )
 {
     etxSegmentTable->head = NULL;
     etxSegmentTable->size = 0;
-
 }
 /*
  * ETX metric Init
@@ -39,230 +34,221 @@ void MetricEtxInitSegmentTable(ETX_ST *etxSegmentTable)
  * ETX packet - broadcast with ACK,  TTL = 1
  */
 
-void MetricETXInit(GlomoNode *node) 
+void MetricETXInit( GlomoNode* node )
 {
-	GlomoNetworkIp* ipLayer = (GlomoNetworkIp *) node->networkData.networkVar;
-  	GlomoRoutingAodv* aodv = (GlomoRoutingAodv *) ipLayer->routingProtocol;
-  	int pktSize = sizeof(ETX_PROBE_Packet);
-  	Message *newMsg;
-  	char *pktPtr;
-  	ETX_PROBE_Packet *etxPrbPkt;
-  	clocktype delay;
-  	int plusMinus;
-	
-	#ifdef ETX_DEBUG
-	//-------------tianke on 2007-12-13 17:2 0.01------>
-	printf("the MetricETXInit fuction is called~~~~~~~~~~~~~~~~~~~~~\n");
-	//<----------- tianke on 2007-12-13 17:2 0.01--------
-	#endif
+    GlomoNetworkIp*     ipLayer = ( GlomoNetworkIp* ) node->networkData.networkVar;
+    GlomoRoutingAodv*   aodv    = ( GlomoRoutingAodv* ) ipLayer->routingProtocol;
+    int                 pktSize = sizeof( ETX_PROBE_Packet );
+    Message*            newMsg;
+    char*               pktPtr;
+    ETX_PROBE_Packet*   etxPrbPkt;
+    clocktype           delay;
+    int                 plusMinus;
 
-	newMsg = GLOMO_MsgAlloc(node, GLOMO_MAC_LAYER, 0, MSG_MAC_FromNetwork);
-  	GLOMO_MsgPacketAlloc(node, newMsg, pktSize);
-  	pktPtr = (char *) GLOMO_MsgReturnPacket(newMsg);
-  	etxPrbPkt = (ETX_PROBE_Packet *) pktPtr;
-  	etxPrbPkt->pktType = ETX_PROBE;
-	etxPrbPkt->probeNum =aodv->stats.numEtxProbeSent;
-  	etxPrbPkt->lifetime = ALLOWED_ETX_PROBE_LOSS * ETX_PROBE_INTERVAL;
+#ifdef ETX_DEBUG
+    //-------------tianke on 2007-12-13 17:2 0.01------>
+    printf( "the MetricETXInit fuction is called~~~~~~~~~~~~~~~~~~~~~\n" );
+    //<----------- tianke on 2007-12-13 17:2 0.01--------
+#endif
 
-	if(pc_erand(node->seed) <= 0.5)
-		plusMinus = 1;
-	else
-		plusMinus = -1;
+    newMsg = GLOMO_MsgAlloc( node, GLOMO_MAC_LAYER, 0, MSG_MAC_FromNetwork );
+    GLOMO_MsgPacketAlloc( node, newMsg, pktSize );
+    pktPtr = ( char * ) GLOMO_MsgReturnPacket( newMsg );
+    etxPrbPkt = ( ETX_PROBE_Packet * ) pktPtr;
+    etxPrbPkt->pktType = ETX_PROBE;
+    etxPrbPkt->probeNum = aodv->stats.numEtxProbeSent;
+    etxPrbPkt->lifetime = ALLOWED_ETX_PROBE_LOSS * ETX_PROBE_INTERVAL;
 
-	// this is the delay for the next HELLO message
-  	delay = pc_erand(node->seed) * BROADCAST_JITTER;
-	
-  	NetworkIpSendRawGlomoMessage(node, newMsg, ANY_DEST, CONTROL,
-  							IPPROTO_AOMDV, 1); // 1: ttl
-  	RoutingAodvSetTimer(node, MSG_ETX_PROBE, ANY_DEST,
-  					(clocktype)ETX_PROBE_INTERVAL + plusMinus * delay); //延时发送消息
-
-  	aodv->stats.numEtxProbeSent++;
-
-	#ifdef ETX_DEBUG
-	printf("numEtxProbeSent:  %d \n  node address: %d \n",
-				aodv->stats.numEtxProbeSent, node->nodeAddr);
-	#endif
-}
-
-void MetricETXHandleProbe(GlomoNode *node, Message*msg, NODE_ADDR nbrAddr)
-{
-	GlomoNetworkIp* ipLayer = (GlomoNetworkIp *) node->networkData.networkVar;
-  	GlomoRoutingAodv* aodv = (GlomoRoutingAodv *) ipLayer->routingProtocol;
-  	ETX_PROBE_Packet* etxPrbPkt =  (ETX_PROBE_Packet*)GLOMO_MsgReturnPacket(msg);
-  	int pktSize;
-	PROBE_NUM probeNum = etxPrbPkt->probeNum;
-	ETXValue etx;
-	Message *newMsg;
-  	char *pktPtr;
-  	ETX_PROBE_ACK_Packet *etxPrbAckPkt;
-
-	if(!MetricEtxCheckEtxnbrExist(node, nbrAddr)) {
-		MetricEtxInsertEtxProbeNumTable(node, nbrAddr, probeNum);
-		MetricEtxInsertEtxnbrTable(node, nbrAddr);
-	}
-
-	etx = MetricEtxUpdateEtxProbeNumTable(node, nbrAddr, probeNum);
-	MetricEtxUpdateEtxnbrtable(node, nbrAddr, etx);
-
-	newMsg = GLOMO_MsgAlloc(node, GLOMO_MAC_LAYER, 0, MSG_MAC_FromNetwork);
-	pktSize = sizeof(ETX_PROBE_ACK_Packet);
-  	GLOMO_MsgPacketAlloc(node, newMsg, pktSize);
-  	pktPtr = (char *) GLOMO_MsgReturnPacket(newMsg);
-  	etxPrbAckPkt = (ETX_PROBE_ACK_Packet*) pktPtr;//为什么不把上面两句合为一句，不用pakPtr转?
-  	etxPrbAckPkt->pktType = ETX_PROBE_ACK;
-	etxPrbAckPkt->origAddr = nbrAddr;
-	etxPrbAckPkt->etx = etx;
-	etxPrbAckPkt->probeNum =aodv->stats.numEtxProbeSent;
-  	etxPrbAckPkt->lifetime = ALLOWED_ETX_PROBE_LOSS * ETX_PROBE_INTERVAL;
-	
-  	NetworkIpSendRawGlomoMessage(node, newMsg, nbrAddr, CONTROL,
-  							IPPROTO_AOMDV, 1); // 1: ttl
-
-  	aodv->stats.numEtxProbeSent++;
-	
-	#ifdef ETX_DEBUG
-	printf("the MetricETXHandlePROBE fuction is called~~~~~~~~~~~~~~~~~~~~~\n");
-	#endif
-
-	GLOMO_MsgFree(node, msg)
-}
-
-void MetricETXHandleProbeAck(GlomoNode *node, Message*msg, NODE_ADDR srcAddr)
-{
-	#ifdef ETX_DEBUG
-	printf("the MetricETXHandleProbeAck fuction is called~~~~~~~~~~~~~~~~~~~~~");
-	#endif
-}
-
-BOOL MetricEtxCheckEtxnbrExist(GlomoNode *node, NODE_ADDR nbrAddr)
-{
-	GlomoNetworkIp* ipLayer = (GlomoNetworkIp *) node->networkData.networkVar;
-	GlomoRoutingAodv* aodv = (GlomoRoutingAodv *) ipLayer->routingProtocol;
-	ETX_NT etxNbrTable = aodv->etxNbrTable;
-	ETX_NT_Node *current;
-
-	if (etxNbrTable.size == 0) {
-    	return (FALSE);
+    if( pc_erand( node->seed ) <= 0.5 ) {
+        plusMinus = 1;
+    }else {
+        plusMinus = -1;
     }
 
-	for (current = etxNbrTable.head;
-         current != NULL && current->nbrAddr <= nbrAddr;
-         current = current->next) {
+    // this is the delay for the next HELLO message
+    delay = pc_erand( node->seed ) * BROADCAST_JITTER;
 
-        if (current->nbrAddr == nbrAddr) {
-            return(TRUE);
+    NetworkIpSendRawGlomoMessage( node, newMsg, ANY_DEST, CONTROL, IPPROTO_AOMDV, 1 ); // 1: ttl
+    RoutingAodvSetTimer( node,
+                         MSG_ETX_PROBE,
+                         ANY_DEST,
+                         ( clocktype ) ETX_PROBE_INTERVAL + plusMinus * delay ); //延时发送消息
+
+    aodv->stats.numEtxProbeSent++;
+
+#ifdef ETX_DEBUG
+    printf( "numEtxProbeSent:  %d \n  node address: %d \n",
+            aodv->stats.numEtxProbeSent,
+            node->nodeAddr );
+#endif
+}
+
+void MetricETXHandleProbe( GlomoNode* node, Message* msg, NODE_ADDR nbrAddr )
+{
+    GlomoNetworkIp*         ipLayer     = ( GlomoNetworkIp* ) node->networkData.networkVar;
+    GlomoRoutingAodv*       aodv        = ( GlomoRoutingAodv* ) ipLayer->routingProtocol;
+    ETX_PROBE_Packet*       etxPrbPkt   = ( ETX_PROBE_Packet* ) GLOMO_MsgReturnPacket( msg );
+    int                     pktSize;
+    PROBE_NUM               probeNum    = etxPrbPkt->probeNum;
+    ETXValue                etx;
+    Message*                newMsg;
+    char*                   pktPtr;
+    ETX_PROBE_ACK_Packet*   etxPrbAckPkt;
+
+    if( !MetricEtxCheckEtxnbrExist( node, nbrAddr ) ) {
+        MetricEtxInsertEtxProbeNumTable( node, nbrAddr, probeNum );
+        MetricEtxInsertEtxnbrTable( node, nbrAddr );
+    }
+
+    etx = MetricEtxUpdateEtxProbeNumTable( node, nbrAddr, probeNum );
+    MetricEtxUpdateEtxnbrtable( node, nbrAddr, etx );
+
+    newMsg = GLOMO_MsgAlloc( node, GLOMO_MAC_LAYER, 0, MSG_MAC_FromNetwork );
+    pktSize = sizeof( ETX_PROBE_ACK_Packet );
+    GLOMO_MsgPacketAlloc( node, newMsg, pktSize );
+    pktPtr = ( char * ) GLOMO_MsgReturnPacket( newMsg );
+    etxPrbAckPkt = ( ETX_PROBE_ACK_Packet * ) pktPtr;//为什么不把上面两句合为一句，不用pakPtr转?
+    etxPrbAckPkt->pktType = ETX_PROBE_ACK;
+    etxPrbAckPkt->origAddr = nbrAddr;
+    etxPrbAckPkt->etx = etx;
+    etxPrbAckPkt->probeNum = aodv->stats.numEtxProbeSent;
+    etxPrbAckPkt->lifetime = ALLOWED_ETX_PROBE_LOSS * ETX_PROBE_INTERVAL;
+
+    NetworkIpSendRawGlomoMessage( node, newMsg, nbrAddr, CONTROL, IPPROTO_AOMDV, 1 ); // 1: ttl
+
+    aodv->stats.numEtxProbeSent++;
+
+#ifdef ETX_DEBUG
+    printf( "the MetricETXHandlePROBE fuction is called~~~~~~~~~~~~~~~~~~~~~\n" );
+#endif
+
+    GLOMO_MsgFree( node, msg )
+}
+
+void MetricETXHandleProbeAck( GlomoNode* node, Message* msg, NODE_ADDR srcAddr )
+{
+#ifdef ETX_DEBUG
+    printf( "the MetricETXHandleProbeAck fuction is called~~~~~~~~~~~~~~~~~~~~~" );
+#endif
+}
+
+BOOL MetricEtxCheckEtxnbrExist( GlomoNode* node, NODE_ADDR nbrAddr )
+{
+    GlomoNetworkIp*     ipLayer     = ( GlomoNetworkIp* ) node->networkData.networkVar;
+    GlomoRoutingAodv*   aodv        = ( GlomoRoutingAodv* ) ipLayer->routingProtocol;
+    ETX_NT              etxNbrTable = aodv->etxNbrTable;
+    ETX_NT_Node*        current;
+
+    if( etxNbrTable.size == 0 ) {
+        return ( FALSE );
+    }
+
+    for( current = etxNbrTable.head;
+         current != NULL && current->nbrAddr <= nbrAddr;
+         current = current->next ) {
+        if( current->nbrAddr == nbrAddr ) {
+            return( TRUE );
         }
     }
-	return (FALSE);
-
+    return ( FALSE );
 }
 
-void MetricEtxInsertEtxnbrTable(GlomoNode *node, NODE_ADDR nbrAddr)
+void MetricEtxInsertEtxnbrTable( GlomoNode* node, NODE_ADDR nbrAddr )
 {
-	GlomoNetworkIp* ipLayer = (GlomoNetworkIp *) node->networkData.networkVar;
-	GlomoRoutingAodv* aodv = (GlomoRoutingAodv *) ipLayer->routingProtocol;
-	ETX_NT etxNbrTable = aodv->etxNbrTable;
-	ETX_NT_Node* current;
-  ETX_NT_Node* previous;
-  
-  ETX_NT_Node* newNode = 
-  	(ETX_NT_Node *)checked_pc_malloc(sizeof(ETX_NT_Node));
+    GlomoNetworkIp*     ipLayer     = ( GlomoNetworkIp* ) node->networkData.networkVar;
+    GlomoRoutingAodv*   aodv        = ( GlomoRoutingAodv* ) ipLayer->routingProtocol;
+    ETX_NT              etxNbrTable = aodv->etxNbrTable;
+    ETX_NT_Node*        current;
+    ETX_NT_Node*        previous;
 
-	newNode->nbrAddr = nbrAddr;
-  newNode->etx = 1;
-  newNode->next = NULL;
-  
-  ++(etxNbrTable->size);
+    ETX_NT_Node*        newNode     = ( ETX_NT_Node* ) checked_pc_malloc( sizeof( ETX_NT_Node ) );
 
-	  // Find Insertion point.  Insert after all address matches.
-  
-  previous = NULL;
-  current = etxNbrTable->head;
-  while ((current != NULL) && (current->nbrAddr <= nbrAddr)) {
-      previous = current;
-      current = current->next;
-  }
-  
+    newNode->nbrAddr = nbrAddr;
+    newNode->etx = 1;
+    newNode->next = NULL;
 
-  if (previous == NULL) {
-	newNode->next = etxNbrTable->head;
-	etxNbrTable->head = newNode;
-  } else {
-	newNode->next = previous->next;
-	previous->next = newNode;
-  }//if//
+    ++( etxNbrTable->size );
 
+    // Find Insertion point.  Insert after all address matches.
+
+    previous = NULL;
+    current = etxNbrTable->head;
+    while( ( current != NULL ) && ( current->nbrAddr <= nbrAddr ) ) {
+        previous = current;
+        current = current->next;
+    }
+
+
+    if( previous == NULL ) {
+        newNode->next = etxNbrTable->head;
+        etxNbrTable->head = newNode;
+    }else {
+        newNode->next = previous->next;
+        previous->next = newNode;
+    }//if//
 }
 
 
-void MetricEtxInsertEtxProbeNumTable(
-												GlomoNode *node, NODE_ADDR nbrAddr, PROBE_NUM probeNum)
+void MetricEtxInsertEtxProbeNumTable( GlomoNode* node, NODE_ADDR nbrAddr, PROBE_NUM probeNum )
 {
-	GlomoNetworkIp* ipLayer = (GlomoNetworkIp *) node->networkData.networkVar;
-	GlomoRoutingAodv* aodv = (GlomoRoutingAodv *) ipLayer->routingProtocol;
-	ETX_PNT etxProbeNumTable = aodv->etxProbeNumTable;
-	int sum;
-	ETX_PNT_Node* current;
-  ETX_PNT_Node* previous;
-  
-  ETX_PNT_Node* newNode = 
-  	(ETX_PNT_Node *)checked_pc_malloc(sizeof(ETX_PNT_Node));
+    GlomoNetworkIp*     ipLayer             = ( GlomoNetworkIp* ) node->networkData.networkVar;
+    GlomoRoutingAodv*   aodv                = ( GlomoRoutingAodv* ) ipLayer->routingProtocol;
+    ETX_PNT             etxProbeNumTable    = aodv->etxProbeNumTable;
+    int                 sum;
+    ETX_PNT_Node*       current;
+    ETX_PNT_Node*       previous;
 
-	newNode->nbrAddr = nbrAddr;
-  newNode->next = NULL;  
+    ETX_PNT_Node*       newNode             = ( ETX_PNT_Node* )
+                                              checked_pc_malloc( sizeof( ETX_PNT_Node ) );
 
-	
-	newNode->state[probeNum % MAX_NUM_PROBE] = probeNum;
+    newNode->nbrAddr = nbrAddr;
+    newNode->next = NULL;  
 
-	
-	
-  ++(etxProbeNumTable->size);
 
-	  // Find Insertion point.  Insert after all address matches.
-  
-  previous = NULL;
-  current = etxProbeNumTable->head;
-  while ((current != NULL) && (current->nbrAddr <= nbrAddr)) {
-      previous = current;
-      current = current->next;
-  }
-  
-  if (previous == NULL) {
-	newNode->next = etxProbeNumTable->head;
-	etxProbeNumTable->head = newNode;
-  } else {
-	newNode->next = previous->next;
-	previous->next = newNode;
-  }//if//
+    newNode->state[probeNum % MAX_NUM_PROBE] = probeNum;
 
+
+
+    ++( etxProbeNumTable->size );
+
+    // Find Insertion point.  Insert after all address matches.
+
+    previous = NULL;
+    current = etxProbeNumTable->head;
+    while( ( current != NULL ) && ( current->nbrAddr <= nbrAddr ) ) {
+        previous = current;
+        current = current->next;
+    }
+
+    if( previous == NULL ) {
+        newNode->next = etxProbeNumTable->head;
+        etxProbeNumTable->head = newNode;
+    }else {
+        newNode->next = previous->next;
+        previous->next = newNode;
+    }//if//
 }
 
-ETXValue MetricEtxUpdateEtxProbeNumTable(GlomoNode *node, NODE_ADDR nbrAddr, PROBE_NUM probeNum)
+ETXValue MetricEtxUpdateEtxProbeNumTable( GlomoNode* node, NODE_ADDR nbrAddr, PROBE_NUM probeNum )
 {
-
 }
 
-void MetricEtxUpdateEtxnbrtable(GlomoNode *node, NODE_ADDR nbrAddr, ETXValue etx)
+void MetricEtxUpdateEtxnbrtable( GlomoNode* node, NODE_ADDR nbrAddr, ETXValue etx )
 {
-
 }
 
-void MetricETXEventHandler(GlomoNode *node, Message*msg)
+void MetricETXEventHandler( GlomoNode* node, Message* msg )
 {
-
-
 }
 
-void MetricETXPacketHandlingFunction(GlomoNode *node, Message*msg, 
-								NODE_ADDR sourceAddress, NODE_ADDR destinationAddress, int ttl)
+void MetricETXPacketHandlingFunction( GlomoNode* node,
+                                      Message* msg,
+                                      NODE_ADDR sourceAddress,
+                                      NODE_ADDR destinationAddress,
+                                      int ttl )
 {
-
-
 }
 
-void MetricETXFinalize(GlomoNode *node)
+void MetricETXFinalize( GlomoNode* node )
 {
-
-
 }

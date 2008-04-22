@@ -78,22 +78,20 @@
  *              nodeInput, access to the glomo parameters
  * RETURN:      None.
  */
-void RoutingZrpInit(GlomoNode *nodePtr,
-                    GlomoRoutingZrp **zrpPtr,
-                    const GlomoNodeInput *nodeInput)
+void RoutingZrpInit( GlomoNode* nodePtr, GlomoRoutingZrp** zrpPtr, const GlomoNodeInput* nodeInput )
 {
-    assert(FALSE); abort();
+    assert( FALSE ); abort();
 }
-   
+
 /*
  * NAME:        RoutingZrpFinalize
  * PURPOSE:     Handling all finalization needed by ZRP.
  * PARAMETERS:  nodePtr, node doing the finalization.
  * RETURN:      None.
  */
-void RoutingZrpFinalize(GlomoNode *nodePtr)
+void RoutingZrpFinalize( GlomoNode* nodePtr )
 {
-    assert(FALSE); abort();
+    assert( FALSE ); abort();
 }
 
 /*
@@ -103,10 +101,12 @@ void RoutingZrpFinalize(GlomoNode *nodePtr)
  *              msg : the message from MAC layer.
  * RETURN:      none.
  */
-void RoutingZrpHandleProtocolPacket(GlomoNode *nodePtr, Message *msg, 
-                                    NODE_ADDR srcAddr, NODE_ADDR destAddr)
+void RoutingZrpHandleProtocolPacket( GlomoNode* nodePtr,
+                                     Message* msg,
+                                     NODE_ADDR srcAddr,
+                                     NODE_ADDR destAddr )
 {
-    assert(FALSE); abort();
+    assert( FALSE ); abort();
 }
 
 /*
@@ -116,8 +116,8 @@ void RoutingZrpHandleProtocolPacket(GlomoNode *nodePtr, Message *msg,
  *              msg : the message for handling.
  * RETURN:      none.
  */
-void RoutingZrpHandleProtocolEvent(GlomoNode *nodePtr, Message *msg)
+void RoutingZrpHandleProtocolEvent( GlomoNode* nodePtr, Message* msg )
 {
-    assert(FALSE); abort();
+    assert( FALSE ); abort();
 }
 

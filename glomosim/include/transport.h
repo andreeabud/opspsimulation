@@ -46,14 +46,11 @@
 
 #define TRANSPORT_DELAY (1 * MICRO_SECOND)
 
-typedef enum {
-    TRANSPORT_PROTOCOL_UDP, 
-    TRANSPORT_PROTOCOL_TCP 
-}TRANSPORT_PROTOCOL;
+typedef enum { TRANSPORT_PROTOCOL_UDP, TRANSPORT_PROTOCOL_TCP }                                         TRANSPORT_PROTOCOL;
 
 
-typedef struct GlomoTransportUdpStruct GlomoTransportUdp;
-typedef struct GlomoTransportTcpStruct GlomoTransportTcp;
+typedef struct GlomoTransportUdpStruct  GlomoTransportUdp;
+typedef struct GlomoTransportTcpStruct  GlomoTransportTcp;
 
 
 /*
@@ -61,10 +58,11 @@ typedef struct GlomoTransportTcpStruct GlomoTransportTcp;
  *
  * typedef to GlomoTransport in main.h
  */
-struct glomo_transport_str {
-    GlomoTransportUdp* udp;
-    GlomoTransportTcp* tcp;
+struct glomo_transport_str
+{
+    GlomoTransportUdp*  udp;
+    GlomoTransportTcp*  tcp;
 };
- 
+
 #endif /* _TRANSPORT_H_ */
 

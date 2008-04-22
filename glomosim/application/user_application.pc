@@ -60,42 +60,35 @@
 #include "application.h"
 
 // Must be unique GloMoSim 0..65K protocol number. 
-                                      
+
 #define USER_DEFINED_APPLICATION_NUMBER 12345
 
 
-void AppLayerInitUserApplications(
-   GlomoNode *node,
-   const GlomoNodeInput *nodeInput,
-   void** userApplicationData) 
+void AppLayerInitUserApplications( GlomoNode* node,
+                                   const GlomoNodeInput* nodeInput,
+                                   void** userApplicationData )
 {
-   *userApplicationData = NULL;
-   // Put function to create your datastructures and 
-   // initialize your applications here.  
+    *userApplicationData = NULL;
+    // Put function to create your datastructures and 
+    // initialize your applications here.  
 }      
-   
-      
-void AppLayerHandleUserAppEvent(
-   GlomoNode* node, 
-   void* userApplicationData,
-   Message* msg) 
+
+
+void AppLayerHandleUserAppEvent( GlomoNode* node, void* userApplicationData, Message* msg )
 {
-   // Put function to create your datastructures and 
-   // initialize your applications here.  
-   if (msg->protocolType == USER_DEFINED_APPLICATION_NUMBER) {
-      // Put function to handle GlomoSim Events for your application here.  
-   } else {
-      printf("GloMoSim: Application type# %d Not Handled\n", 
-             msg->protocolType);
-      assert(FALSE); abort();
-   }
+    // Put function to create your datastructures and 
+    // initialize your applications here.  
+    if( msg->protocolType == USER_DEFINED_APPLICATION_NUMBER ) {
+        // Put function to handle GlomoSim Events for your application here.  
+    }else {
+        printf( "GloMoSim: Application type# %d Not Handled\n", msg->protocolType );
+        assert( FALSE ); abort();
+    }
 }
 
-void AppLayerFinalizeUserApps(
-   GlomoNode* node,
-   void* userApplicationData) 
+void AppLayerFinalizeUserApps( GlomoNode* node, void* userApplicationData )
 {
-   // Call function to finalize the user's applications.
+    // Call function to finalize the user's applications.
 }
 
 

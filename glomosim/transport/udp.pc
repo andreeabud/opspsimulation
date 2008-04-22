@@ -68,41 +68,35 @@
  *     node:      node being initialized.
  *     nodeInput: structure containing contents of input file
  */
-void
-TransportUdpInit(GlomoNode *node, const GlomoNodeInput *nodeInput)
+void TransportUdpInit( GlomoNode* node, const GlomoNodeInput* nodeInput )
 {
-    char buf[GLOMO_MAX_STRING_LENGTH];
-    BOOL retVal;
-    GlomoTransportUdp* udp = 
-       (GlomoTransportUdp*)checked_pc_malloc(sizeof(GlomoTransportUdp));
-    
+    char                buf[GLOMO_MAX_STRING_LENGTH];
+    BOOL                retVal;
+    GlomoTransportUdp*  udp = ( GlomoTransportUdp* )
+                              checked_pc_malloc( sizeof( GlomoTransportUdp ) );
+
     node->transportData.udp = udp;
-    
-    retVal = GLOMO_ReadString(node->nodeAddr, nodeInput, "UDP-STATISTICS", buf);
-    assert(retVal == TRUE);
 
-    if (strcmp(buf, "YES") == 0) {
+    retVal = GLOMO_ReadString( node->nodeAddr, nodeInput, "UDP-STATISTICS", buf );
+    assert( retVal == TRUE );
+
+    if( strcmp( buf, "YES" ) == 0 ) {
         udp->udpStatsEnabled = TRUE;
-    }
-    else if (strcmp(buf, "NO") == 0) {
+    }else if( strcmp( buf, "NO" ) == 0 ) {
         udp->udpStatsEnabled = FALSE;
-    }
-    else {
-        fprintf (stderr, "TRANSPORT unknown (%s) for UDP-STATISTICS.\n",
-                 buf);
-        assert(FALSE);
+    }else {
+        fprintf( stderr, "TRANSPORT unknown (%s) for UDP-STATISTICS.\n", buf );
+        assert( FALSE );
     }
 
-    if (udp->udpStatsEnabled == TRUE) {
-        udp->statistics = (TransportUdpStat *) pc_malloc
-                                               (sizeof(TransportUdpStat));
-        if (udp->statistics == NULL) {
-            fprintf(stderr, "TRANSPORT UDP: cannot allocate memory\n");
-            assert(FALSE);
+    if( udp->udpStatsEnabled == TRUE ) {
+        udp->statistics = ( TransportUdpStat * ) pc_malloc( sizeof( TransportUdpStat ) );
+        if( udp->statistics == NULL ) {
+            fprintf( stderr, "TRANSPORT UDP: cannot allocate memory\n" );
+            assert( FALSE );
         }
-        memset(udp->statistics, 0, sizeof(TransportUdpStat));
+        memset( udp->statistics, 0, sizeof( TransportUdpStat ) );
     }
-
 }
 
 
@@ -116,22 +110,19 @@ TransportUdpInit(GlomoNode *node, const GlomoNodeInput *nodeInput)
  * Parameter:
  *     node:     node for which results are to be collected.
  */
-void TransportUdpFinalize(GlomoNode *node)
+void TransportUdpFinalize( GlomoNode* node )
 {
-    char buf[200];
-    FILE *stat = NULL;
-    GlomoTransportUdp* udp = node->transportData.udp;
-    TransportUdpStat* st =  udp->statistics;
-    
-    
-    if (udp->udpStatsEnabled == TRUE) {
-   
-        sprintf (buf, "Number of pkts from application %d.", 
-                       st->numPktFromApp);
-        GLOMO_PrintStat(node, "TransportUdp", buf);
-        sprintf (buf, "Number of pkts to application %d.",
-                       st->numPktToApp);
-        GLOMO_PrintStat(node, "TransportUdp", buf);               
+    char                buf[200];
+    FILE*               stat    = NULL;
+    GlomoTransportUdp*  udp     = node->transportData.udp;
+    TransportUdpStat*   st      = udp->statistics;
+
+
+    if( udp->udpStatsEnabled == TRUE ) {
+        sprintf( buf, "Number of pkts from application %d.", st->numPktFromApp );
+        GLOMO_PrintStat( node, "TransportUdp", buf );
+        sprintf( buf, "Number of pkts to application %d.", st->numPktToApp );
+        GLOMO_PrintStat( node, "TransportUdp", buf );
     }
 }
 
@@ -146,58 +137,56 @@ void TransportUdpFinalize(GlomoNode *node)
  *     node:     node which received the message
  *     msg:   message received by the layer
  */
-void TransportUdpLayer(GlomoNode *node,  Message *msg)
+void TransportUdpLayer( GlomoNode* node, Message* msg )
 {
     /*
      * Retrieve the pointer to the data portion which relates
      * to the TCP protocol.
      */
-    char clockStr[GLOMO_MAX_STRING_LENGTH];
+    char    clockStr[GLOMO_MAX_STRING_LENGTH];
 
-    switch (msg->eventType) {
-    case MSG_TRANSPORT_FromNetwork: 
-        {
-            TransportUdpSendToApp(node, msg);
-            break;
-        }
+    switch( msg->eventType ) {
+    case MSG_TRANSPORT_FromNetwork:
+    {
+        TransportUdpSendToApp( node, msg );
+        break;
+    }
     case MSG_TRANSPORT_FromAppSend:
-        {
-            TransportUdpSendToNetwork(node, msg);
-            break; 
-        }
-    default:
-        assert(FALSE);
+    {
+        TransportUdpSendToNetwork( node, msg );
+        break;
+    }
+    default:assert( FALSE );
     }
 }
 
 
 
 
-void TransportUdpSendToApp(GlomoNode *node, Message *msg) 
+void TransportUdpSendToApp( GlomoNode* node, Message* msg )
 {
-    GlomoTransportUdp* udpLayer = node->transportData.udp;
-   
-    TransportUdpHeader* udpHdr = (TransportUdpHeader *) msg->packet;
-    NODE_ADDR sourceAddress = ((NetworkToTransportInfo *)msg->info)->sourceAddr;
-    NODE_ADDR destinationAddress = 
-       ((NetworkToTransportInfo *)msg->info)->destinationAddr;
-    UdpToAppRecv *info;
-    
+    GlomoTransportUdp*  udpLayer            = node->transportData.udp;
+
+    TransportUdpHeader* udpHdr              = ( TransportUdpHeader* ) msg->packet;
+    NODE_ADDR           sourceAddress       = ( ( NetworkToTransportInfo* ) msg->info )->sourceAddr;
+    NODE_ADDR           destinationAddress  = ( ( NetworkToTransportInfo* ) msg->info )->destinationAddr;
+    UdpToAppRecv*       info;
+
     /* should receive message with ip and udp headers,
      * remove ip header
      */
     /* save these two fields before remove ip header */
-         
-    if (udpLayer->udpStatsEnabled == TRUE) {
-       udpLayer->statistics->numPktToApp++;
+
+    if( udpLayer->udpStatsEnabled == TRUE ) {
+        udpLayer->statistics->numPktToApp++;
     }
 
-    GLOMO_MsgSetLayer(msg, GLOMO_APP_LAYER, udpHdr->destPort);
-    GLOMO_MsgSetEvent(msg, MSG_APP_FromTransport);
-    GLOMO_MsgInfoAlloc(node, msg, sizeof(UdpToAppRecv));
+    GLOMO_MsgSetLayer( msg, GLOMO_APP_LAYER, udpHdr->destPort );
+    GLOMO_MsgSetEvent( msg, MSG_APP_FromTransport );
+    GLOMO_MsgInfoAlloc( node, msg, sizeof( UdpToAppRecv ) );
 
     /* info field to send to application */
-    info = (UdpToAppRecv *) msg->info;
+    info = ( UdpToAppRecv * ) msg->info;
 
     info->sourceAddr = sourceAddress;
     info->sourcePort = udpHdr->sourcePort;
@@ -205,37 +194,39 @@ void TransportUdpSendToApp(GlomoNode *node, Message *msg)
     info->destPort = udpHdr->destPort;
 
     /* remove udp header */
-    GLOMO_MsgRemoveHeader(node, msg, sizeof(TransportUdpHeader));
-    GLOMO_MsgSend (node, msg, TRANSPORT_DELAY);
+    GLOMO_MsgRemoveHeader( node, msg, sizeof( TransportUdpHeader ) );
+    GLOMO_MsgSend( node, msg, TRANSPORT_DELAY );
 }
 
 
 
 
-void TransportUdpSendToNetwork(GlomoNode *node, Message *msg)
+void TransportUdpSendToNetwork( GlomoNode* node, Message* msg )
 {
+    GlomoTransportUdp*  udp = node->transportData.udp;
+    int                 appLayer;
+    TransportUdpHeader* udpHdr;
+    AppToUdpSend*       info;
 
-    GlomoTransportUdp* udp = node->transportData.udp;
-    int appLayer;
-    TransportUdpHeader *udpHdr;
-    AppToUdpSend *info;
 
-   
-    if (udp->udpStatsEnabled == TRUE) {
-       udp->statistics->numPktFromApp++;
+    if( udp->udpStatsEnabled == TRUE ) {
+        udp->statistics->numPktFromApp++;
     }
 
-    GLOMO_MsgAddHeader(node, msg, sizeof(TransportUdpHeader));
-    udpHdr = (TransportUdpHeader *) msg->packet;
-    info = (AppToUdpSend *) msg->info;
+    GLOMO_MsgAddHeader( node, msg, sizeof( TransportUdpHeader ) );
+    udpHdr = ( TransportUdpHeader * ) msg->packet;
+    info = ( AppToUdpSend * ) msg->info;
 
     udpHdr->sourcePort = info->sourcePort;
     udpHdr->destPort = info->destPort;
     udpHdr->length = msg->packetSize;
     udpHdr->checksum = 0;      /* not doing checksum */
 
-    NetworkIpReceivePacketFromTransportLayer(node, msg, info->destAddr,
-                                             info->priority, 
-                                             IPPROTO_UDP, TRANSPORT_DELAY);
+    NetworkIpReceivePacketFromTransportLayer( node,
+                                              msg,
+                                              info->destAddr,
+                                              info->priority,
+                                              IPPROTO_UDP,
+                                              TRANSPORT_DELAY );
 }
 

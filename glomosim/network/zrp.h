@@ -50,21 +50,24 @@
 
 #include "main.h"
 
-typedef struct {int Dummy;} GlomoRoutingZrp;
+typedef struct
+{
+    int Dummy;
+} GlomoRoutingZrp;
 
 /*
  * Prototype of functions for ZRP.
  */
-void RoutingZrpInit(GlomoNode *nodePtr,
-                    GlomoRoutingZrp **zrpPtr,
-                    const GlomoNodeInput *nodeInput);
+void RoutingZrpInit( GlomoNode* nodePtr, GlomoRoutingZrp** zrpPtr, const GlomoNodeInput* nodeInput );
 
-void RoutingZrpFinalize(GlomoNode *nodePtr);
+void RoutingZrpFinalize( GlomoNode* nodePtr );
 
-void RoutingZrpHandleProtocolPacket(GlomoNode *nodePtr, Message *msg,
-                                    NODE_ADDR srcAddr, NODE_ADDR destAddr);
+void RoutingZrpHandleProtocolPacket( GlomoNode* nodePtr,
+                                     Message* msg,
+                                     NODE_ADDR srcAddr,
+                                     NODE_ADDR destAddr );
 
-void RoutingZrpHandleProtocolEvent(GlomoNode *nodePtr, Message *msg);
+void RoutingZrpHandleProtocolEvent( GlomoNode* nodePtr, Message* msg );
 
 #endif /* _ZRP_H_ */
 

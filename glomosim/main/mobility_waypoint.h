@@ -45,17 +45,17 @@
 #include "driver.h"
 #include "fileio.h"
 
-typedef struct glomo_mobility_random_waypoint_str {
-    clocktype mobilityPause;
-    double MaxSpeed;
-    double MinSpeed;
+typedef struct glomo_mobility_random_waypoint_str
+{
+    clocktype           mobilityPause;
+    double              MaxSpeed;
+    double              MinSpeed;
 
-    GlomoCoordinates dest;
-    int number_moves_left;
-    clocktype move_interval;
+    GlomoCoordinates    dest;
+    int                 number_moves_left;
+    clocktype           move_interval;
 
-    GlomoCoordinates move_step;
-
+    GlomoCoordinates    move_step;
 } GlomoMobilityRandomWaypoint;
 
 
@@ -67,8 +67,7 @@ typedef struct glomo_mobility_random_waypoint_str {
  *     node:      node being initialized.
  *     nodeInput: structure containing contents of input file
  */
-void GLOMO_MobilityRandomWaypointInit (GlomoNode *node,
-                                       GlomoNodeInput *nodeInput);
+void GLOMO_MobilityRandomWaypointInit( GlomoNode* node, GlomoNodeInput* nodeInput );
 
 
 /*
@@ -80,7 +79,7 @@ void GLOMO_MobilityRandomWaypointInit (GlomoNode *node,
  *     node:     node which received the message
  *     msg:      message received by the layer
  */
-void GLOMO_MobilityRandomWaypoint (GlomoNode *node);
+void GLOMO_MobilityRandomWaypoint( GlomoNode* node );
 
 #endif /* _MOBILITY_DEST_H_ */
 
