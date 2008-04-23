@@ -1574,6 +1574,9 @@ void RoutingAodvInit( GlomoNode* node, GlomoRoutingAodv** aodvPtr, const GlomoNo
     RoutingAodvInitSeq( node );
     RoutingAodvInitBcastId( node );
 
+	    /* Need to do this to run promiscuous mode */
+    NetworkIpSetPromiscuousMessagePeekFunction( node, &OpspHandleOverhearRREP );
+
 
     //--------------tianke on 2008-3-18 22:40 0.01------------>
 #if 0
@@ -5127,16 +5130,22 @@ ETXValue OpspGetEtxToDest( NODE_ADDR destAddr, AODV_RT* routeTable )
     return ( returnEtxToDest );
 }
 
-void OpspHandleOverhearRREP( GlomoNode* node, Message* msg, NODE_ADDR srcAddr, NODE_ADDR destAddr )
+void OpspHandleOverhearRREP( GlomoNode* node, Message* msg )
 {
     GlomoNetworkIp*     ipLayer     = ( GlomoNetworkIp* ) node->networkData.networkVar;
     GlomoRoutingAodv*   aodv        = ( GlomoRoutingAodv* ) ipLayer->routingProtocol;
+	IpHeaderType*   ipHeader    = ( IpHeaderType* ) msg->packet;
     AODV_RREP_Packet*   rrepPkt     = ( AODV_RREP_Packet* ) GLOMO_MsgReturnPacket( msg );
     char                timeInSeconds[GLOMO_MAX_STRING_LENGTH];
     clocktype           lifetime;
     AODV_NT             nbrTable    = aodv->nbrTable;
     AODV_NT_Node*       current;
-    OPSP_NFRT*          nfrTable;
+    OPSP_NFRT*          nfrTable; 
+	NODE_ADDR srcAddr; 
+	NODE_ADDR destAddr;
+
+	srcAddr = ipHeader->ip_src;
+	destAddr = rrepPkt->destAddr;
 
     assert( destAddr != node->nodeAddr );
 

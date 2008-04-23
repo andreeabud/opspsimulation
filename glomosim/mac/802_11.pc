@@ -2068,8 +2068,8 @@ void Mac802_11ReceivePacketFromRadio( GlomoNode* node, GlomoMac802_11* M802, Mes
     */
 
     assert( !Mac802_11IsTransmittingState( M802->state ) );
-
-    if( hdr->destAddr == node->nodeAddr ) {
+	
+	if( hdr->destAddr == node->nodeAddr ) {
         switch( hdr->frameType ) {
         case M802_11_CTS:assert( M802->state == M802_11_S_WFCTS );
         Mac802_11CancelTimer( node, M802 );
@@ -2137,9 +2137,11 @@ void Mac802_11ReceivePacketFromRadio( GlomoNode* node, GlomoMac802_11* M802, Mes
         }/*switch*/
     }else /* Does not belong to node */ {
         Mac802_11ProcessNotMyFrame( node, M802, hdr->duration, ( hdr->frameType == M802_11_RTS ) );
-
         if( ( M802->myGlomoMac->promiscuousMode == TRUE ) &&
             ( ( hdr->frameType == M802_11_FRAGMENT ) || ( hdr->frameType == M802_11_DATA ) ) ) {
+//v----------------------------tianke on 2008-4-23 18:1 0.01--------------------------v
+printf("promiscuousMode: TRUE; hdr->frameType : M802_11_DATA\n");
+//^--------------------------- tianke on 2008-4-23 18:1 0.01--------------------------^
             Mac802_11HandlePromiscuousMode( node, M802, msg );
         }
 

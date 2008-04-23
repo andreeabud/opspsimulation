@@ -138,7 +138,7 @@
 
 //#define AOMDV_DEBUG
 
-#define AOMDV_DEBUG_TRACE
+#define noAOMDV_DEBUG_TRACE
 
 #define OPSP
 
