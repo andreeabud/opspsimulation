@@ -735,9 +735,6 @@ BOOL RadioAccnoiseCheckRxPacketError( GlomoNode* node, int radioNum )
     GlomoRadio*         thisRadio   = node->radioData[radioNum];
     GlomoRadioAccnoise* accnoise    = thisRadio->radioVar;
 
-    double              pc_randome; //tianke
-    FILE*               TempOutFile; //tianke
-
     //
     // Get BER from the fading model
     //
@@ -750,25 +747,13 @@ BOOL RadioAccnoiseCheckRxPacketError( GlomoNode* node, int radioNum )
                                         ( double )
                                         SECOND );
 
-        double  errorProbability    = 1.0 - pow( ( 1.0 - BER ), numBits );  //tianke PER
+        double  errorProbability    = 1.0 - pow( ( 1.0 - BER ), numBits );
 
         assert( ( errorProbability >= 0.0 ) && ( errorProbability <= 1.0 ) );
 
-        //tianke
-        pc_randome = pc_erand( node->seed );    
-        TempOutFile = fopen( "tmp.out", "a" );
-        fprintf( TempOutFile, "%f,%f\n", errorProbability, pc_randome );
-        fclose( TempOutFile );
-        //tianke    
-        if( errorProbability > pc_randome ) {
+        if( errorProbability > pc_erand( node->seed ) ) {
             return TRUE;
         }
-
-        /* tianke
-               if (errorProbability > pc_erand(node->seed)) {
-                   return TRUE;
-               }
-               */
     }
 
     return FALSE;

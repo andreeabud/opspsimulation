@@ -56,7 +56,6 @@
 #include "ip.h"
 #include "main.h"
 #include "nwcommon.h"
-/*#include "etx.h"*/
 
 #define NODE_TRAVERSAL_TIME         40 * MILLI_SECOND
 

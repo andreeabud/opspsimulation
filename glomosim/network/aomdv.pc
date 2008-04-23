@@ -3882,11 +3882,16 @@ void RoutingAodvHandleProtocolPacket( GlomoNode* node,
             RoutingAodvHandleHello( node, msg, srcAddr );
         }else {
             aodv->lastpkt = simclock();
+#ifdef OPSP_DEBUG
+				printf( "In Handle Protocol Packet");
+                printf( "nodeAddr:  %d\n", node->nodeAddr );
+                printf( "destAddr:  %d\n", destAddr );
+#endif
             if( destAddr == node->nodeAddr ) {
                 RoutingAodvHandleReply( node, msg, srcAddr, destAddr );
             }else {
 #ifdef OPSP_DEBUG
-                printf( "destAddr != nodeAddr " );
+				printf( "Overhear Protocol Packet");
                 printf( "nodeAddr:  %d\n", node->nodeAddr );
                 printf( "destAddr:  %d\n", destAddr );
 #endif
@@ -4125,20 +4130,26 @@ void RoutingAodvRouterFunction( GlomoNode* node,
     IpHeaderType*       ipHeader    = ( IpHeaderType* ) msg->packet;
 
     /* Control packets */
+
 	#ifdef OPSP_DEBUG
-	printf("IP Header: %d\n",ipHeader->ip_p);
+	printf("in the AODV Router Function\n");
+	printf("\nIP Header: %d\n",ipHeader->ip_p);
+	printf("destAddr: %d, nodeAddr: %d\n",destAddr, node->nodeAddr);
 	#endif
 	
     if( ipHeader->ip_p == IPPROTO_AODV ) {
         return;
     }
-
+		
     if( destAddr == node->nodeAddr ) {
         aodv->lastpkt = simclock();
         *packetWasRouted = FALSE;
     }else {
         *packetWasRouted = TRUE;
     }
+	
+	#ifdef OPSP_DEBUG
+	#endif
 
     /* intermediate node or destination of the route */
     if( ipHeader->ip_src != node->nodeAddr ) {

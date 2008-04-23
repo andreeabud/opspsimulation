@@ -1,7 +1,7 @@
 @setlocal
 @set prompt=$g
 
-@set cppflags=-Ox 
+@set cppflags=-Ox
 @rem -DPARALLEL
 
 @set parsecflags=%cppflags% 

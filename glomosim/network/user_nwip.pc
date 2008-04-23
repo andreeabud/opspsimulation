@@ -70,7 +70,7 @@
 // "IPPROTO_" is the current prefix for these numbers in GloMoSim.
 
 #define USER_DEFINED_IP_PROTOCOL_NUMBER 123
-#define IPPROTO_AOMDV 100
+//#define IPPROTO_AOMDV 100
 #define IPPROTO_ETX 254
 
 // The GLOMOSIM protocol number is a "unsigned short" that must be
@@ -141,28 +141,7 @@ void NetworkIpUserHandleProtocolEvent( GlomoNode* node, Message* msg )
         // YourRoutingProtocolEventHandler(node, msg);
         break;
     }
-    //--------------------------tianke------------------------------begin
-    case ROUTING_PROTOCOL_AOMDV:
-    {
-        // Put function to handle GlomoSim Events for your protocol here.  
-        // For Example,
 
-        // YourRoutingProtocolEventHandler(node, msg);
-        break;
-    }
-
-    /*   ETX不作为路由协议处理
-       case ROUTING_PROTOCOL_ETX: {
-       
-          // Put function to handle GlomoSim Events for your protocol here.  
-          // For Example,
-               
-          MetricETXEventHandler(node, msg);
-          break;
-       }
-      */
-
-    //--------------------------tianke-------------------------------end
     default:printf( "GloMoSim: Network IP Protocol %d Not Handled\n", msg->protocolType );
     assert( FALSE ); abort();
     }/*switch*/
@@ -188,36 +167,6 @@ void NetworkIpUserHandleProtocolPacket( GlomoNode* node,
 
         break;
     }
-
-#if 0
-//-----------------------------tianke------------------------------begin
-   case IPPROTO_AOMDV: {
-   
-      // Put function call to handle Ip protocol packets (with IP header
-      // already stripped). 
-      // For Example,
-      
-      // YourIpPacketHandlingFunction(node, msg, sourceAddress, 
-      //    destinationAddress, ttl);
-      
-      break;
-   }
-   
-/*
-     case IPPROTO_ETX: {
-   
-      // Put function call to handle Ip protocol packets (with IP header
-      // already stripped). 
-      // For Example,
-      
-      MetricETXPacketHandlingFunction(node, msg, sourceAddress, 
-          destinationAddress, ttl);
-      
-      break;
-   }
- */
-//------------------------tianke-----------------------------------end
-#endif
 
     default:printf( "Ip Protocol %d Not Handled\n", ipProtocol );
     assert( FALSE ); abort();

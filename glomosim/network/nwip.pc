@@ -69,7 +69,6 @@
 //----------------------------------tianke--------------------begin
 #include "aomdv.h"
 //#include "aodv.h"
-//#include "etx.h"
 //----------------------------------tianke-----------------------end
 #include "dsr.h"
 #include "odmrp.h"
@@ -1802,8 +1801,14 @@ void ProcessPacketForMeFromMac( GlomoNode* node, Message* msg, NODE_ADDR lastAdd
                   * We have modified this function to include the lastAddr 
                   * the address of the node from whom we received the packet.
                   */
+    #ifdef OPSP_DEBUG
+	printf("in the ProcessPacketForMeFromMac\n");
+    printf("IP Header: %d\n",ipHeader->ip_p);
+	printf("destinationAddress: %d, sourceAddress: %d\n",ipHeader->ip_dst, ipHeader->ip_src);
+    #endif
+	
 #ifdef AOMDV
-            printf( "%s", *ipLayer->routerFunction );
+            //printf( "ipLayer->routerFunction: %s", *ipLayer->routerFunction );
             ( ipLayer->routerFunction ) ( node, msg, ipHeader->ip_dst, lastAddr, & PacketWasRouted );
 #else
             ( ipLayer->routerFunction ) ( node, msg, ipHeader->ip_dst, & PacketWasRouted );
@@ -1847,12 +1852,6 @@ void ProcessPacketForMeFromMac( GlomoNode* node, Message* msg, NODE_ADDR lastAdd
     }
 
     case IPPROTO_AODV:
-    {
-        RoutingAodvHandleProtocolPacket( node, msg, sourceAddress, destinationAddress, ttl );
-        break;
-    }
-
-    case IPPROTO_AOMDV:
     {
         RoutingAodvHandleProtocolPacket( node, msg, sourceAddress, destinationAddress, ttl );
         break;

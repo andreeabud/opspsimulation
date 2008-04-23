@@ -1,9 +1,9 @@
 Node:      0, Layer:     RoutingAodv, 
 You are running @@@aomdv.pc@@@@
 
-Node:      0, Layer:     RoutingAodv, Number of Route Requests Txed = 3
-Node:      0, Layer:     RoutingAodv, Number of Route Requests Originated as source of route = 3
-Node:      0, Layer:     RoutingAodv, Request latency(secs) =     1.352690376
+Node:      0, Layer:     RoutingAodv, Number of Route Requests Txed = 0
+Node:      0, Layer:     RoutingAodv, Number of Route Requests Originated as source of route = 0
+Node:      0, Layer:     RoutingAodv, Request latency(secs) =     0.000000000
 Node:      0, Layer:     RoutingAodv, Number of Replies Txed = 0
 Node:      0, Layer:     RoutingAodv, Number of Replies Sent as Destination = 0
 Node:      0, Layer:     RoutingAodv, Number of Replies Sent as Intermediate Node = 0
@@ -13,34 +13,28 @@ Node:      0, Layer:     RoutingAodv, Number of Route Errors (RERR) Txed = 0
 Node:      0, Layer:     RoutingAodv, Number of Route Errors (RERR) sent without N bit set = 0
 Node:      0, Layer:     RoutingAodv, Number of Route Errors (RERR) sent with N bit set = 0
 Node:      0, Layer:     RoutingAodv, Maintainence Overhead = 0
-Node:      0, Layer:     RoutingAodv, Number of CTRL Packets Txed = 3
-Node:      0, Layer:     RoutingAodv, Discovery Overhead = 3
-Node:      0, Layer:     RoutingAodv, Number of Routes Selected = 1
+Node:      0, Layer:     RoutingAodv, Number of CTRL Packets Txed = 0
+Node:      0, Layer:     RoutingAodv, Discovery Overhead = 0
+Node:      0, Layer:     RoutingAodv, Number of Routes Selected = 0
 Node:      0, Layer:     RoutingAodv, Number of Hop Counts = 0
-Node:      0, Layer:     RoutingAodv, Number of Data Txed = 2
-Node:      0, Layer:     RoutingAodv, Number of Data Packets Originated = 2
+Node:      0, Layer:     RoutingAodv, Number of Data Txed = 0
+Node:      0, Layer:     RoutingAodv, Number of Data Packets Originated = 0
 Node:      0, Layer:     RoutingAodv, Number of Data Packets Received = 0
 Node:      0, Layer:     RoutingAodv, Number of Hello packets sent = 0
 Node:      0, Layer:     RoutingAodv, Number of Packets Dropped or Left waiting for Route = 0
 Node:      0, Layer:     RoutingAodv, Number of Broken Links = 0
 Node:      0, Layer:     RoutingAodv, Number of Destination Unreachable Messages sent to application = 0
-Node:      0, Layer:       NetworkIp, Number of Packet Attepted to be Sent to MAC: 5
+Node:      0, Layer:       NetworkIp, Number of Packet Attepted to be Sent to MAC: 0
 Node:      0, Layer:       NetworkIp, Number of Packets Routed For Another Node: 0
 Node:      0, Layer:       NetworkIp, Number of Packets Delivered To this Node: 0
 Node:      0, Layer:       NetworkIp, Total of the TTL's of Delivered Packets: 0
 Node:      0, Layer:       NetworkIp, Number Fragments dropped because Node was Unreachable: 0
 Node:      0, Layer:       NetworkIp, Number Fragments dropped because TTL expired: 0
-Node:      0, Layer:    AppCbrClient, (0) Server address: 30
-Node:      0, Layer:    AppCbrClient, (0) First packet sent at [s]: 0.000000000
-Node:      0, Layer:    AppCbrClient, (0) Last packet sent at [s]: 0.500000000
-Node:      0, Layer:    AppCbrClient, (0) Session status: Not closed
-Node:      0, Layer:    AppCbrClient, (0) Total number of bytes sent: 1024
-Node:      0, Layer:    AppCbrClient, (0) Total number of packets sent: 2
-Node:      0, Layer:    AppCbrClient, (0) Throughput (bits per second): 8192
+Node:      0, Layer:    AppFtpClient, from 0 to 1 (cid = -1), start = 0, end = 10000000000 ns (not closed), bytes sent = 0 B, bytes recv = 0 B, throughput = 0 bps
 Node:      1, Layer:     RoutingAodv, 
 You are running @@@aomdv.pc@@@@
 
-Node:      1, Layer:     RoutingAodv, Number of Route Requests Txed = 3
+Node:      1, Layer:     RoutingAodv, Number of Route Requests Txed = 0
 Node:      1, Layer:     RoutingAodv, Number of Route Requests Originated as source of route = 0
 Node:      1, Layer:     RoutingAodv, Request latency(secs) =     0.000000000
 Node:      1, Layer:     RoutingAodv, Number of Replies Txed = 0
@@ -52,9 +46,9 @@ Node:      1, Layer:     RoutingAodv, Number of Route Errors (RERR) Txed = 0
 Node:      1, Layer:     RoutingAodv, Number of Route Errors (RERR) sent without N bit set = 0
 Node:      1, Layer:     RoutingAodv, Number of Route Errors (RERR) sent with N bit set = 0
 Node:      1, Layer:     RoutingAodv, Maintainence Overhead = 0
-Node:      1, Layer:     RoutingAodv, Number of CTRL Packets Txed = 3
-Node:      1, Layer:     RoutingAodv, Discovery Overhead = 3
-Node:      1, Layer:     RoutingAodv, Number of Routes Selected = 3
+Node:      1, Layer:     RoutingAodv, Number of CTRL Packets Txed = 0
+Node:      1, Layer:     RoutingAodv, Discovery Overhead = 0
+Node:      1, Layer:     RoutingAodv, Number of Routes Selected = 0
 Node:      1, Layer:     RoutingAodv, Number of Hop Counts = 0
 Node:      1, Layer:     RoutingAodv, Number of Data Txed = 0
 Node:      1, Layer:     RoutingAodv, Number of Data Packets Originated = 0
@@ -63,7 +57,7 @@ Node:      1, Layer:     RoutingAodv, Number of Hello packets sent = 0
 Node:      1, Layer:     RoutingAodv, Number of Packets Dropped or Left waiting for Route = 0
 Node:      1, Layer:     RoutingAodv, Number of Broken Links = 0
 Node:      1, Layer:     RoutingAodv, Number of Destination Unreachable Messages sent to application = 0
-Node:      1, Layer:       NetworkIp, Number of Packet Attepted to be Sent to MAC: 3
+Node:      1, Layer:       NetworkIp, Number of Packet Attepted to be Sent to MAC: 0
 Node:      1, Layer:       NetworkIp, Number of Packets Routed For Another Node: 0
 Node:      1, Layer:       NetworkIp, Number of Packets Delivered To this Node: 0
 Node:      1, Layer:       NetworkIp, Total of the TTL's of Delivered Packets: 0
@@ -86,7 +80,7 @@ Node:      2, Layer:     RoutingAodv, Number of Route Errors (RERR) sent with N 
 Node:      2, Layer:     RoutingAodv, Maintainence Overhead = 0
 Node:      2, Layer:     RoutingAodv, Number of CTRL Packets Txed = 0
 Node:      2, Layer:     RoutingAodv, Discovery Overhead = 0
-Node:      2, Layer:     RoutingAodv, Number of Routes Selected = 1
+Node:      2, Layer:     RoutingAodv, Number of Routes Selected = 0
 Node:      2, Layer:     RoutingAodv, Number of Hop Counts = 0
 Node:      2, Layer:     RoutingAodv, Number of Data Txed = 0
 Node:      2, Layer:     RoutingAodv, Number of Data Packets Originated = 0
@@ -104,7 +98,7 @@ Node:      2, Layer:       NetworkIp, Number Fragments dropped because TTL expir
 Node:      3, Layer:     RoutingAodv, 
 You are running @@@aomdv.pc@@@@
 
-Node:      3, Layer:     RoutingAodv, Number of Route Requests Txed = 2
+Node:      3, Layer:     RoutingAodv, Number of Route Requests Txed = 0
 Node:      3, Layer:     RoutingAodv, Number of Route Requests Originated as source of route = 0
 Node:      3, Layer:     RoutingAodv, Request latency(secs) =     0.000000000
 Node:      3, Layer:     RoutingAodv, Number of Replies Txed = 0
@@ -116,9 +110,9 @@ Node:      3, Layer:     RoutingAodv, Number of Route Errors (RERR) Txed = 0
 Node:      3, Layer:     RoutingAodv, Number of Route Errors (RERR) sent without N bit set = 0
 Node:      3, Layer:     RoutingAodv, Number of Route Errors (RERR) sent with N bit set = 0
 Node:      3, Layer:     RoutingAodv, Maintainence Overhead = 0
-Node:      3, Layer:     RoutingAodv, Number of CTRL Packets Txed = 2
-Node:      3, Layer:     RoutingAodv, Discovery Overhead = 2
-Node:      3, Layer:     RoutingAodv, Number of Routes Selected = 9
+Node:      3, Layer:     RoutingAodv, Number of CTRL Packets Txed = 0
+Node:      3, Layer:     RoutingAodv, Discovery Overhead = 0
+Node:      3, Layer:     RoutingAodv, Number of Routes Selected = 0
 Node:      3, Layer:     RoutingAodv, Number of Hop Counts = 0
 Node:      3, Layer:     RoutingAodv, Number of Data Txed = 0
 Node:      3, Layer:     RoutingAodv, Number of Data Packets Originated = 0
@@ -127,7 +121,7 @@ Node:      3, Layer:     RoutingAodv, Number of Hello packets sent = 0
 Node:      3, Layer:     RoutingAodv, Number of Packets Dropped or Left waiting for Route = 0
 Node:      3, Layer:     RoutingAodv, Number of Broken Links = 0
 Node:      3, Layer:     RoutingAodv, Number of Destination Unreachable Messages sent to application = 0
-Node:      3, Layer:       NetworkIp, Number of Packet Attepted to be Sent to MAC: 2
+Node:      3, Layer:       NetworkIp, Number of Packet Attepted to be Sent to MAC: 0
 Node:      3, Layer:       NetworkIp, Number of Packets Routed For Another Node: 0
 Node:      3, Layer:       NetworkIp, Number of Packets Delivered To this Node: 0
 Node:      3, Layer:       NetworkIp, Total of the TTL's of Delivered Packets: 0
@@ -136,7 +130,7 @@ Node:      3, Layer:       NetworkIp, Number Fragments dropped because TTL expir
 Node:      4, Layer:     RoutingAodv, 
 You are running @@@aomdv.pc@@@@
 
-Node:      4, Layer:     RoutingAodv, Number of Route Requests Txed = 1
+Node:      4, Layer:     RoutingAodv, Number of Route Requests Txed = 0
 Node:      4, Layer:     RoutingAodv, Number of Route Requests Originated as source of route = 0
 Node:      4, Layer:     RoutingAodv, Request latency(secs) =     0.000000000
 Node:      4, Layer:     RoutingAodv, Number of Replies Txed = 0
@@ -148,9 +142,9 @@ Node:      4, Layer:     RoutingAodv, Number of Route Errors (RERR) Txed = 0
 Node:      4, Layer:     RoutingAodv, Number of Route Errors (RERR) sent without N bit set = 0
 Node:      4, Layer:     RoutingAodv, Number of Route Errors (RERR) sent with N bit set = 0
 Node:      4, Layer:     RoutingAodv, Maintainence Overhead = 0
-Node:      4, Layer:     RoutingAodv, Number of CTRL Packets Txed = 1
-Node:      4, Layer:     RoutingAodv, Discovery Overhead = 1
-Node:      4, Layer:     RoutingAodv, Number of Routes Selected = 1
+Node:      4, Layer:     RoutingAodv, Number of CTRL Packets Txed = 0
+Node:      4, Layer:     RoutingAodv, Discovery Overhead = 0
+Node:      4, Layer:     RoutingAodv, Number of Routes Selected = 0
 Node:      4, Layer:     RoutingAodv, Number of Hop Counts = 0
 Node:      4, Layer:     RoutingAodv, Number of Data Txed = 0
 Node:      4, Layer:     RoutingAodv, Number of Data Packets Originated = 0
@@ -168,7 +162,7 @@ Node:      4, Layer:       NetworkIp, Number Fragments dropped because TTL expir
 Node:      5, Layer:     RoutingAodv, 
 You are running @@@aomdv.pc@@@@
 
-Node:      5, Layer:     RoutingAodv, Number of Route Requests Txed = 3
+Node:      5, Layer:     RoutingAodv, Number of Route Requests Txed = 0
 Node:      5, Layer:     RoutingAodv, Number of Route Requests Originated as source of route = 0
 Node:      5, Layer:     RoutingAodv, Request latency(secs) =     0.000000000
 Node:      5, Layer:     RoutingAodv, Number of Replies Txed = 0
@@ -180,9 +174,9 @@ Node:      5, Layer:     RoutingAodv, Number of Route Errors (RERR) Txed = 0
 Node:      5, Layer:     RoutingAodv, Number of Route Errors (RERR) sent without N bit set = 0
 Node:      5, Layer:     RoutingAodv, Number of Route Errors (RERR) sent with N bit set = 0
 Node:      5, Layer:     RoutingAodv, Maintainence Overhead = 0
-Node:      5, Layer:     RoutingAodv, Number of CTRL Packets Txed = 3
-Node:      5, Layer:     RoutingAodv, Discovery Overhead = 3
-Node:      5, Layer:     RoutingAodv, Number of Routes Selected = 3
+Node:      5, Layer:     RoutingAodv, Number of CTRL Packets Txed = 0
+Node:      5, Layer:     RoutingAodv, Discovery Overhead = 0
+Node:      5, Layer:     RoutingAodv, Number of Routes Selected = 0
 Node:      5, Layer:     RoutingAodv, Number of Hop Counts = 0
 Node:      5, Layer:     RoutingAodv, Number of Data Txed = 0
 Node:      5, Layer:     RoutingAodv, Number of Data Packets Originated = 0
@@ -191,7 +185,7 @@ Node:      5, Layer:     RoutingAodv, Number of Hello packets sent = 0
 Node:      5, Layer:     RoutingAodv, Number of Packets Dropped or Left waiting for Route = 0
 Node:      5, Layer:     RoutingAodv, Number of Broken Links = 0
 Node:      5, Layer:     RoutingAodv, Number of Destination Unreachable Messages sent to application = 0
-Node:      5, Layer:       NetworkIp, Number of Packet Attepted to be Sent to MAC: 3
+Node:      5, Layer:       NetworkIp, Number of Packet Attepted to be Sent to MAC: 0
 Node:      5, Layer:       NetworkIp, Number of Packets Routed For Another Node: 0
 Node:      5, Layer:       NetworkIp, Number of Packets Delivered To this Node: 0
 Node:      5, Layer:       NetworkIp, Total of the TTL's of Delivered Packets: 0
@@ -200,7 +194,7 @@ Node:      5, Layer:       NetworkIp, Number Fragments dropped because TTL expir
 Node:      6, Layer:     RoutingAodv, 
 You are running @@@aomdv.pc@@@@
 
-Node:      6, Layer:     RoutingAodv, Number of Route Requests Txed = 2
+Node:      6, Layer:     RoutingAodv, Number of Route Requests Txed = 0
 Node:      6, Layer:     RoutingAodv, Number of Route Requests Originated as source of route = 0
 Node:      6, Layer:     RoutingAodv, Request latency(secs) =     0.000000000
 Node:      6, Layer:     RoutingAodv, Number of Replies Txed = 0
@@ -212,9 +206,9 @@ Node:      6, Layer:     RoutingAodv, Number of Route Errors (RERR) Txed = 0
 Node:      6, Layer:     RoutingAodv, Number of Route Errors (RERR) sent without N bit set = 0
 Node:      6, Layer:     RoutingAodv, Number of Route Errors (RERR) sent with N bit set = 0
 Node:      6, Layer:     RoutingAodv, Maintainence Overhead = 0
-Node:      6, Layer:     RoutingAodv, Number of CTRL Packets Txed = 2
-Node:      6, Layer:     RoutingAodv, Discovery Overhead = 2
-Node:      6, Layer:     RoutingAodv, Number of Routes Selected = 9
+Node:      6, Layer:     RoutingAodv, Number of CTRL Packets Txed = 0
+Node:      6, Layer:     RoutingAodv, Discovery Overhead = 0
+Node:      6, Layer:     RoutingAodv, Number of Routes Selected = 0
 Node:      6, Layer:     RoutingAodv, Number of Hop Counts = 0
 Node:      6, Layer:     RoutingAodv, Number of Data Txed = 0
 Node:      6, Layer:     RoutingAodv, Number of Data Packets Originated = 0
@@ -223,7 +217,7 @@ Node:      6, Layer:     RoutingAodv, Number of Hello packets sent = 0
 Node:      6, Layer:     RoutingAodv, Number of Packets Dropped or Left waiting for Route = 0
 Node:      6, Layer:     RoutingAodv, Number of Broken Links = 0
 Node:      6, Layer:     RoutingAodv, Number of Destination Unreachable Messages sent to application = 0
-Node:      6, Layer:       NetworkIp, Number of Packet Attepted to be Sent to MAC: 2
+Node:      6, Layer:       NetworkIp, Number of Packet Attepted to be Sent to MAC: 0
 Node:      6, Layer:       NetworkIp, Number of Packets Routed For Another Node: 0
 Node:      6, Layer:       NetworkIp, Number of Packets Delivered To this Node: 0
 Node:      6, Layer:       NetworkIp, Total of the TTL's of Delivered Packets: 0
@@ -232,7 +226,7 @@ Node:      6, Layer:       NetworkIp, Number Fragments dropped because TTL expir
 Node:      7, Layer:     RoutingAodv, 
 You are running @@@aomdv.pc@@@@
 
-Node:      7, Layer:     RoutingAodv, Number of Route Requests Txed = 3
+Node:      7, Layer:     RoutingAodv, Number of Route Requests Txed = 0
 Node:      7, Layer:     RoutingAodv, Number of Route Requests Originated as source of route = 0
 Node:      7, Layer:     RoutingAodv, Request latency(secs) =     0.000000000
 Node:      7, Layer:     RoutingAodv, Number of Replies Txed = 0
@@ -244,9 +238,9 @@ Node:      7, Layer:     RoutingAodv, Number of Route Errors (RERR) Txed = 0
 Node:      7, Layer:     RoutingAodv, Number of Route Errors (RERR) sent without N bit set = 0
 Node:      7, Layer:     RoutingAodv, Number of Route Errors (RERR) sent with N bit set = 0
 Node:      7, Layer:     RoutingAodv, Maintainence Overhead = 0
-Node:      7, Layer:     RoutingAodv, Number of CTRL Packets Txed = 3
-Node:      7, Layer:     RoutingAodv, Discovery Overhead = 3
-Node:      7, Layer:     RoutingAodv, Number of Routes Selected = 3
+Node:      7, Layer:     RoutingAodv, Number of CTRL Packets Txed = 0
+Node:      7, Layer:     RoutingAodv, Discovery Overhead = 0
+Node:      7, Layer:     RoutingAodv, Number of Routes Selected = 0
 Node:      7, Layer:     RoutingAodv, Number of Hop Counts = 0
 Node:      7, Layer:     RoutingAodv, Number of Data Txed = 0
 Node:      7, Layer:     RoutingAodv, Number of Data Packets Originated = 0
@@ -255,7 +249,7 @@ Node:      7, Layer:     RoutingAodv, Number of Hello packets sent = 0
 Node:      7, Layer:     RoutingAodv, Number of Packets Dropped or Left waiting for Route = 0
 Node:      7, Layer:     RoutingAodv, Number of Broken Links = 0
 Node:      7, Layer:     RoutingAodv, Number of Destination Unreachable Messages sent to application = 0
-Node:      7, Layer:       NetworkIp, Number of Packet Attepted to be Sent to MAC: 3
+Node:      7, Layer:       NetworkIp, Number of Packet Attepted to be Sent to MAC: 0
 Node:      7, Layer:       NetworkIp, Number of Packets Routed For Another Node: 0
 Node:      7, Layer:       NetworkIp, Number of Packets Delivered To this Node: 0
 Node:      7, Layer:       NetworkIp, Total of the TTL's of Delivered Packets: 0
@@ -264,7 +258,7 @@ Node:      7, Layer:       NetworkIp, Number Fragments dropped because TTL expir
 Node:      8, Layer:     RoutingAodv, 
 You are running @@@aomdv.pc@@@@
 
-Node:      8, Layer:     RoutingAodv, Number of Route Requests Txed = 3
+Node:      8, Layer:     RoutingAodv, Number of Route Requests Txed = 0
 Node:      8, Layer:     RoutingAodv, Number of Route Requests Originated as source of route = 0
 Node:      8, Layer:     RoutingAodv, Request latency(secs) =     0.000000000
 Node:      8, Layer:     RoutingAodv, Number of Replies Txed = 0
@@ -276,9 +270,9 @@ Node:      8, Layer:     RoutingAodv, Number of Route Errors (RERR) Txed = 0
 Node:      8, Layer:     RoutingAodv, Number of Route Errors (RERR) sent without N bit set = 0
 Node:      8, Layer:     RoutingAodv, Number of Route Errors (RERR) sent with N bit set = 0
 Node:      8, Layer:     RoutingAodv, Maintainence Overhead = 0
-Node:      8, Layer:     RoutingAodv, Number of CTRL Packets Txed = 3
-Node:      8, Layer:     RoutingAodv, Discovery Overhead = 3
-Node:      8, Layer:     RoutingAodv, Number of Routes Selected = 3
+Node:      8, Layer:     RoutingAodv, Number of CTRL Packets Txed = 0
+Node:      8, Layer:     RoutingAodv, Discovery Overhead = 0
+Node:      8, Layer:     RoutingAodv, Number of Routes Selected = 0
 Node:      8, Layer:     RoutingAodv, Number of Hop Counts = 0
 Node:      8, Layer:     RoutingAodv, Number of Data Txed = 0
 Node:      8, Layer:     RoutingAodv, Number of Data Packets Originated = 0
@@ -287,7 +281,7 @@ Node:      8, Layer:     RoutingAodv, Number of Hello packets sent = 0
 Node:      8, Layer:     RoutingAodv, Number of Packets Dropped or Left waiting for Route = 0
 Node:      8, Layer:     RoutingAodv, Number of Broken Links = 0
 Node:      8, Layer:     RoutingAodv, Number of Destination Unreachable Messages sent to application = 0
-Node:      8, Layer:       NetworkIp, Number of Packet Attepted to be Sent to MAC: 3
+Node:      8, Layer:       NetworkIp, Number of Packet Attepted to be Sent to MAC: 0
 Node:      8, Layer:       NetworkIp, Number of Packets Routed For Another Node: 0
 Node:      8, Layer:       NetworkIp, Number of Packets Delivered To this Node: 0
 Node:      8, Layer:       NetworkIp, Total of the TTL's of Delivered Packets: 0
@@ -342,7 +336,7 @@ Node:     10, Layer:     RoutingAodv, Number of Route Errors (RERR) sent with N 
 Node:     10, Layer:     RoutingAodv, Maintainence Overhead = 0
 Node:     10, Layer:     RoutingAodv, Number of CTRL Packets Txed = 0
 Node:     10, Layer:     RoutingAodv, Discovery Overhead = 0
-Node:     10, Layer:     RoutingAodv, Number of Routes Selected = 1
+Node:     10, Layer:     RoutingAodv, Number of Routes Selected = 0
 Node:     10, Layer:     RoutingAodv, Number of Hop Counts = 0
 Node:     10, Layer:     RoutingAodv, Number of Data Txed = 0
 Node:     10, Layer:     RoutingAodv, Number of Data Packets Originated = 0
@@ -392,7 +386,7 @@ Node:     11, Layer:       NetworkIp, Number Fragments dropped because TTL expir
 Node:     12, Layer:     RoutingAodv, 
 You are running @@@aomdv.pc@@@@
 
-Node:     12, Layer:     RoutingAodv, Number of Route Requests Txed = 1
+Node:     12, Layer:     RoutingAodv, Number of Route Requests Txed = 0
 Node:     12, Layer:     RoutingAodv, Number of Route Requests Originated as source of route = 0
 Node:     12, Layer:     RoutingAodv, Request latency(secs) =     0.000000000
 Node:     12, Layer:     RoutingAodv, Number of Replies Txed = 0
@@ -404,9 +398,9 @@ Node:     12, Layer:     RoutingAodv, Number of Route Errors (RERR) Txed = 0
 Node:     12, Layer:     RoutingAodv, Number of Route Errors (RERR) sent without N bit set = 0
 Node:     12, Layer:     RoutingAodv, Number of Route Errors (RERR) sent with N bit set = 0
 Node:     12, Layer:     RoutingAodv, Maintainence Overhead = 0
-Node:     12, Layer:     RoutingAodv, Number of CTRL Packets Txed = 1
-Node:     12, Layer:     RoutingAodv, Discovery Overhead = 1
-Node:     12, Layer:     RoutingAodv, Number of Routes Selected = 2
+Node:     12, Layer:     RoutingAodv, Number of CTRL Packets Txed = 0
+Node:     12, Layer:     RoutingAodv, Discovery Overhead = 0
+Node:     12, Layer:     RoutingAodv, Number of Routes Selected = 0
 Node:     12, Layer:     RoutingAodv, Number of Hop Counts = 0
 Node:     12, Layer:     RoutingAodv, Number of Data Txed = 0
 Node:     12, Layer:     RoutingAodv, Number of Data Packets Originated = 0
@@ -415,7 +409,7 @@ Node:     12, Layer:     RoutingAodv, Number of Hello packets sent = 0
 Node:     12, Layer:     RoutingAodv, Number of Packets Dropped or Left waiting for Route = 0
 Node:     12, Layer:     RoutingAodv, Number of Broken Links = 0
 Node:     12, Layer:     RoutingAodv, Number of Destination Unreachable Messages sent to application = 0
-Node:     12, Layer:       NetworkIp, Number of Packet Attepted to be Sent to MAC: 1
+Node:     12, Layer:       NetworkIp, Number of Packet Attepted to be Sent to MAC: 0
 Node:     12, Layer:       NetworkIp, Number of Packets Routed For Another Node: 0
 Node:     12, Layer:       NetworkIp, Number of Packets Delivered To this Node: 0
 Node:     12, Layer:       NetworkIp, Total of the TTL's of Delivered Packets: 0
@@ -424,7 +418,7 @@ Node:     12, Layer:       NetworkIp, Number Fragments dropped because TTL expir
 Node:     13, Layer:     RoutingAodv, 
 You are running @@@aomdv.pc@@@@
 
-Node:     13, Layer:     RoutingAodv, Number of Route Requests Txed = 1
+Node:     13, Layer:     RoutingAodv, Number of Route Requests Txed = 0
 Node:     13, Layer:     RoutingAodv, Number of Route Requests Originated as source of route = 0
 Node:     13, Layer:     RoutingAodv, Request latency(secs) =     0.000000000
 Node:     13, Layer:     RoutingAodv, Number of Replies Txed = 0
@@ -436,9 +430,9 @@ Node:     13, Layer:     RoutingAodv, Number of Route Errors (RERR) Txed = 0
 Node:     13, Layer:     RoutingAodv, Number of Route Errors (RERR) sent without N bit set = 0
 Node:     13, Layer:     RoutingAodv, Number of Route Errors (RERR) sent with N bit set = 0
 Node:     13, Layer:     RoutingAodv, Maintainence Overhead = 0
-Node:     13, Layer:     RoutingAodv, Number of CTRL Packets Txed = 1
-Node:     13, Layer:     RoutingAodv, Discovery Overhead = 1
-Node:     13, Layer:     RoutingAodv, Number of Routes Selected = 1
+Node:     13, Layer:     RoutingAodv, Number of CTRL Packets Txed = 0
+Node:     13, Layer:     RoutingAodv, Discovery Overhead = 0
+Node:     13, Layer:     RoutingAodv, Number of Routes Selected = 0
 Node:     13, Layer:     RoutingAodv, Number of Hop Counts = 0
 Node:     13, Layer:     RoutingAodv, Number of Data Txed = 0
 Node:     13, Layer:     RoutingAodv, Number of Data Packets Originated = 0
@@ -447,7 +441,7 @@ Node:     13, Layer:     RoutingAodv, Number of Hello packets sent = 0
 Node:     13, Layer:     RoutingAodv, Number of Packets Dropped or Left waiting for Route = 0
 Node:     13, Layer:     RoutingAodv, Number of Broken Links = 0
 Node:     13, Layer:     RoutingAodv, Number of Destination Unreachable Messages sent to application = 0
-Node:     13, Layer:       NetworkIp, Number of Packet Attepted to be Sent to MAC: 1
+Node:     13, Layer:       NetworkIp, Number of Packet Attepted to be Sent to MAC: 0
 Node:     13, Layer:       NetworkIp, Number of Packets Routed For Another Node: 0
 Node:     13, Layer:       NetworkIp, Number of Packets Delivered To this Node: 0
 Node:     13, Layer:       NetworkIp, Total of the TTL's of Delivered Packets: 0
@@ -456,7 +450,7 @@ Node:     13, Layer:       NetworkIp, Number Fragments dropped because TTL expir
 Node:     14, Layer:     RoutingAodv, 
 You are running @@@aomdv.pc@@@@
 
-Node:     14, Layer:     RoutingAodv, Number of Route Requests Txed = 3
+Node:     14, Layer:     RoutingAodv, Number of Route Requests Txed = 0
 Node:     14, Layer:     RoutingAodv, Number of Route Requests Originated as source of route = 0
 Node:     14, Layer:     RoutingAodv, Request latency(secs) =     0.000000000
 Node:     14, Layer:     RoutingAodv, Number of Replies Txed = 0
@@ -468,9 +462,9 @@ Node:     14, Layer:     RoutingAodv, Number of Route Errors (RERR) Txed = 0
 Node:     14, Layer:     RoutingAodv, Number of Route Errors (RERR) sent without N bit set = 0
 Node:     14, Layer:     RoutingAodv, Number of Route Errors (RERR) sent with N bit set = 0
 Node:     14, Layer:     RoutingAodv, Maintainence Overhead = 0
-Node:     14, Layer:     RoutingAodv, Number of CTRL Packets Txed = 3
-Node:     14, Layer:     RoutingAodv, Discovery Overhead = 3
-Node:     14, Layer:     RoutingAodv, Number of Routes Selected = 3
+Node:     14, Layer:     RoutingAodv, Number of CTRL Packets Txed = 0
+Node:     14, Layer:     RoutingAodv, Discovery Overhead = 0
+Node:     14, Layer:     RoutingAodv, Number of Routes Selected = 0
 Node:     14, Layer:     RoutingAodv, Number of Hop Counts = 0
 Node:     14, Layer:     RoutingAodv, Number of Data Txed = 0
 Node:     14, Layer:     RoutingAodv, Number of Data Packets Originated = 0
@@ -479,7 +473,7 @@ Node:     14, Layer:     RoutingAodv, Number of Hello packets sent = 0
 Node:     14, Layer:     RoutingAodv, Number of Packets Dropped or Left waiting for Route = 0
 Node:     14, Layer:     RoutingAodv, Number of Broken Links = 0
 Node:     14, Layer:     RoutingAodv, Number of Destination Unreachable Messages sent to application = 0
-Node:     14, Layer:       NetworkIp, Number of Packet Attepted to be Sent to MAC: 3
+Node:     14, Layer:       NetworkIp, Number of Packet Attepted to be Sent to MAC: 0
 Node:     14, Layer:       NetworkIp, Number of Packets Routed For Another Node: 0
 Node:     14, Layer:       NetworkIp, Number of Packets Delivered To this Node: 0
 Node:     14, Layer:       NetworkIp, Total of the TTL's of Delivered Packets: 0
@@ -488,10 +482,10 @@ Node:     14, Layer:       NetworkIp, Number Fragments dropped because TTL expir
 Node:     15, Layer:     RoutingAodv, 
 You are running @@@aomdv.pc@@@@
 
-Node:     15, Layer:     RoutingAodv, Number of Route Requests Txed = 3
+Node:     15, Layer:     RoutingAodv, Number of Route Requests Txed = 0
 Node:     15, Layer:     RoutingAodv, Number of Route Requests Originated as source of route = 0
 Node:     15, Layer:     RoutingAodv, Request latency(secs) =     0.000000000
-Node:     15, Layer:     RoutingAodv, Number of Replies Txed = 1
+Node:     15, Layer:     RoutingAodv, Number of Replies Txed = 0
 Node:     15, Layer:     RoutingAodv, Number of Replies Sent as Destination = 0
 Node:     15, Layer:     RoutingAodv, Number of Replies Sent as Intermediate Node = 0
 Node:     15, Layer:     RoutingAodv, Number of Gratuitous Replies Sent = 0
@@ -500,19 +494,19 @@ Node:     15, Layer:     RoutingAodv, Number of Route Errors (RERR) Txed = 0
 Node:     15, Layer:     RoutingAodv, Number of Route Errors (RERR) sent without N bit set = 0
 Node:     15, Layer:     RoutingAodv, Number of Route Errors (RERR) sent with N bit set = 0
 Node:     15, Layer:     RoutingAodv, Maintainence Overhead = 0
-Node:     15, Layer:     RoutingAodv, Number of CTRL Packets Txed = 4
-Node:     15, Layer:     RoutingAodv, Discovery Overhead = 4
-Node:     15, Layer:     RoutingAodv, Number of Routes Selected = 4
+Node:     15, Layer:     RoutingAodv, Number of CTRL Packets Txed = 0
+Node:     15, Layer:     RoutingAodv, Discovery Overhead = 0
+Node:     15, Layer:     RoutingAodv, Number of Routes Selected = 0
 Node:     15, Layer:     RoutingAodv, Number of Hop Counts = 0
-Node:     15, Layer:     RoutingAodv, Number of Data Txed = 2
+Node:     15, Layer:     RoutingAodv, Number of Data Txed = 0
 Node:     15, Layer:     RoutingAodv, Number of Data Packets Originated = 0
 Node:     15, Layer:     RoutingAodv, Number of Data Packets Received = 0
 Node:     15, Layer:     RoutingAodv, Number of Hello packets sent = 0
 Node:     15, Layer:     RoutingAodv, Number of Packets Dropped or Left waiting for Route = 0
 Node:     15, Layer:     RoutingAodv, Number of Broken Links = 0
 Node:     15, Layer:     RoutingAodv, Number of Destination Unreachable Messages sent to application = 0
-Node:     15, Layer:       NetworkIp, Number of Packet Attepted to be Sent to MAC: 6
-Node:     15, Layer:       NetworkIp, Number of Packets Routed For Another Node: 2
+Node:     15, Layer:       NetworkIp, Number of Packet Attepted to be Sent to MAC: 0
+Node:     15, Layer:       NetworkIp, Number of Packets Routed For Another Node: 0
 Node:     15, Layer:       NetworkIp, Number of Packets Delivered To this Node: 0
 Node:     15, Layer:       NetworkIp, Total of the TTL's of Delivered Packets: 0
 Node:     15, Layer:       NetworkIp, Number Fragments dropped because Node was Unreachable: 0
@@ -534,7 +528,7 @@ Node:     16, Layer:     RoutingAodv, Number of Route Errors (RERR) sent with N 
 Node:     16, Layer:     RoutingAodv, Maintainence Overhead = 0
 Node:     16, Layer:     RoutingAodv, Number of CTRL Packets Txed = 0
 Node:     16, Layer:     RoutingAodv, Discovery Overhead = 0
-Node:     16, Layer:     RoutingAodv, Number of Routes Selected = 1
+Node:     16, Layer:     RoutingAodv, Number of Routes Selected = 0
 Node:     16, Layer:     RoutingAodv, Number of Hop Counts = 0
 Node:     16, Layer:     RoutingAodv, Number of Data Txed = 0
 Node:     16, Layer:     RoutingAodv, Number of Data Packets Originated = 0
@@ -552,7 +546,7 @@ Node:     16, Layer:       NetworkIp, Number Fragments dropped because TTL expir
 Node:     17, Layer:     RoutingAodv, 
 You are running @@@aomdv.pc@@@@
 
-Node:     17, Layer:     RoutingAodv, Number of Route Requests Txed = 1
+Node:     17, Layer:     RoutingAodv, Number of Route Requests Txed = 0
 Node:     17, Layer:     RoutingAodv, Number of Route Requests Originated as source of route = 0
 Node:     17, Layer:     RoutingAodv, Request latency(secs) =     0.000000000
 Node:     17, Layer:     RoutingAodv, Number of Replies Txed = 0
@@ -564,9 +558,9 @@ Node:     17, Layer:     RoutingAodv, Number of Route Errors (RERR) Txed = 0
 Node:     17, Layer:     RoutingAodv, Number of Route Errors (RERR) sent without N bit set = 0
 Node:     17, Layer:     RoutingAodv, Number of Route Errors (RERR) sent with N bit set = 0
 Node:     17, Layer:     RoutingAodv, Maintainence Overhead = 0
-Node:     17, Layer:     RoutingAodv, Number of CTRL Packets Txed = 1
-Node:     17, Layer:     RoutingAodv, Discovery Overhead = 1
-Node:     17, Layer:     RoutingAodv, Number of Routes Selected = 2
+Node:     17, Layer:     RoutingAodv, Number of CTRL Packets Txed = 0
+Node:     17, Layer:     RoutingAodv, Discovery Overhead = 0
+Node:     17, Layer:     RoutingAodv, Number of Routes Selected = 0
 Node:     17, Layer:     RoutingAodv, Number of Hop Counts = 0
 Node:     17, Layer:     RoutingAodv, Number of Data Txed = 0
 Node:     17, Layer:     RoutingAodv, Number of Data Packets Originated = 0
@@ -575,7 +569,7 @@ Node:     17, Layer:     RoutingAodv, Number of Hello packets sent = 0
 Node:     17, Layer:     RoutingAodv, Number of Packets Dropped or Left waiting for Route = 0
 Node:     17, Layer:     RoutingAodv, Number of Broken Links = 0
 Node:     17, Layer:     RoutingAodv, Number of Destination Unreachable Messages sent to application = 0
-Node:     17, Layer:       NetworkIp, Number of Packet Attepted to be Sent to MAC: 1
+Node:     17, Layer:       NetworkIp, Number of Packet Attepted to be Sent to MAC: 0
 Node:     17, Layer:       NetworkIp, Number of Packets Routed For Another Node: 0
 Node:     17, Layer:       NetworkIp, Number of Packets Delivered To this Node: 0
 Node:     17, Layer:       NetworkIp, Total of the TTL's of Delivered Packets: 0
@@ -584,7 +578,7 @@ Node:     17, Layer:       NetworkIp, Number Fragments dropped because TTL expir
 Node:     18, Layer:     RoutingAodv, 
 You are running @@@aomdv.pc@@@@
 
-Node:     18, Layer:     RoutingAodv, Number of Route Requests Txed = 1
+Node:     18, Layer:     RoutingAodv, Number of Route Requests Txed = 0
 Node:     18, Layer:     RoutingAodv, Number of Route Requests Originated as source of route = 0
 Node:     18, Layer:     RoutingAodv, Request latency(secs) =     0.000000000
 Node:     18, Layer:     RoutingAodv, Number of Replies Txed = 0
@@ -596,9 +590,9 @@ Node:     18, Layer:     RoutingAodv, Number of Route Errors (RERR) Txed = 0
 Node:     18, Layer:     RoutingAodv, Number of Route Errors (RERR) sent without N bit set = 0
 Node:     18, Layer:     RoutingAodv, Number of Route Errors (RERR) sent with N bit set = 0
 Node:     18, Layer:     RoutingAodv, Maintainence Overhead = 0
-Node:     18, Layer:     RoutingAodv, Number of CTRL Packets Txed = 1
-Node:     18, Layer:     RoutingAodv, Discovery Overhead = 1
-Node:     18, Layer:     RoutingAodv, Number of Routes Selected = 2
+Node:     18, Layer:     RoutingAodv, Number of CTRL Packets Txed = 0
+Node:     18, Layer:     RoutingAodv, Discovery Overhead = 0
+Node:     18, Layer:     RoutingAodv, Number of Routes Selected = 0
 Node:     18, Layer:     RoutingAodv, Number of Hop Counts = 0
 Node:     18, Layer:     RoutingAodv, Number of Data Txed = 0
 Node:     18, Layer:     RoutingAodv, Number of Data Packets Originated = 0
@@ -607,7 +601,7 @@ Node:     18, Layer:     RoutingAodv, Number of Hello packets sent = 0
 Node:     18, Layer:     RoutingAodv, Number of Packets Dropped or Left waiting for Route = 0
 Node:     18, Layer:     RoutingAodv, Number of Broken Links = 0
 Node:     18, Layer:     RoutingAodv, Number of Destination Unreachable Messages sent to application = 0
-Node:     18, Layer:       NetworkIp, Number of Packet Attepted to be Sent to MAC: 1
+Node:     18, Layer:       NetworkIp, Number of Packet Attepted to be Sent to MAC: 0
 Node:     18, Layer:       NetworkIp, Number of Packets Routed For Another Node: 0
 Node:     18, Layer:       NetworkIp, Number of Packets Delivered To this Node: 0
 Node:     18, Layer:       NetworkIp, Total of the TTL's of Delivered Packets: 0
@@ -616,7 +610,7 @@ Node:     18, Layer:       NetworkIp, Number Fragments dropped because TTL expir
 Node:     19, Layer:     RoutingAodv, 
 You are running @@@aomdv.pc@@@@
 
-Node:     19, Layer:     RoutingAodv, Number of Route Requests Txed = 3
+Node:     19, Layer:     RoutingAodv, Number of Route Requests Txed = 0
 Node:     19, Layer:     RoutingAodv, Number of Route Requests Originated as source of route = 0
 Node:     19, Layer:     RoutingAodv, Request latency(secs) =     0.000000000
 Node:     19, Layer:     RoutingAodv, Number of Replies Txed = 0
@@ -628,9 +622,9 @@ Node:     19, Layer:     RoutingAodv, Number of Route Errors (RERR) Txed = 0
 Node:     19, Layer:     RoutingAodv, Number of Route Errors (RERR) sent without N bit set = 0
 Node:     19, Layer:     RoutingAodv, Number of Route Errors (RERR) sent with N bit set = 0
 Node:     19, Layer:     RoutingAodv, Maintainence Overhead = 0
-Node:     19, Layer:     RoutingAodv, Number of CTRL Packets Txed = 3
-Node:     19, Layer:     RoutingAodv, Discovery Overhead = 3
-Node:     19, Layer:     RoutingAodv, Number of Routes Selected = 3
+Node:     19, Layer:     RoutingAodv, Number of CTRL Packets Txed = 0
+Node:     19, Layer:     RoutingAodv, Discovery Overhead = 0
+Node:     19, Layer:     RoutingAodv, Number of Routes Selected = 0
 Node:     19, Layer:     RoutingAodv, Number of Hop Counts = 0
 Node:     19, Layer:     RoutingAodv, Number of Data Txed = 0
 Node:     19, Layer:     RoutingAodv, Number of Data Packets Originated = 0
@@ -639,7 +633,7 @@ Node:     19, Layer:     RoutingAodv, Number of Hello packets sent = 0
 Node:     19, Layer:     RoutingAodv, Number of Packets Dropped or Left waiting for Route = 0
 Node:     19, Layer:     RoutingAodv, Number of Broken Links = 0
 Node:     19, Layer:     RoutingAodv, Number of Destination Unreachable Messages sent to application = 0
-Node:     19, Layer:       NetworkIp, Number of Packet Attepted to be Sent to MAC: 3
+Node:     19, Layer:       NetworkIp, Number of Packet Attepted to be Sent to MAC: 0
 Node:     19, Layer:       NetworkIp, Number of Packets Routed For Another Node: 0
 Node:     19, Layer:       NetworkIp, Number of Packets Delivered To this Node: 0
 Node:     19, Layer:       NetworkIp, Total of the TTL's of Delivered Packets: 0
@@ -648,7 +642,7 @@ Node:     19, Layer:       NetworkIp, Number Fragments dropped because TTL expir
 Node:     20, Layer:     RoutingAodv, 
 You are running @@@aomdv.pc@@@@
 
-Node:     20, Layer:     RoutingAodv, Number of Route Requests Txed = 1
+Node:     20, Layer:     RoutingAodv, Number of Route Requests Txed = 0
 Node:     20, Layer:     RoutingAodv, Number of Route Requests Originated as source of route = 0
 Node:     20, Layer:     RoutingAodv, Request latency(secs) =     0.000000000
 Node:     20, Layer:     RoutingAodv, Number of Replies Txed = 0
@@ -660,9 +654,9 @@ Node:     20, Layer:     RoutingAodv, Number of Route Errors (RERR) Txed = 0
 Node:     20, Layer:     RoutingAodv, Number of Route Errors (RERR) sent without N bit set = 0
 Node:     20, Layer:     RoutingAodv, Number of Route Errors (RERR) sent with N bit set = 0
 Node:     20, Layer:     RoutingAodv, Maintainence Overhead = 0
-Node:     20, Layer:     RoutingAodv, Number of CTRL Packets Txed = 1
-Node:     20, Layer:     RoutingAodv, Discovery Overhead = 1
-Node:     20, Layer:     RoutingAodv, Number of Routes Selected = 2
+Node:     20, Layer:     RoutingAodv, Number of CTRL Packets Txed = 0
+Node:     20, Layer:     RoutingAodv, Discovery Overhead = 0
+Node:     20, Layer:     RoutingAodv, Number of Routes Selected = 0
 Node:     20, Layer:     RoutingAodv, Number of Hop Counts = 0
 Node:     20, Layer:     RoutingAodv, Number of Data Txed = 0
 Node:     20, Layer:     RoutingAodv, Number of Data Packets Originated = 0
@@ -694,7 +688,7 @@ Node:     21, Layer:     RoutingAodv, Number of Route Errors (RERR) sent with N 
 Node:     21, Layer:     RoutingAodv, Maintainence Overhead = 0
 Node:     21, Layer:     RoutingAodv, Number of CTRL Packets Txed = 0
 Node:     21, Layer:     RoutingAodv, Discovery Overhead = 0
-Node:     21, Layer:     RoutingAodv, Number of Routes Selected = 1
+Node:     21, Layer:     RoutingAodv, Number of Routes Selected = 0
 Node:     21, Layer:     RoutingAodv, Number of Hop Counts = 0
 Node:     21, Layer:     RoutingAodv, Number of Data Txed = 0
 Node:     21, Layer:     RoutingAodv, Number of Data Packets Originated = 0
@@ -712,7 +706,7 @@ Node:     21, Layer:       NetworkIp, Number Fragments dropped because TTL expir
 Node:     22, Layer:     RoutingAodv, 
 You are running @@@aomdv.pc@@@@
 
-Node:     22, Layer:     RoutingAodv, Number of Route Requests Txed = 1
+Node:     22, Layer:     RoutingAodv, Number of Route Requests Txed = 0
 Node:     22, Layer:     RoutingAodv, Number of Route Requests Originated as source of route = 0
 Node:     22, Layer:     RoutingAodv, Request latency(secs) =     0.000000000
 Node:     22, Layer:     RoutingAodv, Number of Replies Txed = 0
@@ -724,9 +718,9 @@ Node:     22, Layer:     RoutingAodv, Number of Route Errors (RERR) Txed = 0
 Node:     22, Layer:     RoutingAodv, Number of Route Errors (RERR) sent without N bit set = 0
 Node:     22, Layer:     RoutingAodv, Number of Route Errors (RERR) sent with N bit set = 0
 Node:     22, Layer:     RoutingAodv, Maintainence Overhead = 0
-Node:     22, Layer:     RoutingAodv, Number of CTRL Packets Txed = 1
-Node:     22, Layer:     RoutingAodv, Discovery Overhead = 1
-Node:     22, Layer:     RoutingAodv, Number of Routes Selected = 1
+Node:     22, Layer:     RoutingAodv, Number of CTRL Packets Txed = 0
+Node:     22, Layer:     RoutingAodv, Discovery Overhead = 0
+Node:     22, Layer:     RoutingAodv, Number of Routes Selected = 0
 Node:     22, Layer:     RoutingAodv, Number of Hop Counts = 0
 Node:     22, Layer:     RoutingAodv, Number of Data Txed = 0
 Node:     22, Layer:     RoutingAodv, Number of Data Packets Originated = 0
@@ -744,7 +738,7 @@ Node:     22, Layer:       NetworkIp, Number Fragments dropped because TTL expir
 Node:     23, Layer:     RoutingAodv, 
 You are running @@@aomdv.pc@@@@
 
-Node:     23, Layer:     RoutingAodv, Number of Route Requests Txed = 2
+Node:     23, Layer:     RoutingAodv, Number of Route Requests Txed = 0
 Node:     23, Layer:     RoutingAodv, Number of Route Requests Originated as source of route = 0
 Node:     23, Layer:     RoutingAodv, Request latency(secs) =     0.000000000
 Node:     23, Layer:     RoutingAodv, Number of Replies Txed = 0
@@ -756,9 +750,9 @@ Node:     23, Layer:     RoutingAodv, Number of Route Errors (RERR) Txed = 0
 Node:     23, Layer:     RoutingAodv, Number of Route Errors (RERR) sent without N bit set = 0
 Node:     23, Layer:     RoutingAodv, Number of Route Errors (RERR) sent with N bit set = 0
 Node:     23, Layer:     RoutingAodv, Maintainence Overhead = 0
-Node:     23, Layer:     RoutingAodv, Number of CTRL Packets Txed = 2
-Node:     23, Layer:     RoutingAodv, Discovery Overhead = 2
-Node:     23, Layer:     RoutingAodv, Number of Routes Selected = 2
+Node:     23, Layer:     RoutingAodv, Number of CTRL Packets Txed = 0
+Node:     23, Layer:     RoutingAodv, Discovery Overhead = 0
+Node:     23, Layer:     RoutingAodv, Number of Routes Selected = 0
 Node:     23, Layer:     RoutingAodv, Number of Hop Counts = 0
 Node:     23, Layer:     RoutingAodv, Number of Data Txed = 0
 Node:     23, Layer:     RoutingAodv, Number of Data Packets Originated = 0
@@ -767,7 +761,7 @@ Node:     23, Layer:     RoutingAodv, Number of Hello packets sent = 0
 Node:     23, Layer:     RoutingAodv, Number of Packets Dropped or Left waiting for Route = 0
 Node:     23, Layer:     RoutingAodv, Number of Broken Links = 0
 Node:     23, Layer:     RoutingAodv, Number of Destination Unreachable Messages sent to application = 0
-Node:     23, Layer:       NetworkIp, Number of Packet Attepted to be Sent to MAC: 2
+Node:     23, Layer:       NetworkIp, Number of Packet Attepted to be Sent to MAC: 0
 Node:     23, Layer:       NetworkIp, Number of Packets Routed For Another Node: 0
 Node:     23, Layer:       NetworkIp, Number of Packets Delivered To this Node: 0
 Node:     23, Layer:       NetworkIp, Total of the TTL's of Delivered Packets: 0
@@ -776,7 +770,7 @@ Node:     23, Layer:       NetworkIp, Number Fragments dropped because TTL expir
 Node:     24, Layer:     RoutingAodv, 
 You are running @@@aomdv.pc@@@@
 
-Node:     24, Layer:     RoutingAodv, Number of Route Requests Txed = 3
+Node:     24, Layer:     RoutingAodv, Number of Route Requests Txed = 0
 Node:     24, Layer:     RoutingAodv, Number of Route Requests Originated as source of route = 0
 Node:     24, Layer:     RoutingAodv, Request latency(secs) =     0.000000000
 Node:     24, Layer:     RoutingAodv, Number of Replies Txed = 0
@@ -788,9 +782,9 @@ Node:     24, Layer:     RoutingAodv, Number of Route Errors (RERR) Txed = 0
 Node:     24, Layer:     RoutingAodv, Number of Route Errors (RERR) sent without N bit set = 0
 Node:     24, Layer:     RoutingAodv, Number of Route Errors (RERR) sent with N bit set = 0
 Node:     24, Layer:     RoutingAodv, Maintainence Overhead = 0
-Node:     24, Layer:     RoutingAodv, Number of CTRL Packets Txed = 3
-Node:     24, Layer:     RoutingAodv, Discovery Overhead = 3
-Node:     24, Layer:     RoutingAodv, Number of Routes Selected = 3
+Node:     24, Layer:     RoutingAodv, Number of CTRL Packets Txed = 0
+Node:     24, Layer:     RoutingAodv, Discovery Overhead = 0
+Node:     24, Layer:     RoutingAodv, Number of Routes Selected = 0
 Node:     24, Layer:     RoutingAodv, Number of Hop Counts = 0
 Node:     24, Layer:     RoutingAodv, Number of Data Txed = 0
 Node:     24, Layer:     RoutingAodv, Number of Data Packets Originated = 0
@@ -799,7 +793,7 @@ Node:     24, Layer:     RoutingAodv, Number of Hello packets sent = 0
 Node:     24, Layer:     RoutingAodv, Number of Packets Dropped or Left waiting for Route = 0
 Node:     24, Layer:     RoutingAodv, Number of Broken Links = 0
 Node:     24, Layer:     RoutingAodv, Number of Destination Unreachable Messages sent to application = 0
-Node:     24, Layer:       NetworkIp, Number of Packet Attepted to be Sent to MAC: 3
+Node:     24, Layer:       NetworkIp, Number of Packet Attepted to be Sent to MAC: 0
 Node:     24, Layer:       NetworkIp, Number of Packets Routed For Another Node: 0
 Node:     24, Layer:       NetworkIp, Number of Packets Delivered To this Node: 0
 Node:     24, Layer:       NetworkIp, Total of the TTL's of Delivered Packets: 0
@@ -808,7 +802,7 @@ Node:     24, Layer:       NetworkIp, Number Fragments dropped because TTL expir
 Node:     25, Layer:     RoutingAodv, 
 You are running @@@aomdv.pc@@@@
 
-Node:     25, Layer:     RoutingAodv, Number of Route Requests Txed = 1
+Node:     25, Layer:     RoutingAodv, Number of Route Requests Txed = 0
 Node:     25, Layer:     RoutingAodv, Number of Route Requests Originated as source of route = 0
 Node:     25, Layer:     RoutingAodv, Request latency(secs) =     0.000000000
 Node:     25, Layer:     RoutingAodv, Number of Replies Txed = 0
@@ -820,9 +814,9 @@ Node:     25, Layer:     RoutingAodv, Number of Route Errors (RERR) Txed = 0
 Node:     25, Layer:     RoutingAodv, Number of Route Errors (RERR) sent without N bit set = 0
 Node:     25, Layer:     RoutingAodv, Number of Route Errors (RERR) sent with N bit set = 0
 Node:     25, Layer:     RoutingAodv, Maintainence Overhead = 0
-Node:     25, Layer:     RoutingAodv, Number of CTRL Packets Txed = 1
-Node:     25, Layer:     RoutingAodv, Discovery Overhead = 1
-Node:     25, Layer:     RoutingAodv, Number of Routes Selected = 2
+Node:     25, Layer:     RoutingAodv, Number of CTRL Packets Txed = 0
+Node:     25, Layer:     RoutingAodv, Discovery Overhead = 0
+Node:     25, Layer:     RoutingAodv, Number of Routes Selected = 0
 Node:     25, Layer:     RoutingAodv, Number of Hop Counts = 0
 Node:     25, Layer:     RoutingAodv, Number of Data Txed = 0
 Node:     25, Layer:     RoutingAodv, Number of Data Packets Originated = 0
@@ -831,7 +825,7 @@ Node:     25, Layer:     RoutingAodv, Number of Hello packets sent = 0
 Node:     25, Layer:     RoutingAodv, Number of Packets Dropped or Left waiting for Route = 0
 Node:     25, Layer:     RoutingAodv, Number of Broken Links = 0
 Node:     25, Layer:     RoutingAodv, Number of Destination Unreachable Messages sent to application = 0
-Node:     25, Layer:       NetworkIp, Number of Packet Attepted to be Sent to MAC: 1
+Node:     25, Layer:       NetworkIp, Number of Packet Attepted to be Sent to MAC: 0
 Node:     25, Layer:       NetworkIp, Number of Packets Routed For Another Node: 0
 Node:     25, Layer:       NetworkIp, Number of Packets Delivered To this Node: 0
 Node:     25, Layer:       NetworkIp, Total of the TTL's of Delivered Packets: 0
@@ -840,7 +834,7 @@ Node:     25, Layer:       NetworkIp, Number Fragments dropped because TTL expir
 Node:     26, Layer:     RoutingAodv, 
 You are running @@@aomdv.pc@@@@
 
-Node:     26, Layer:     RoutingAodv, Number of Route Requests Txed = 1
+Node:     26, Layer:     RoutingAodv, Number of Route Requests Txed = 0
 Node:     26, Layer:     RoutingAodv, Number of Route Requests Originated as source of route = 0
 Node:     26, Layer:     RoutingAodv, Request latency(secs) =     0.000000000
 Node:     26, Layer:     RoutingAodv, Number of Replies Txed = 0
@@ -852,9 +846,9 @@ Node:     26, Layer:     RoutingAodv, Number of Route Errors (RERR) Txed = 0
 Node:     26, Layer:     RoutingAodv, Number of Route Errors (RERR) sent without N bit set = 0
 Node:     26, Layer:     RoutingAodv, Number of Route Errors (RERR) sent with N bit set = 0
 Node:     26, Layer:     RoutingAodv, Maintainence Overhead = 0
-Node:     26, Layer:     RoutingAodv, Number of CTRL Packets Txed = 1
-Node:     26, Layer:     RoutingAodv, Discovery Overhead = 1
-Node:     26, Layer:     RoutingAodv, Number of Routes Selected = 2
+Node:     26, Layer:     RoutingAodv, Number of CTRL Packets Txed = 0
+Node:     26, Layer:     RoutingAodv, Discovery Overhead = 0
+Node:     26, Layer:     RoutingAodv, Number of Routes Selected = 0
 Node:     26, Layer:     RoutingAodv, Number of Hop Counts = 0
 Node:     26, Layer:     RoutingAodv, Number of Data Txed = 0
 Node:     26, Layer:     RoutingAodv, Number of Data Packets Originated = 0
@@ -863,7 +857,7 @@ Node:     26, Layer:     RoutingAodv, Number of Hello packets sent = 0
 Node:     26, Layer:     RoutingAodv, Number of Packets Dropped or Left waiting for Route = 0
 Node:     26, Layer:     RoutingAodv, Number of Broken Links = 0
 Node:     26, Layer:     RoutingAodv, Number of Destination Unreachable Messages sent to application = 0
-Node:     26, Layer:       NetworkIp, Number of Packet Attepted to be Sent to MAC: 1
+Node:     26, Layer:       NetworkIp, Number of Packet Attepted to be Sent to MAC: 0
 Node:     26, Layer:       NetworkIp, Number of Packets Routed For Another Node: 0
 Node:     26, Layer:       NetworkIp, Number of Packets Delivered To this Node: 0
 Node:     26, Layer:       NetworkIp, Total of the TTL's of Delivered Packets: 0
@@ -872,7 +866,7 @@ Node:     26, Layer:       NetworkIp, Number Fragments dropped because TTL expir
 Node:     27, Layer:     RoutingAodv, 
 You are running @@@aomdv.pc@@@@
 
-Node:     27, Layer:     RoutingAodv, Number of Route Requests Txed = 1
+Node:     27, Layer:     RoutingAodv, Number of Route Requests Txed = 0
 Node:     27, Layer:     RoutingAodv, Number of Route Requests Originated as source of route = 0
 Node:     27, Layer:     RoutingAodv, Request latency(secs) =     0.000000000
 Node:     27, Layer:     RoutingAodv, Number of Replies Txed = 0
@@ -884,9 +878,9 @@ Node:     27, Layer:     RoutingAodv, Number of Route Errors (RERR) Txed = 0
 Node:     27, Layer:     RoutingAodv, Number of Route Errors (RERR) sent without N bit set = 0
 Node:     27, Layer:     RoutingAodv, Number of Route Errors (RERR) sent with N bit set = 0
 Node:     27, Layer:     RoutingAodv, Maintainence Overhead = 0
-Node:     27, Layer:     RoutingAodv, Number of CTRL Packets Txed = 1
-Node:     27, Layer:     RoutingAodv, Discovery Overhead = 1
-Node:     27, Layer:     RoutingAodv, Number of Routes Selected = 2
+Node:     27, Layer:     RoutingAodv, Number of CTRL Packets Txed = 0
+Node:     27, Layer:     RoutingAodv, Discovery Overhead = 0
+Node:     27, Layer:     RoutingAodv, Number of Routes Selected = 0
 Node:     27, Layer:     RoutingAodv, Number of Hop Counts = 0
 Node:     27, Layer:     RoutingAodv, Number of Data Txed = 0
 Node:     27, Layer:     RoutingAodv, Number of Data Packets Originated = 0
@@ -895,7 +889,7 @@ Node:     27, Layer:     RoutingAodv, Number of Hello packets sent = 0
 Node:     27, Layer:     RoutingAodv, Number of Packets Dropped or Left waiting for Route = 0
 Node:     27, Layer:     RoutingAodv, Number of Broken Links = 0
 Node:     27, Layer:     RoutingAodv, Number of Destination Unreachable Messages sent to application = 0
-Node:     27, Layer:       NetworkIp, Number of Packet Attepted to be Sent to MAC: 1
+Node:     27, Layer:       NetworkIp, Number of Packet Attepted to be Sent to MAC: 0
 Node:     27, Layer:       NetworkIp, Number of Packets Routed For Another Node: 0
 Node:     27, Layer:       NetworkIp, Number of Packets Delivered To this Node: 0
 Node:     27, Layer:       NetworkIp, Total of the TTL's of Delivered Packets: 0
@@ -904,7 +898,7 @@ Node:     27, Layer:       NetworkIp, Number Fragments dropped because TTL expir
 Node:     28, Layer:     RoutingAodv, 
 You are running @@@aomdv.pc@@@@
 
-Node:     28, Layer:     RoutingAodv, Number of Route Requests Txed = 2
+Node:     28, Layer:     RoutingAodv, Number of Route Requests Txed = 0
 Node:     28, Layer:     RoutingAodv, Number of Route Requests Originated as source of route = 0
 Node:     28, Layer:     RoutingAodv, Request latency(secs) =     0.000000000
 Node:     28, Layer:     RoutingAodv, Number of Replies Txed = 0
@@ -916,9 +910,9 @@ Node:     28, Layer:     RoutingAodv, Number of Route Errors (RERR) Txed = 0
 Node:     28, Layer:     RoutingAodv, Number of Route Errors (RERR) sent without N bit set = 0
 Node:     28, Layer:     RoutingAodv, Number of Route Errors (RERR) sent with N bit set = 0
 Node:     28, Layer:     RoutingAodv, Maintainence Overhead = 0
-Node:     28, Layer:     RoutingAodv, Number of CTRL Packets Txed = 2
-Node:     28, Layer:     RoutingAodv, Discovery Overhead = 2
-Node:     28, Layer:     RoutingAodv, Number of Routes Selected = 2
+Node:     28, Layer:     RoutingAodv, Number of CTRL Packets Txed = 0
+Node:     28, Layer:     RoutingAodv, Discovery Overhead = 0
+Node:     28, Layer:     RoutingAodv, Number of Routes Selected = 0
 Node:     28, Layer:     RoutingAodv, Number of Hop Counts = 0
 Node:     28, Layer:     RoutingAodv, Number of Data Txed = 0
 Node:     28, Layer:     RoutingAodv, Number of Data Packets Originated = 0
@@ -927,7 +921,7 @@ Node:     28, Layer:     RoutingAodv, Number of Hello packets sent = 0
 Node:     28, Layer:     RoutingAodv, Number of Packets Dropped or Left waiting for Route = 0
 Node:     28, Layer:     RoutingAodv, Number of Broken Links = 0
 Node:     28, Layer:     RoutingAodv, Number of Destination Unreachable Messages sent to application = 0
-Node:     28, Layer:       NetworkIp, Number of Packet Attepted to be Sent to MAC: 2
+Node:     28, Layer:       NetworkIp, Number of Packet Attepted to be Sent to MAC: 0
 Node:     28, Layer:       NetworkIp, Number of Packets Routed For Another Node: 0
 Node:     28, Layer:       NetworkIp, Number of Packets Delivered To this Node: 0
 Node:     28, Layer:       NetworkIp, Total of the TTL's of Delivered Packets: 0
@@ -936,7 +930,7 @@ Node:     28, Layer:       NetworkIp, Number Fragments dropped because TTL expir
 Node:     29, Layer:     RoutingAodv, 
 You are running @@@aomdv.pc@@@@
 
-Node:     29, Layer:     RoutingAodv, Number of Route Requests Txed = 2
+Node:     29, Layer:     RoutingAodv, Number of Route Requests Txed = 0
 Node:     29, Layer:     RoutingAodv, Number of Route Requests Originated as source of route = 0
 Node:     29, Layer:     RoutingAodv, Request latency(secs) =     0.000000000
 Node:     29, Layer:     RoutingAodv, Number of Replies Txed = 0
@@ -948,9 +942,9 @@ Node:     29, Layer:     RoutingAodv, Number of Route Errors (RERR) Txed = 0
 Node:     29, Layer:     RoutingAodv, Number of Route Errors (RERR) sent without N bit set = 0
 Node:     29, Layer:     RoutingAodv, Number of Route Errors (RERR) sent with N bit set = 0
 Node:     29, Layer:     RoutingAodv, Maintainence Overhead = 0
-Node:     29, Layer:     RoutingAodv, Number of CTRL Packets Txed = 2
-Node:     29, Layer:     RoutingAodv, Discovery Overhead = 2
-Node:     29, Layer:     RoutingAodv, Number of Routes Selected = 9
+Node:     29, Layer:     RoutingAodv, Number of CTRL Packets Txed = 0
+Node:     29, Layer:     RoutingAodv, Discovery Overhead = 0
+Node:     29, Layer:     RoutingAodv, Number of Routes Selected = 0
 Node:     29, Layer:     RoutingAodv, Number of Hop Counts = 0
 Node:     29, Layer:     RoutingAodv, Number of Data Txed = 0
 Node:     29, Layer:     RoutingAodv, Number of Data Packets Originated = 0
@@ -959,7 +953,7 @@ Node:     29, Layer:     RoutingAodv, Number of Hello packets sent = 0
 Node:     29, Layer:     RoutingAodv, Number of Packets Dropped or Left waiting for Route = 0
 Node:     29, Layer:     RoutingAodv, Number of Broken Links = 0
 Node:     29, Layer:     RoutingAodv, Number of Destination Unreachable Messages sent to application = 0
-Node:     29, Layer:       NetworkIp, Number of Packet Attepted to be Sent to MAC: 2
+Node:     29, Layer:       NetworkIp, Number of Packet Attepted to be Sent to MAC: 0
 Node:     29, Layer:       NetworkIp, Number of Packets Routed For Another Node: 0
 Node:     29, Layer:       NetworkIp, Number of Packets Delivered To this Node: 0
 Node:     29, Layer:       NetworkIp, Total of the TTL's of Delivered Packets: 0
@@ -971,8 +965,8 @@ You are running @@@aomdv.pc@@@@
 Node:     30, Layer:     RoutingAodv, Number of Route Requests Txed = 0
 Node:     30, Layer:     RoutingAodv, Number of Route Requests Originated as source of route = 0
 Node:     30, Layer:     RoutingAodv, Request latency(secs) =     0.000000000
-Node:     30, Layer:     RoutingAodv, Number of Replies Txed = 1
-Node:     30, Layer:     RoutingAodv, Number of Replies Sent as Destination = 1
+Node:     30, Layer:     RoutingAodv, Number of Replies Txed = 0
+Node:     30, Layer:     RoutingAodv, Number of Replies Sent as Destination = 0
 Node:     30, Layer:     RoutingAodv, Number of Replies Sent as Intermediate Node = 0
 Node:     30, Layer:     RoutingAodv, Number of Gratuitous Replies Sent = 0
 Node:     30, Layer:     RoutingAodv, Number of Reply Acks Sent = 0
@@ -980,37 +974,27 @@ Node:     30, Layer:     RoutingAodv, Number of Route Errors (RERR) Txed = 0
 Node:     30, Layer:     RoutingAodv, Number of Route Errors (RERR) sent without N bit set = 0
 Node:     30, Layer:     RoutingAodv, Number of Route Errors (RERR) sent with N bit set = 0
 Node:     30, Layer:     RoutingAodv, Maintainence Overhead = 0
-Node:     30, Layer:     RoutingAodv, Number of CTRL Packets Txed = 1
-Node:     30, Layer:     RoutingAodv, Discovery Overhead = 1
-Node:     30, Layer:     RoutingAodv, Number of Routes Selected = 1
-Node:     30, Layer:     RoutingAodv, Number of Hop Counts = 8
+Node:     30, Layer:     RoutingAodv, Number of CTRL Packets Txed = 0
+Node:     30, Layer:     RoutingAodv, Discovery Overhead = 0
+Node:     30, Layer:     RoutingAodv, Number of Routes Selected = 0
+Node:     30, Layer:     RoutingAodv, Number of Hop Counts = 0
 Node:     30, Layer:     RoutingAodv, Number of Data Txed = 0
 Node:     30, Layer:     RoutingAodv, Number of Data Packets Originated = 0
-Node:     30, Layer:     RoutingAodv, Number of Data Packets Received = 2
-Node:     30, Layer:     RoutingAodv, Average route length = 4.000000
+Node:     30, Layer:     RoutingAodv, Number of Data Packets Received = 0
 Node:     30, Layer:     RoutingAodv, Number of Hello packets sent = 0
 Node:     30, Layer:     RoutingAodv, Number of Packets Dropped or Left waiting for Route = 0
 Node:     30, Layer:     RoutingAodv, Number of Broken Links = 0
 Node:     30, Layer:     RoutingAodv, Number of Destination Unreachable Messages sent to application = 0
-Node:     30, Layer:       NetworkIp, Number of Packet Attepted to be Sent to MAC: 1
+Node:     30, Layer:       NetworkIp, Number of Packet Attepted to be Sent to MAC: 0
 Node:     30, Layer:       NetworkIp, Number of Packets Routed For Another Node: 0
-Node:     30, Layer:       NetworkIp, Number of Packets Delivered To this Node: 2
-Node:     30, Layer:       NetworkIp, Total of the TTL's of Delivered Packets: 120
-Node:     30, Layer:       NetworkIp, Average Hop Count Assuming 64 Inital TTL 4.000000
+Node:     30, Layer:       NetworkIp, Number of Packets Delivered To this Node: 0
+Node:     30, Layer:       NetworkIp, Total of the TTL's of Delivered Packets: 0
 Node:     30, Layer:       NetworkIp, Number Fragments dropped because Node was Unreachable: 0
 Node:     30, Layer:       NetworkIp, Number Fragments dropped because TTL expired: 0
-Node:     30, Layer:    AppCbrServer, (0) Client address: 0
-Node:     30, Layer:    AppCbrServer, (0) First packet received at [s]: 0.948110975
-Node:     30, Layer:    AppCbrServer, (0) Last packet received at [s]: 0.969493746
-Node:     30, Layer:    AppCbrServer, (0) Average end-to-end delay [s]: 0.708802360
-Node:     30, Layer:    AppCbrServer, (0) Session status: Not closed
-Node:     30, Layer:    AppCbrServer, (0) Total number of bytes received: 1024
-Node:     30, Layer:    AppCbrServer, (0) Total number of packets received: 2
-Node:     30, Layer:    AppCbrServer, (0) Throughput (bits per second): 157875
 Node:     31, Layer:     RoutingAodv, 
 You are running @@@aomdv.pc@@@@
 
-Node:     31, Layer:     RoutingAodv, Number of Route Requests Txed = 3
+Node:     31, Layer:     RoutingAodv, Number of Route Requests Txed = 0
 Node:     31, Layer:     RoutingAodv, Number of Route Requests Originated as source of route = 0
 Node:     31, Layer:     RoutingAodv, Request latency(secs) =     0.000000000
 Node:     31, Layer:     RoutingAodv, Number of Replies Txed = 0
@@ -1022,9 +1006,9 @@ Node:     31, Layer:     RoutingAodv, Number of Route Errors (RERR) Txed = 0
 Node:     31, Layer:     RoutingAodv, Number of Route Errors (RERR) sent without N bit set = 0
 Node:     31, Layer:     RoutingAodv, Number of Route Errors (RERR) sent with N bit set = 0
 Node:     31, Layer:     RoutingAodv, Maintainence Overhead = 0
-Node:     31, Layer:     RoutingAodv, Number of CTRL Packets Txed = 3
-Node:     31, Layer:     RoutingAodv, Discovery Overhead = 3
-Node:     31, Layer:     RoutingAodv, Number of Routes Selected = 3
+Node:     31, Layer:     RoutingAodv, Number of CTRL Packets Txed = 0
+Node:     31, Layer:     RoutingAodv, Discovery Overhead = 0
+Node:     31, Layer:     RoutingAodv, Number of Routes Selected = 0
 Node:     31, Layer:     RoutingAodv, Number of Hop Counts = 0
 Node:     31, Layer:     RoutingAodv, Number of Data Txed = 0
 Node:     31, Layer:     RoutingAodv, Number of Data Packets Originated = 0
@@ -1033,7 +1017,7 @@ Node:     31, Layer:     RoutingAodv, Number of Hello packets sent = 0
 Node:     31, Layer:     RoutingAodv, Number of Packets Dropped or Left waiting for Route = 0
 Node:     31, Layer:     RoutingAodv, Number of Broken Links = 0
 Node:     31, Layer:     RoutingAodv, Number of Destination Unreachable Messages sent to application = 0
-Node:     31, Layer:       NetworkIp, Number of Packet Attepted to be Sent to MAC: 3
+Node:     31, Layer:       NetworkIp, Number of Packet Attepted to be Sent to MAC: 0
 Node:     31, Layer:       NetworkIp, Number of Packets Routed For Another Node: 0
 Node:     31, Layer:       NetworkIp, Number of Packets Delivered To this Node: 0
 Node:     31, Layer:       NetworkIp, Total of the TTL's of Delivered Packets: 0
@@ -1056,7 +1040,7 @@ Node:     32, Layer:     RoutingAodv, Number of Route Errors (RERR) sent with N 
 Node:     32, Layer:     RoutingAodv, Maintainence Overhead = 0
 Node:     32, Layer:     RoutingAodv, Number of CTRL Packets Txed = 0
 Node:     32, Layer:     RoutingAodv, Discovery Overhead = 0
-Node:     32, Layer:     RoutingAodv, Number of Routes Selected = 1
+Node:     32, Layer:     RoutingAodv, Number of Routes Selected = 0
 Node:     32, Layer:     RoutingAodv, Number of Hop Counts = 0
 Node:     32, Layer:     RoutingAodv, Number of Data Txed = 0
 Node:     32, Layer:     RoutingAodv, Number of Data Packets Originated = 0
@@ -1074,7 +1058,7 @@ Node:     32, Layer:       NetworkIp, Number Fragments dropped because TTL expir
 Node:     33, Layer:     RoutingAodv, 
 You are running @@@aomdv.pc@@@@
 
-Node:     33, Layer:     RoutingAodv, Number of Route Requests Txed = 1
+Node:     33, Layer:     RoutingAodv, Number of Route Requests Txed = 0
 Node:     33, Layer:     RoutingAodv, Number of Route Requests Originated as source of route = 0
 Node:     33, Layer:     RoutingAodv, Request latency(secs) =     0.000000000
 Node:     33, Layer:     RoutingAodv, Number of Replies Txed = 0
@@ -1086,9 +1070,9 @@ Node:     33, Layer:     RoutingAodv, Number of Route Errors (RERR) Txed = 0
 Node:     33, Layer:     RoutingAodv, Number of Route Errors (RERR) sent without N bit set = 0
 Node:     33, Layer:     RoutingAodv, Number of Route Errors (RERR) sent with N bit set = 0
 Node:     33, Layer:     RoutingAodv, Maintainence Overhead = 0
-Node:     33, Layer:     RoutingAodv, Number of CTRL Packets Txed = 1
-Node:     33, Layer:     RoutingAodv, Discovery Overhead = 1
-Node:     33, Layer:     RoutingAodv, Number of Routes Selected = 1
+Node:     33, Layer:     RoutingAodv, Number of CTRL Packets Txed = 0
+Node:     33, Layer:     RoutingAodv, Discovery Overhead = 0
+Node:     33, Layer:     RoutingAodv, Number of Routes Selected = 0
 Node:     33, Layer:     RoutingAodv, Number of Hop Counts = 0
 Node:     33, Layer:     RoutingAodv, Number of Data Txed = 0
 Node:     33, Layer:     RoutingAodv, Number of Data Packets Originated = 0
@@ -1106,7 +1090,7 @@ Node:     33, Layer:       NetworkIp, Number Fragments dropped because TTL expir
 Node:     34, Layer:     RoutingAodv, 
 You are running @@@aomdv.pc@@@@
 
-Node:     34, Layer:     RoutingAodv, Number of Route Requests Txed = 1
+Node:     34, Layer:     RoutingAodv, Number of Route Requests Txed = 0
 Node:     34, Layer:     RoutingAodv, Number of Route Requests Originated as source of route = 0
 Node:     34, Layer:     RoutingAodv, Request latency(secs) =     0.000000000
 Node:     34, Layer:     RoutingAodv, Number of Replies Txed = 0
@@ -1118,9 +1102,9 @@ Node:     34, Layer:     RoutingAodv, Number of Route Errors (RERR) Txed = 0
 Node:     34, Layer:     RoutingAodv, Number of Route Errors (RERR) sent without N bit set = 0
 Node:     34, Layer:     RoutingAodv, Number of Route Errors (RERR) sent with N bit set = 0
 Node:     34, Layer:     RoutingAodv, Maintainence Overhead = 0
-Node:     34, Layer:     RoutingAodv, Number of CTRL Packets Txed = 1
-Node:     34, Layer:     RoutingAodv, Discovery Overhead = 1
-Node:     34, Layer:     RoutingAodv, Number of Routes Selected = 2
+Node:     34, Layer:     RoutingAodv, Number of CTRL Packets Txed = 0
+Node:     34, Layer:     RoutingAodv, Discovery Overhead = 0
+Node:     34, Layer:     RoutingAodv, Number of Routes Selected = 0
 Node:     34, Layer:     RoutingAodv, Number of Hop Counts = 0
 Node:     34, Layer:     RoutingAodv, Number of Data Txed = 0
 Node:     34, Layer:     RoutingAodv, Number of Data Packets Originated = 0
@@ -1129,7 +1113,7 @@ Node:     34, Layer:     RoutingAodv, Number of Hello packets sent = 0
 Node:     34, Layer:     RoutingAodv, Number of Packets Dropped or Left waiting for Route = 0
 Node:     34, Layer:     RoutingAodv, Number of Broken Links = 0
 Node:     34, Layer:     RoutingAodv, Number of Destination Unreachable Messages sent to application = 0
-Node:     34, Layer:       NetworkIp, Number of Packet Attepted to be Sent to MAC: 1
+Node:     34, Layer:       NetworkIp, Number of Packet Attepted to be Sent to MAC: 0
 Node:     34, Layer:       NetworkIp, Number of Packets Routed For Another Node: 0
 Node:     34, Layer:       NetworkIp, Number of Packets Delivered To this Node: 0
 Node:     34, Layer:       NetworkIp, Total of the TTL's of Delivered Packets: 0
@@ -1138,7 +1122,7 @@ Node:     34, Layer:       NetworkIp, Number Fragments dropped because TTL expir
 Node:     35, Layer:     RoutingAodv, 
 You are running @@@aomdv.pc@@@@
 
-Node:     35, Layer:     RoutingAodv, Number of Route Requests Txed = 3
+Node:     35, Layer:     RoutingAodv, Number of Route Requests Txed = 0
 Node:     35, Layer:     RoutingAodv, Number of Route Requests Originated as source of route = 0
 Node:     35, Layer:     RoutingAodv, Request latency(secs) =     0.000000000
 Node:     35, Layer:     RoutingAodv, Number of Replies Txed = 0
@@ -1150,9 +1134,9 @@ Node:     35, Layer:     RoutingAodv, Number of Route Errors (RERR) Txed = 0
 Node:     35, Layer:     RoutingAodv, Number of Route Errors (RERR) sent without N bit set = 0
 Node:     35, Layer:     RoutingAodv, Number of Route Errors (RERR) sent with N bit set = 0
 Node:     35, Layer:     RoutingAodv, Maintainence Overhead = 0
-Node:     35, Layer:     RoutingAodv, Number of CTRL Packets Txed = 3
-Node:     35, Layer:     RoutingAodv, Discovery Overhead = 3
-Node:     35, Layer:     RoutingAodv, Number of Routes Selected = 3
+Node:     35, Layer:     RoutingAodv, Number of CTRL Packets Txed = 0
+Node:     35, Layer:     RoutingAodv, Discovery Overhead = 0
+Node:     35, Layer:     RoutingAodv, Number of Routes Selected = 0
 Node:     35, Layer:     RoutingAodv, Number of Hop Counts = 0
 Node:     35, Layer:     RoutingAodv, Number of Data Txed = 0
 Node:     35, Layer:     RoutingAodv, Number of Data Packets Originated = 0
@@ -1161,7 +1145,7 @@ Node:     35, Layer:     RoutingAodv, Number of Hello packets sent = 0
 Node:     35, Layer:     RoutingAodv, Number of Packets Dropped or Left waiting for Route = 0
 Node:     35, Layer:     RoutingAodv, Number of Broken Links = 0
 Node:     35, Layer:     RoutingAodv, Number of Destination Unreachable Messages sent to application = 0
-Node:     35, Layer:       NetworkIp, Number of Packet Attepted to be Sent to MAC: 3
+Node:     35, Layer:       NetworkIp, Number of Packet Attepted to be Sent to MAC: 0
 Node:     35, Layer:       NetworkIp, Number of Packets Routed For Another Node: 0
 Node:     35, Layer:       NetworkIp, Number of Packets Delivered To this Node: 0
 Node:     35, Layer:       NetworkIp, Total of the TTL's of Delivered Packets: 0
@@ -1170,7 +1154,7 @@ Node:     35, Layer:       NetworkIp, Number Fragments dropped because TTL expir
 Node:     36, Layer:     RoutingAodv, 
 You are running @@@aomdv.pc@@@@
 
-Node:     36, Layer:     RoutingAodv, Number of Route Requests Txed = 2
+Node:     36, Layer:     RoutingAodv, Number of Route Requests Txed = 0
 Node:     36, Layer:     RoutingAodv, Number of Route Requests Originated as source of route = 0
 Node:     36, Layer:     RoutingAodv, Request latency(secs) =     0.000000000
 Node:     36, Layer:     RoutingAodv, Number of Replies Txed = 0
@@ -1182,9 +1166,9 @@ Node:     36, Layer:     RoutingAodv, Number of Route Errors (RERR) Txed = 0
 Node:     36, Layer:     RoutingAodv, Number of Route Errors (RERR) sent without N bit set = 0
 Node:     36, Layer:     RoutingAodv, Number of Route Errors (RERR) sent with N bit set = 0
 Node:     36, Layer:     RoutingAodv, Maintainence Overhead = 0
-Node:     36, Layer:     RoutingAodv, Number of CTRL Packets Txed = 2
-Node:     36, Layer:     RoutingAodv, Discovery Overhead = 2
-Node:     36, Layer:     RoutingAodv, Number of Routes Selected = 9
+Node:     36, Layer:     RoutingAodv, Number of CTRL Packets Txed = 0
+Node:     36, Layer:     RoutingAodv, Discovery Overhead = 0
+Node:     36, Layer:     RoutingAodv, Number of Routes Selected = 0
 Node:     36, Layer:     RoutingAodv, Number of Hop Counts = 0
 Node:     36, Layer:     RoutingAodv, Number of Data Txed = 0
 Node:     36, Layer:     RoutingAodv, Number of Data Packets Originated = 0
@@ -1193,7 +1177,7 @@ Node:     36, Layer:     RoutingAodv, Number of Hello packets sent = 0
 Node:     36, Layer:     RoutingAodv, Number of Packets Dropped or Left waiting for Route = 0
 Node:     36, Layer:     RoutingAodv, Number of Broken Links = 0
 Node:     36, Layer:     RoutingAodv, Number of Destination Unreachable Messages sent to application = 0
-Node:     36, Layer:       NetworkIp, Number of Packet Attepted to be Sent to MAC: 2
+Node:     36, Layer:       NetworkIp, Number of Packet Attepted to be Sent to MAC: 0
 Node:     36, Layer:       NetworkIp, Number of Packets Routed For Another Node: 0
 Node:     36, Layer:       NetworkIp, Number of Packets Delivered To this Node: 0
 Node:     36, Layer:       NetworkIp, Total of the TTL's of Delivered Packets: 0
@@ -1202,7 +1186,7 @@ Node:     36, Layer:       NetworkIp, Number Fragments dropped because TTL expir
 Node:     37, Layer:     RoutingAodv, 
 You are running @@@aomdv.pc@@@@
 
-Node:     37, Layer:     RoutingAodv, Number of Route Requests Txed = 2
+Node:     37, Layer:     RoutingAodv, Number of Route Requests Txed = 0
 Node:     37, Layer:     RoutingAodv, Number of Route Requests Originated as source of route = 0
 Node:     37, Layer:     RoutingAodv, Request latency(secs) =     0.000000000
 Node:     37, Layer:     RoutingAodv, Number of Replies Txed = 0
@@ -1214,9 +1198,9 @@ Node:     37, Layer:     RoutingAodv, Number of Route Errors (RERR) Txed = 0
 Node:     37, Layer:     RoutingAodv, Number of Route Errors (RERR) sent without N bit set = 0
 Node:     37, Layer:     RoutingAodv, Number of Route Errors (RERR) sent with N bit set = 0
 Node:     37, Layer:     RoutingAodv, Maintainence Overhead = 0
-Node:     37, Layer:     RoutingAodv, Number of CTRL Packets Txed = 2
-Node:     37, Layer:     RoutingAodv, Discovery Overhead = 2
-Node:     37, Layer:     RoutingAodv, Number of Routes Selected = 9
+Node:     37, Layer:     RoutingAodv, Number of CTRL Packets Txed = 0
+Node:     37, Layer:     RoutingAodv, Discovery Overhead = 0
+Node:     37, Layer:     RoutingAodv, Number of Routes Selected = 0
 Node:     37, Layer:     RoutingAodv, Number of Hop Counts = 0
 Node:     37, Layer:     RoutingAodv, Number of Data Txed = 0
 Node:     37, Layer:     RoutingAodv, Number of Data Packets Originated = 0
@@ -1225,7 +1209,7 @@ Node:     37, Layer:     RoutingAodv, Number of Hello packets sent = 0
 Node:     37, Layer:     RoutingAodv, Number of Packets Dropped or Left waiting for Route = 0
 Node:     37, Layer:     RoutingAodv, Number of Broken Links = 0
 Node:     37, Layer:     RoutingAodv, Number of Destination Unreachable Messages sent to application = 0
-Node:     37, Layer:       NetworkIp, Number of Packet Attepted to be Sent to MAC: 2
+Node:     37, Layer:       NetworkIp, Number of Packet Attepted to be Sent to MAC: 0
 Node:     37, Layer:       NetworkIp, Number of Packets Routed For Another Node: 0
 Node:     37, Layer:       NetworkIp, Number of Packets Delivered To this Node: 0
 Node:     37, Layer:       NetworkIp, Total of the TTL's of Delivered Packets: 0
@@ -1234,7 +1218,7 @@ Node:     37, Layer:       NetworkIp, Number Fragments dropped because TTL expir
 Node:     38, Layer:     RoutingAodv, 
 You are running @@@aomdv.pc@@@@
 
-Node:     38, Layer:     RoutingAodv, Number of Route Requests Txed = 3
+Node:     38, Layer:     RoutingAodv, Number of Route Requests Txed = 0
 Node:     38, Layer:     RoutingAodv, Number of Route Requests Originated as source of route = 0
 Node:     38, Layer:     RoutingAodv, Request latency(secs) =     0.000000000
 Node:     38, Layer:     RoutingAodv, Number of Replies Txed = 0
@@ -1246,9 +1230,9 @@ Node:     38, Layer:     RoutingAodv, Number of Route Errors (RERR) Txed = 0
 Node:     38, Layer:     RoutingAodv, Number of Route Errors (RERR) sent without N bit set = 0
 Node:     38, Layer:     RoutingAodv, Number of Route Errors (RERR) sent with N bit set = 0
 Node:     38, Layer:     RoutingAodv, Maintainence Overhead = 0
-Node:     38, Layer:     RoutingAodv, Number of CTRL Packets Txed = 3
-Node:     38, Layer:     RoutingAodv, Discovery Overhead = 3
-Node:     38, Layer:     RoutingAodv, Number of Routes Selected = 3
+Node:     38, Layer:     RoutingAodv, Number of CTRL Packets Txed = 0
+Node:     38, Layer:     RoutingAodv, Discovery Overhead = 0
+Node:     38, Layer:     RoutingAodv, Number of Routes Selected = 0
 Node:     38, Layer:     RoutingAodv, Number of Hop Counts = 0
 Node:     38, Layer:     RoutingAodv, Number of Data Txed = 0
 Node:     38, Layer:     RoutingAodv, Number of Data Packets Originated = 0
@@ -1257,7 +1241,7 @@ Node:     38, Layer:     RoutingAodv, Number of Hello packets sent = 0
 Node:     38, Layer:     RoutingAodv, Number of Packets Dropped or Left waiting for Route = 0
 Node:     38, Layer:     RoutingAodv, Number of Broken Links = 0
 Node:     38, Layer:     RoutingAodv, Number of Destination Unreachable Messages sent to application = 0
-Node:     38, Layer:       NetworkIp, Number of Packet Attepted to be Sent to MAC: 3
+Node:     38, Layer:       NetworkIp, Number of Packet Attepted to be Sent to MAC: 0
 Node:     38, Layer:       NetworkIp, Number of Packets Routed For Another Node: 0
 Node:     38, Layer:       NetworkIp, Number of Packets Delivered To this Node: 0
 Node:     38, Layer:       NetworkIp, Total of the TTL's of Delivered Packets: 0
@@ -1266,7 +1250,7 @@ Node:     38, Layer:       NetworkIp, Number Fragments dropped because TTL expir
 Node:     39, Layer:     RoutingAodv, 
 You are running @@@aomdv.pc@@@@
 
-Node:     39, Layer:     RoutingAodv, Number of Route Requests Txed = 1
+Node:     39, Layer:     RoutingAodv, Number of Route Requests Txed = 0
 Node:     39, Layer:     RoutingAodv, Number of Route Requests Originated as source of route = 0
 Node:     39, Layer:     RoutingAodv, Request latency(secs) =     0.000000000
 Node:     39, Layer:     RoutingAodv, Number of Replies Txed = 0
@@ -1278,9 +1262,9 @@ Node:     39, Layer:     RoutingAodv, Number of Route Errors (RERR) Txed = 0
 Node:     39, Layer:     RoutingAodv, Number of Route Errors (RERR) sent without N bit set = 0
 Node:     39, Layer:     RoutingAodv, Number of Route Errors (RERR) sent with N bit set = 0
 Node:     39, Layer:     RoutingAodv, Maintainence Overhead = 0
-Node:     39, Layer:     RoutingAodv, Number of CTRL Packets Txed = 1
-Node:     39, Layer:     RoutingAodv, Discovery Overhead = 1
-Node:     39, Layer:     RoutingAodv, Number of Routes Selected = 1
+Node:     39, Layer:     RoutingAodv, Number of CTRL Packets Txed = 0
+Node:     39, Layer:     RoutingAodv, Discovery Overhead = 0
+Node:     39, Layer:     RoutingAodv, Number of Routes Selected = 0
 Node:     39, Layer:     RoutingAodv, Number of Hop Counts = 0
 Node:     39, Layer:     RoutingAodv, Number of Data Txed = 0
 Node:     39, Layer:     RoutingAodv, Number of Data Packets Originated = 0
@@ -1289,7 +1273,7 @@ Node:     39, Layer:     RoutingAodv, Number of Hello packets sent = 0
 Node:     39, Layer:     RoutingAodv, Number of Packets Dropped or Left waiting for Route = 0
 Node:     39, Layer:     RoutingAodv, Number of Broken Links = 0
 Node:     39, Layer:     RoutingAodv, Number of Destination Unreachable Messages sent to application = 0
-Node:     39, Layer:       NetworkIp, Number of Packet Attepted to be Sent to MAC: 1
+Node:     39, Layer:       NetworkIp, Number of Packet Attepted to be Sent to MAC: 0
 Node:     39, Layer:       NetworkIp, Number of Packets Routed For Another Node: 0
 Node:     39, Layer:       NetworkIp, Number of Packets Delivered To this Node: 0
 Node:     39, Layer:       NetworkIp, Total of the TTL's of Delivered Packets: 0
@@ -1298,7 +1282,7 @@ Node:     39, Layer:       NetworkIp, Number Fragments dropped because TTL expir
 Node:     40, Layer:     RoutingAodv, 
 You are running @@@aomdv.pc@@@@
 
-Node:     40, Layer:     RoutingAodv, Number of Route Requests Txed = 3
+Node:     40, Layer:     RoutingAodv, Number of Route Requests Txed = 0
 Node:     40, Layer:     RoutingAodv, Number of Route Requests Originated as source of route = 0
 Node:     40, Layer:     RoutingAodv, Request latency(secs) =     0.000000000
 Node:     40, Layer:     RoutingAodv, Number of Replies Txed = 0
@@ -1310,9 +1294,9 @@ Node:     40, Layer:     RoutingAodv, Number of Route Errors (RERR) Txed = 0
 Node:     40, Layer:     RoutingAodv, Number of Route Errors (RERR) sent without N bit set = 0
 Node:     40, Layer:     RoutingAodv, Number of Route Errors (RERR) sent with N bit set = 0
 Node:     40, Layer:     RoutingAodv, Maintainence Overhead = 0
-Node:     40, Layer:     RoutingAodv, Number of CTRL Packets Txed = 3
-Node:     40, Layer:     RoutingAodv, Discovery Overhead = 3
-Node:     40, Layer:     RoutingAodv, Number of Routes Selected = 3
+Node:     40, Layer:     RoutingAodv, Number of CTRL Packets Txed = 0
+Node:     40, Layer:     RoutingAodv, Discovery Overhead = 0
+Node:     40, Layer:     RoutingAodv, Number of Routes Selected = 0
 Node:     40, Layer:     RoutingAodv, Number of Hop Counts = 0
 Node:     40, Layer:     RoutingAodv, Number of Data Txed = 0
 Node:     40, Layer:     RoutingAodv, Number of Data Packets Originated = 0
@@ -1321,7 +1305,7 @@ Node:     40, Layer:     RoutingAodv, Number of Hello packets sent = 0
 Node:     40, Layer:     RoutingAodv, Number of Packets Dropped or Left waiting for Route = 0
 Node:     40, Layer:     RoutingAodv, Number of Broken Links = 0
 Node:     40, Layer:     RoutingAodv, Number of Destination Unreachable Messages sent to application = 0
-Node:     40, Layer:       NetworkIp, Number of Packet Attepted to be Sent to MAC: 3
+Node:     40, Layer:       NetworkIp, Number of Packet Attepted to be Sent to MAC: 0
 Node:     40, Layer:       NetworkIp, Number of Packets Routed For Another Node: 0
 Node:     40, Layer:       NetworkIp, Number of Packets Delivered To this Node: 0
 Node:     40, Layer:       NetworkIp, Total of the TTL's of Delivered Packets: 0
@@ -1330,7 +1314,7 @@ Node:     40, Layer:       NetworkIp, Number Fragments dropped because TTL expir
 Node:     41, Layer:     RoutingAodv, 
 You are running @@@aomdv.pc@@@@
 
-Node:     41, Layer:     RoutingAodv, Number of Route Requests Txed = 1
+Node:     41, Layer:     RoutingAodv, Number of Route Requests Txed = 0
 Node:     41, Layer:     RoutingAodv, Number of Route Requests Originated as source of route = 0
 Node:     41, Layer:     RoutingAodv, Request latency(secs) =     0.000000000
 Node:     41, Layer:     RoutingAodv, Number of Replies Txed = 0
@@ -1342,9 +1326,9 @@ Node:     41, Layer:     RoutingAodv, Number of Route Errors (RERR) Txed = 0
 Node:     41, Layer:     RoutingAodv, Number of Route Errors (RERR) sent without N bit set = 0
 Node:     41, Layer:     RoutingAodv, Number of Route Errors (RERR) sent with N bit set = 0
 Node:     41, Layer:     RoutingAodv, Maintainence Overhead = 0
-Node:     41, Layer:     RoutingAodv, Number of CTRL Packets Txed = 1
-Node:     41, Layer:     RoutingAodv, Discovery Overhead = 1
-Node:     41, Layer:     RoutingAodv, Number of Routes Selected = 2
+Node:     41, Layer:     RoutingAodv, Number of CTRL Packets Txed = 0
+Node:     41, Layer:     RoutingAodv, Discovery Overhead = 0
+Node:     41, Layer:     RoutingAodv, Number of Routes Selected = 0
 Node:     41, Layer:     RoutingAodv, Number of Hop Counts = 0
 Node:     41, Layer:     RoutingAodv, Number of Data Txed = 0
 Node:     41, Layer:     RoutingAodv, Number of Data Packets Originated = 0
@@ -1353,7 +1337,7 @@ Node:     41, Layer:     RoutingAodv, Number of Hello packets sent = 0
 Node:     41, Layer:     RoutingAodv, Number of Packets Dropped or Left waiting for Route = 0
 Node:     41, Layer:     RoutingAodv, Number of Broken Links = 0
 Node:     41, Layer:     RoutingAodv, Number of Destination Unreachable Messages sent to application = 0
-Node:     41, Layer:       NetworkIp, Number of Packet Attepted to be Sent to MAC: 1
+Node:     41, Layer:       NetworkIp, Number of Packet Attepted to be Sent to MAC: 0
 Node:     41, Layer:       NetworkIp, Number of Packets Routed For Another Node: 0
 Node:     41, Layer:       NetworkIp, Number of Packets Delivered To this Node: 0
 Node:     41, Layer:       NetworkIp, Total of the TTL's of Delivered Packets: 0
@@ -1362,7 +1346,7 @@ Node:     41, Layer:       NetworkIp, Number Fragments dropped because TTL expir
 Node:     42, Layer:     RoutingAodv, 
 You are running @@@aomdv.pc@@@@
 
-Node:     42, Layer:     RoutingAodv, Number of Route Requests Txed = 3
+Node:     42, Layer:     RoutingAodv, Number of Route Requests Txed = 0
 Node:     42, Layer:     RoutingAodv, Number of Route Requests Originated as source of route = 0
 Node:     42, Layer:     RoutingAodv, Request latency(secs) =     0.000000000
 Node:     42, Layer:     RoutingAodv, Number of Replies Txed = 0
@@ -1374,9 +1358,9 @@ Node:     42, Layer:     RoutingAodv, Number of Route Errors (RERR) Txed = 0
 Node:     42, Layer:     RoutingAodv, Number of Route Errors (RERR) sent without N bit set = 0
 Node:     42, Layer:     RoutingAodv, Number of Route Errors (RERR) sent with N bit set = 0
 Node:     42, Layer:     RoutingAodv, Maintainence Overhead = 0
-Node:     42, Layer:     RoutingAodv, Number of CTRL Packets Txed = 3
-Node:     42, Layer:     RoutingAodv, Discovery Overhead = 3
-Node:     42, Layer:     RoutingAodv, Number of Routes Selected = 3
+Node:     42, Layer:     RoutingAodv, Number of CTRL Packets Txed = 0
+Node:     42, Layer:     RoutingAodv, Discovery Overhead = 0
+Node:     42, Layer:     RoutingAodv, Number of Routes Selected = 0
 Node:     42, Layer:     RoutingAodv, Number of Hop Counts = 0
 Node:     42, Layer:     RoutingAodv, Number of Data Txed = 0
 Node:     42, Layer:     RoutingAodv, Number of Data Packets Originated = 0
@@ -1385,7 +1369,7 @@ Node:     42, Layer:     RoutingAodv, Number of Hello packets sent = 0
 Node:     42, Layer:     RoutingAodv, Number of Packets Dropped or Left waiting for Route = 0
 Node:     42, Layer:     RoutingAodv, Number of Broken Links = 0
 Node:     42, Layer:     RoutingAodv, Number of Destination Unreachable Messages sent to application = 0
-Node:     42, Layer:       NetworkIp, Number of Packet Attepted to be Sent to MAC: 3
+Node:     42, Layer:       NetworkIp, Number of Packet Attepted to be Sent to MAC: 0
 Node:     42, Layer:       NetworkIp, Number of Packets Routed For Another Node: 0
 Node:     42, Layer:       NetworkIp, Number of Packets Delivered To this Node: 0
 Node:     42, Layer:       NetworkIp, Total of the TTL's of Delivered Packets: 0
@@ -1394,10 +1378,10 @@ Node:     42, Layer:       NetworkIp, Number Fragments dropped because TTL expir
 Node:     43, Layer:     RoutingAodv, 
 You are running @@@aomdv.pc@@@@
 
-Node:     43, Layer:     RoutingAodv, Number of Route Requests Txed = 1
+Node:     43, Layer:     RoutingAodv, Number of Route Requests Txed = 0
 Node:     43, Layer:     RoutingAodv, Number of Route Requests Originated as source of route = 0
 Node:     43, Layer:     RoutingAodv, Request latency(secs) =     0.000000000
-Node:     43, Layer:     RoutingAodv, Number of Replies Txed = 1
+Node:     43, Layer:     RoutingAodv, Number of Replies Txed = 0
 Node:     43, Layer:     RoutingAodv, Number of Replies Sent as Destination = 0
 Node:     43, Layer:     RoutingAodv, Number of Replies Sent as Intermediate Node = 0
 Node:     43, Layer:     RoutingAodv, Number of Gratuitous Replies Sent = 0
@@ -1406,19 +1390,19 @@ Node:     43, Layer:     RoutingAodv, Number of Route Errors (RERR) Txed = 0
 Node:     43, Layer:     RoutingAodv, Number of Route Errors (RERR) sent without N bit set = 0
 Node:     43, Layer:     RoutingAodv, Number of Route Errors (RERR) sent with N bit set = 0
 Node:     43, Layer:     RoutingAodv, Maintainence Overhead = 0
-Node:     43, Layer:     RoutingAodv, Number of CTRL Packets Txed = 2
-Node:     43, Layer:     RoutingAodv, Discovery Overhead = 2
-Node:     43, Layer:     RoutingAodv, Number of Routes Selected = 3
+Node:     43, Layer:     RoutingAodv, Number of CTRL Packets Txed = 0
+Node:     43, Layer:     RoutingAodv, Discovery Overhead = 0
+Node:     43, Layer:     RoutingAodv, Number of Routes Selected = 0
 Node:     43, Layer:     RoutingAodv, Number of Hop Counts = 0
-Node:     43, Layer:     RoutingAodv, Number of Data Txed = 2
+Node:     43, Layer:     RoutingAodv, Number of Data Txed = 0
 Node:     43, Layer:     RoutingAodv, Number of Data Packets Originated = 0
 Node:     43, Layer:     RoutingAodv, Number of Data Packets Received = 0
 Node:     43, Layer:     RoutingAodv, Number of Hello packets sent = 0
 Node:     43, Layer:     RoutingAodv, Number of Packets Dropped or Left waiting for Route = 0
 Node:     43, Layer:     RoutingAodv, Number of Broken Links = 0
 Node:     43, Layer:     RoutingAodv, Number of Destination Unreachable Messages sent to application = 0
-Node:     43, Layer:       NetworkIp, Number of Packet Attepted to be Sent to MAC: 4
-Node:     43, Layer:       NetworkIp, Number of Packets Routed For Another Node: 2
+Node:     43, Layer:       NetworkIp, Number of Packet Attepted to be Sent to MAC: 0
+Node:     43, Layer:       NetworkIp, Number of Packets Routed For Another Node: 0
 Node:     43, Layer:       NetworkIp, Number of Packets Delivered To this Node: 0
 Node:     43, Layer:       NetworkIp, Total of the TTL's of Delivered Packets: 0
 Node:     43, Layer:       NetworkIp, Number Fragments dropped because Node was Unreachable: 0
@@ -1426,7 +1410,7 @@ Node:     43, Layer:       NetworkIp, Number Fragments dropped because TTL expir
 Node:     44, Layer:     RoutingAodv, 
 You are running @@@aomdv.pc@@@@
 
-Node:     44, Layer:     RoutingAodv, Number of Route Requests Txed = 2
+Node:     44, Layer:     RoutingAodv, Number of Route Requests Txed = 0
 Node:     44, Layer:     RoutingAodv, Number of Route Requests Originated as source of route = 0
 Node:     44, Layer:     RoutingAodv, Request latency(secs) =     0.000000000
 Node:     44, Layer:     RoutingAodv, Number of Replies Txed = 0
@@ -1438,9 +1422,9 @@ Node:     44, Layer:     RoutingAodv, Number of Route Errors (RERR) Txed = 0
 Node:     44, Layer:     RoutingAodv, Number of Route Errors (RERR) sent without N bit set = 0
 Node:     44, Layer:     RoutingAodv, Number of Route Errors (RERR) sent with N bit set = 0
 Node:     44, Layer:     RoutingAodv, Maintainence Overhead = 0
-Node:     44, Layer:     RoutingAodv, Number of CTRL Packets Txed = 2
-Node:     44, Layer:     RoutingAodv, Discovery Overhead = 2
-Node:     44, Layer:     RoutingAodv, Number of Routes Selected = 2
+Node:     44, Layer:     RoutingAodv, Number of CTRL Packets Txed = 0
+Node:     44, Layer:     RoutingAodv, Discovery Overhead = 0
+Node:     44, Layer:     RoutingAodv, Number of Routes Selected = 0
 Node:     44, Layer:     RoutingAodv, Number of Hop Counts = 0
 Node:     44, Layer:     RoutingAodv, Number of Data Txed = 0
 Node:     44, Layer:     RoutingAodv, Number of Data Packets Originated = 0
@@ -1449,7 +1433,7 @@ Node:     44, Layer:     RoutingAodv, Number of Hello packets sent = 0
 Node:     44, Layer:     RoutingAodv, Number of Packets Dropped or Left waiting for Route = 0
 Node:     44, Layer:     RoutingAodv, Number of Broken Links = 0
 Node:     44, Layer:     RoutingAodv, Number of Destination Unreachable Messages sent to application = 0
-Node:     44, Layer:       NetworkIp, Number of Packet Attepted to be Sent to MAC: 2
+Node:     44, Layer:       NetworkIp, Number of Packet Attepted to be Sent to MAC: 0
 Node:     44, Layer:       NetworkIp, Number of Packets Routed For Another Node: 0
 Node:     44, Layer:       NetworkIp, Number of Packets Delivered To this Node: 0
 Node:     44, Layer:       NetworkIp, Total of the TTL's of Delivered Packets: 0
@@ -1504,7 +1488,7 @@ Node:     46, Layer:     RoutingAodv, Number of Route Errors (RERR) sent with N 
 Node:     46, Layer:     RoutingAodv, Maintainence Overhead = 0
 Node:     46, Layer:     RoutingAodv, Number of CTRL Packets Txed = 0
 Node:     46, Layer:     RoutingAodv, Discovery Overhead = 0
-Node:     46, Layer:     RoutingAodv, Number of Routes Selected = 1
+Node:     46, Layer:     RoutingAodv, Number of Routes Selected = 0
 Node:     46, Layer:     RoutingAodv, Number of Hop Counts = 0
 Node:     46, Layer:     RoutingAodv, Number of Data Txed = 0
 Node:     46, Layer:     RoutingAodv, Number of Data Packets Originated = 0
@@ -1554,10 +1538,10 @@ Node:     47, Layer:       NetworkIp, Number Fragments dropped because TTL expir
 Node:     48, Layer:     RoutingAodv, 
 You are running @@@aomdv.pc@@@@
 
-Node:     48, Layer:     RoutingAodv, Number of Route Requests Txed = 2
+Node:     48, Layer:     RoutingAodv, Number of Route Requests Txed = 0
 Node:     48, Layer:     RoutingAodv, Number of Route Requests Originated as source of route = 0
 Node:     48, Layer:     RoutingAodv, Request latency(secs) =     0.000000000
-Node:     48, Layer:     RoutingAodv, Number of Replies Txed = 1
+Node:     48, Layer:     RoutingAodv, Number of Replies Txed = 0
 Node:     48, Layer:     RoutingAodv, Number of Replies Sent as Destination = 0
 Node:     48, Layer:     RoutingAodv, Number of Replies Sent as Intermediate Node = 0
 Node:     48, Layer:     RoutingAodv, Number of Gratuitous Replies Sent = 0
@@ -1566,19 +1550,19 @@ Node:     48, Layer:     RoutingAodv, Number of Route Errors (RERR) Txed = 0
 Node:     48, Layer:     RoutingAodv, Number of Route Errors (RERR) sent without N bit set = 0
 Node:     48, Layer:     RoutingAodv, Number of Route Errors (RERR) sent with N bit set = 0
 Node:     48, Layer:     RoutingAodv, Maintainence Overhead = 0
-Node:     48, Layer:     RoutingAodv, Number of CTRL Packets Txed = 3
-Node:     48, Layer:     RoutingAodv, Discovery Overhead = 3
-Node:     48, Layer:     RoutingAodv, Number of Routes Selected = 5
+Node:     48, Layer:     RoutingAodv, Number of CTRL Packets Txed = 0
+Node:     48, Layer:     RoutingAodv, Discovery Overhead = 0
+Node:     48, Layer:     RoutingAodv, Number of Routes Selected = 0
 Node:     48, Layer:     RoutingAodv, Number of Hop Counts = 0
-Node:     48, Layer:     RoutingAodv, Number of Data Txed = 2
+Node:     48, Layer:     RoutingAodv, Number of Data Txed = 0
 Node:     48, Layer:     RoutingAodv, Number of Data Packets Originated = 0
 Node:     48, Layer:     RoutingAodv, Number of Data Packets Received = 0
 Node:     48, Layer:     RoutingAodv, Number of Hello packets sent = 0
 Node:     48, Layer:     RoutingAodv, Number of Packets Dropped or Left waiting for Route = 0
 Node:     48, Layer:     RoutingAodv, Number of Broken Links = 0
 Node:     48, Layer:     RoutingAodv, Number of Destination Unreachable Messages sent to application = 0
-Node:     48, Layer:       NetworkIp, Number of Packet Attepted to be Sent to MAC: 5
-Node:     48, Layer:       NetworkIp, Number of Packets Routed For Another Node: 2
+Node:     48, Layer:       NetworkIp, Number of Packet Attepted to be Sent to MAC: 0
+Node:     48, Layer:       NetworkIp, Number of Packets Routed For Another Node: 0
 Node:     48, Layer:       NetworkIp, Number of Packets Delivered To this Node: 0
 Node:     48, Layer:       NetworkIp, Total of the TTL's of Delivered Packets: 0
 Node:     48, Layer:       NetworkIp, Number Fragments dropped because Node was Unreachable: 0
@@ -1586,7 +1570,7 @@ Node:     48, Layer:       NetworkIp, Number Fragments dropped because TTL expir
 Node:     49, Layer:     RoutingAodv, 
 You are running @@@aomdv.pc@@@@
 
-Node:     49, Layer:     RoutingAodv, Number of Route Requests Txed = 2
+Node:     49, Layer:     RoutingAodv, Number of Route Requests Txed = 0
 Node:     49, Layer:     RoutingAodv, Number of Route Requests Originated as source of route = 0
 Node:     49, Layer:     RoutingAodv, Request latency(secs) =     0.000000000
 Node:     49, Layer:     RoutingAodv, Number of Replies Txed = 0
@@ -1598,9 +1582,9 @@ Node:     49, Layer:     RoutingAodv, Number of Route Errors (RERR) Txed = 0
 Node:     49, Layer:     RoutingAodv, Number of Route Errors (RERR) sent without N bit set = 0
 Node:     49, Layer:     RoutingAodv, Number of Route Errors (RERR) sent with N bit set = 0
 Node:     49, Layer:     RoutingAodv, Maintainence Overhead = 0
-Node:     49, Layer:     RoutingAodv, Number of CTRL Packets Txed = 2
-Node:     49, Layer:     RoutingAodv, Discovery Overhead = 2
-Node:     49, Layer:     RoutingAodv, Number of Routes Selected = 9
+Node:     49, Layer:     RoutingAodv, Number of CTRL Packets Txed = 0
+Node:     49, Layer:     RoutingAodv, Discovery Overhead = 0
+Node:     49, Layer:     RoutingAodv, Number of Routes Selected = 0
 Node:     49, Layer:     RoutingAodv, Number of Hop Counts = 0
 Node:     49, Layer:     RoutingAodv, Number of Data Txed = 0
 Node:     49, Layer:     RoutingAodv, Number of Data Packets Originated = 0
@@ -1609,7 +1593,7 @@ Node:     49, Layer:     RoutingAodv, Number of Hello packets sent = 0
 Node:     49, Layer:     RoutingAodv, Number of Packets Dropped or Left waiting for Route = 0
 Node:     49, Layer:     RoutingAodv, Number of Broken Links = 0
 Node:     49, Layer:     RoutingAodv, Number of Destination Unreachable Messages sent to application = 0
-Node:     49, Layer:       NetworkIp, Number of Packet Attepted to be Sent to MAC: 2
+Node:     49, Layer:       NetworkIp, Number of Packet Attepted to be Sent to MAC: 0
 Node:     49, Layer:       NetworkIp, Number of Packets Routed For Another Node: 0
 Node:     49, Layer:       NetworkIp, Number of Packets Delivered To this Node: 0
 Node:     49, Layer:       NetworkIp, Total of the TTL's of Delivered Packets: 0

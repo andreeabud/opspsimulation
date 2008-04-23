@@ -73,7 +73,7 @@ TERRAIN-DIMENSIONS  (2000, 1000)
 # The following parameter represents the number of nodes being simulated.
 #
 
-NUMBER-OF-NODES     50
+NUMBER-OF-NODES     49
 
 #
 #
@@ -91,9 +91,9 @@ NUMBER-OF-NODES     50
 
 # NODE-PLACEMENT      FILE
 # NODE-PLACEMENT-FILE ./nodes.input
-# NODE-PLACEMENT      GRID
-# GRID-UNIT           200  
-NODE-PLACEMENT      RANDOM
+ NODE-PLACEMENT      GRID
+ GRID-UNIT           100  
+#NODE-PLACEMENT      RANDOM
 #NODE-PLACEMENT      UNIFORM
 
 #
@@ -319,6 +319,6 @@ MOBILITY-STATISTICS             YES
 # GUI-OPTION: YES allows GloMoSim to communicate with the Java Gui Vis Tool 
 #             NO does not
 
-GUI-OPTION   YES
+GUI-OPTION   NO
 GUI-RADIO    NO
-GUI-ROUTING  YES
+GUI-ROUTING  NO

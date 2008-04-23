@@ -60,7 +60,7 @@
 #include "app_util.h"
 #include "cbr_client.h"
 
-#define noDEBUG
+#define DEBUG
 #define noEXCEL
 
 
