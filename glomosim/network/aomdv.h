@@ -813,6 +813,8 @@ void OpspDisplayNfrTable( OPSP_NFRT* nfrTable );
 
 void OpspSetTimer( GlomoNode* node, long eventType, MsgOpspDestNbrAddr* destNbrAddr, clocktype delay );
 
+void OpspPeekFunction( GlomoNode* node, const Message* msg );
+
 //^--------------------------- tianke on 2008-4-14 15:8 0.01--------------------------^
 
 #endif /* _AOMDV_H_ */

@@ -1572,7 +1572,7 @@ void NetworkIpSetPacketDropNotificationFunction( GlomoNode* node,
 //
 // PARAMETERS  msg - The message being peeked at from the MAC layer.  Must
 //                   not be freed or modified!
-//
+//在混杂模式下mac层调用网络层的接口。
 
 
 void NetworkIpSneakPeekAtMacPacket( GlomoNode* node, const Message* msg )
@@ -1801,11 +1801,6 @@ void ProcessPacketForMeFromMac( GlomoNode* node, Message* msg, NODE_ADDR lastAdd
                   * We have modified this function to include the lastAddr 
                   * the address of the node from whom we received the packet.
                   */
-    #ifdef OPSP_DEBUG
-	printf("in the ProcessPacketForMeFromMac\n");
-    printf("IP Header: %d\n",ipHeader->ip_p);
-	printf("destinationAddress: %d, sourceAddress: %d\n",ipHeader->ip_dst, ipHeader->ip_src);
-    #endif
 	
 #ifdef AOMDV
             //printf( "ipLayer->routerFunction: %s", *ipLayer->routerFunction );
