@@ -760,6 +760,8 @@ void RoutingAodvInsertNbrTable( GlomoNode* node, NODE_ADDR nbrAddr )
 
     AODV_NT_Node*       newNode     = ( AODV_NT_Node* ) checked_pc_malloc( sizeof( AODV_NT_Node ) );
 
+	//printf("in RoutingAodvInsertNbrTable %d\n", nbrAddr);
+
     newNode->nbrAddr = nbrAddr;
     newNode->lastHello = simclock();
     newNode->lastPkt = simclock();
@@ -3580,7 +3582,7 @@ void RoutingAodvDisplayNbrTable( GlomoNode* node )
 
     for( current = nbrTable.head;current != NULL;current = current->next ) {
         GLOMO_PrintClockInSecond( current->lastHello, clockdisplay );
-        printf( "\n%d\t%s\t", current->nbrAddr, clockdisplay );
+        printf( "\nNBRT:\t%d\t%s\t", current->nbrAddr, clockdisplay );
         GLOMO_PrintClockInSecond( current->lastPkt, clockdisplay );
         printf( "%s", clockdisplay );
     } 
@@ -5161,7 +5163,9 @@ void OpspHandleOverhearRREP( GlomoNode* node, Message* msg, NODE_ADDR srcAddr, N
 BOOL OpspCheckNfrExist( OPSP_NFRT* nfrTable, NODE_ADDR destAddr )
 {
     OPSP_NFRT_Node* current;
-
+#ifdef OPSP_DEBUG_TRACE
+printf("in OpspCheckNfrExist\n");
+#endif
     if( nfrTable->size == 0 ) {
         return ( FALSE );
     }
@@ -5186,8 +5190,12 @@ void OpspInsertNfrTable( GlomoNode* node,
     OPSP_NFRT_Node* current;
     OPSP_NFRT_Node* previous;
     char            clockdisplay[GLOMO_MAX_STRING_LENGTH];
-
     OPSP_NFRT_Node* newNode = ( OPSP_NFRT_Node* ) checked_pc_malloc( sizeof( OPSP_NFRT_Node ) );
+
+#ifdef OPSP_DEBUG_TRACE
+	printf("in OpspInsertNfrTable\n");
+#endif
+
 
     newNode->destAddr = destAddr;
     newNode->lastOverhearRrep = simclock();
@@ -5316,15 +5324,15 @@ void OpspDisplayNfrTable( OPSP_NFRT* nfrTable )
     OPSP_NFRT_Node* current;
     char            clockdisplay[GLOMO_MAX_STRING_LENGTH];
 
-
     if( nfrTable->head == NULL ) {
         return;
     }
-
+#ifdef OPSP_DEBUG
+	printf("nfrTable->head != NULL \n");
+#endif
     for( current = nfrTable->head;current != NULL;current = current->next ) {
         GLOMO_PrintClockInSecond( current->lastOverhearRrep, clockdisplay );
-        printf( "\n%d\t%s\t", current->destAddr, clockdisplay );
-        printf( "%s", clockdisplay );
+        printf( "\nNFRT:\t %d \t %d \t %s\t", current->destAddr, current->etxToDest, current->lastOverhearRrep );
     } 
     printf( "\n" );
 }
@@ -5348,14 +5356,15 @@ void OpspPeekFunction( GlomoNode* node, const Message* msg )
 {
     GlomoNetworkIp*     ipLayer     = ( GlomoNetworkIp* ) node->networkData.networkVar;
     GlomoRoutingAodv*   aodv        = ( GlomoRoutingAodv* ) ipLayer->routingProtocol;
+    AODV_NT*             nbrTable    = &aodv->nbrTable;
+    AODV_NT_Node*       current;
+
     IpHeaderType*       ipHeader    = ( IpHeaderType* ) GLOMO_MsgReturnPacket( msg );
     Message*            newMsg      = GLOMO_MsgCopy( node, msg );
 	
     AODV_RREP_Packet*   rrepPkt;
     char                timeInSeconds[GLOMO_MAX_STRING_LENGTH];
     clocktype           lifetime;
-    AODV_NT             nbrTable = aodv->nbrTable;
-    AODV_NT_Node*       current;
     OPSP_NFRT*          nfrTable; 
 
     if( ipHeader->ip_p == IPPROTO_AODV ) {
@@ -5398,14 +5407,14 @@ void OpspPeekFunction( GlomoNode* node, const Message* msg )
             //find the neighbor in Neighbor Table
             RoutingAodvDisplayNbrTable(node);
 			
-            for( current = nbrTable.head;
+            for( current = nbrTable->head;
                  current != NULL && current->nbrAddr <= sourceAddress;
                  current = current->next ) {
-                               	printf("finding the neighbor in Neighbor Table\n"); 
 				if( current->nbrAddr == sourceAddress ) {
 					break;
                 }
             }
+printf("found the neighbor in Neighbor Table: %d at node %d\n", sourceAddress, node->nodeAddr); 				 
             if( !OpspCheckNfrExist( &current->nfrt, destinationAddress ) ) {
                 OpspInsertNfrTable( node, &current->nfrt, destinationAddress, rrepPkt->etxToDest );
             }else {
@@ -5414,7 +5423,7 @@ void OpspPeekFunction( GlomoNode* node, const Message* msg )
             }
 
 #ifdef OPSP_DEBUG
-            OpspDisplayNfrTable( &current->nfrt );
+	OpspDisplayNfrTable( &current->nfrt );
 #endif
 
             //OpspHandleOverhearRREP( node, msg, sourceAddress, destinationAddress );

@@ -144,6 +144,8 @@
 
 #define OPSP_DEBUG
 
+#define OPSP_DEBUG_TRACE
+
 #define noTIMER_CHECKS
 
 //v----------------------------tianke on 2008-4-14 13:46 0.01--------------------------v
