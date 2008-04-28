@@ -144,7 +144,7 @@
 
 #define OPSP_DEBUG
 
-#define OPSP_DEBUG_TRACE
+#define noOPSP_DEBUG_TRACE
 
 #define noTIMER_CHECKS
 
