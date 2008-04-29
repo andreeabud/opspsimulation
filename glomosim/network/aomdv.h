@@ -136,19 +136,21 @@
 
 #define noSHORTEST_PATH_COMPUTATION
 
-//#define AOMDV_DEBUG
+#define noAOMDV_DEBUG
 
 #define noAOMDV_DEBUG_TRACE
+
+
+#define noTIMER_CHECKS
+
+//v----------------------------tianke on 2008-4-14 13:46 0.01--------------------------v
 
 #define OPSP
 
 #define OPSP_DEBUG
 
-#define noOPSP_DEBUG_TRACE
+#define OPSP_DEBUG_TRACE
 
-#define noTIMER_CHECKS
-
-//v----------------------------tianke on 2008-4-14 13:46 0.01--------------------------v
 #define ACTIVE_NFRT_TIMEOUT 3000 * MILLI_SECOND
 
 #define MAX_ETX 256
@@ -507,15 +509,6 @@ typedef struct glomo_network_aodv_str
     AODV_BUFFER buffer;
     AODV_SENT   sent;
     AODV_Stats  stats;
-#if 0
-//--------------tianke on 2008-1-28 11:40 0.01------------>
-  ETX_NT etxNbrTable;
-  ETX_LT etxLinkTable;
-  ETX_ST etxSegmentTable;
-  ETX_PNT etxProbeNumTable;
-  ETX_PANT etxProbeAckNumTable;
-//<-------------tianke on 2008-1-28 11:40 0.01------------
-#endif
     int         seqNumber;
     int         bcastId;
     clocktype   lastbcast;
@@ -810,7 +803,7 @@ void OpspUpdateNfrTableEtxToDest( GlomoNode* node,
                                   NODE_ADDR destAddr,
                                   ETXValue etxToDest );
 
-void OpspDisplayNfrTable( OPSP_NFRT* nfrTable );
+void OpspDisplayNfrTable( NODE_ADDR nbrAddr, OPSP_NFRT* nfrTable );
 
 
 void OpspSetTimer( GlomoNode* node, long eventType, MsgOpspDestNbrAddr* destNbrAddr, clocktype delay );
