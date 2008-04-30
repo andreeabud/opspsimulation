@@ -5109,6 +5109,7 @@ ETXValue OpspGetEtxToDest( NODE_ADDR destAddr, AODV_RT* routeTable )
     return ( returnEtxToDest );
 }
 
+#if 0
 void OpspHandleOverhearRREP( GlomoNode* node, Message* msg, NODE_ADDR srcAddr, NODE_ADDR destAddr )
 {
     GlomoNetworkIp*     ipLayer     = ( GlomoNetworkIp* ) node->networkData.networkVar;
@@ -5122,10 +5123,6 @@ void OpspHandleOverhearRREP( GlomoNode* node, Message* msg, NODE_ADDR srcAddr, N
     OPSP_NFRT*          nfrTable; 
 
     assert( destAddr != node->nodeAddr );
-
-#ifdef OPSP_DEBUG
-    printf( "in handle overhear reply \n" );
-#endif
 
     if( !RoutingAodvCheckNbrExist( node, srcAddr ) ) {
         RoutingAodvInsertNbrTable( node, srcAddr );
@@ -5146,11 +5143,8 @@ void OpspHandleOverhearRREP( GlomoNode* node, Message* msg, NODE_ADDR srcAddr, N
         OpspUpdateNfrTableEtxToDest( node, &current->nfrt, destAddr, rrepPkt->etxToDest );
         OpspUpdateNfrTableLastTime( node, &current->nfrt, destAddr );
     }
-
-#ifdef OPSP_DEBUG
-    OpspDisplayNfrTable( current->nbrAddr,&current->nfrt );
-#endif
 }
+#endif
 
 
 BOOL OpspCheckNfrExist( OPSP_NFRT* nfrTable, NODE_ADDR destAddr )
@@ -5182,9 +5176,11 @@ void OpspInsertNfrTable( GlomoNode* node,
     char            clockdisplay[GLOMO_MAX_STRING_LENGTH];
     OPSP_NFRT_Node* newNode = ( OPSP_NFRT_Node* ) checked_pc_malloc( sizeof( OPSP_NFRT_Node ) );
 
+#if 0
 #ifdef OPSP_DEBUG_TRACE
     printf( "in OpspInsertNfrTable\t" );
 	printf( "etxToDest:%f \n", etxToDest );
+#endif
 #endif
 
 
@@ -5258,6 +5254,10 @@ void OpspUpdateNfrTableLastTime( GlomoNode* node, OPSP_NFRT* nfrTable, NODE_ADDR
 
     DestNbrAddr.nfrTable = nfrTable;
 
+    #ifdef OPSP_DEBUG
+    printf( " In OpspUpdateNfrTableLastTime\n" );
+    #endif
+
     if( nfrTable->size == 0 ) {
         assert( FALSE );
         return;
@@ -5289,7 +5289,11 @@ void OpspUpdateNfrTableEtxToDest( GlomoNode* node,
 
     DestNbrAddr.nfrTable = nfrTable;
 
-    if( nfrTable->size == 0 ) {
+    #ifdef OPSP_DEBUG
+    printf( " In OpspUpdateNfrTableEtxToDest\n" );
+    #endif
+
+	if( nfrTable->size == 0 ) {
         assert( FALSE );
         return;
     }
@@ -5316,7 +5320,7 @@ void OpspDisplayNfrTable( NODE_ADDR nbrAddr, OPSP_NFRT* nfrTable )
     char            clockdisplay[GLOMO_MAX_STRING_LENGTH];
 	
 #ifdef OPSP_DEBUG
-printf("neighbor%d's packet:", nbrAddr);
+printf("neighbor%d's forwarding rate:\n", nbrAddr);
 #endif
 
     if( nfrTable->head == NULL ) {
@@ -5324,11 +5328,11 @@ printf("neighbor%d's packet:", nbrAddr);
     }
     for( current = nfrTable->head;current != NULL;current = current->next ) {
         GLOMO_PrintClockInSecond( current->lastOverhearRrep, clockdisplay );
-        printf( "NFRT:\t destAddr: %d \t etxToDest: %d \t",
+        printf( "NFRT:\t destAddr: %d \t etxToDest: %f \t",
                 current->destAddr,
                 current->etxToDest);
-    } 
-    printf( "\n" );
+        printf( "\n" );
+	} 
 }
 
 
@@ -5393,7 +5397,7 @@ void OpspPeekFunction( GlomoNode* node, const Message* msg )
         case AODV_RREP:
         {
             rrepPkt = ( AODV_RREP_Packet * ) GLOMO_MsgReturnPacket( newMsg );
-            if( rrepPkt->destAddr != ANY_DEST ) {
+            assert( rrepPkt->destAddr != ANY_DEST );
                 #ifdef OPSP_DEBUG
                 printf( "node %d overhear rrepPkt->etxToDest: %f, from node %d \n", 
 					node->nodeAddr, rrepPkt->etxToDest , sourceAddress);
@@ -5414,7 +5418,6 @@ void OpspPeekFunction( GlomoNode* node, const Message* msg )
                 }
                 //printf("found the neighbor in Neighbor Table: %d at node %d\n", sourceAddress, node->nodeAddr);                
                 if( !OpspCheckNfrExist( &current->nfrt, destinationAddress ) ) {
-	printf( "will insert NFRT with etxToDest:%f\n", rrepPkt->etxToDest );
 					OpspInsertNfrTable( node,
                                         &current->nfrt,
                                         destinationAddress,
@@ -5429,7 +5432,7 @@ void OpspPeekFunction( GlomoNode* node, const Message* msg )
 #ifdef OPSP_DEBUG
                 OpspDisplayNfrTable( current->nbrAddr, &current->nfrt );
 #endif
-            }
+            
             break;
         } /* RREP */
 
