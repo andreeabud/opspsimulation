@@ -68,134 +68,153 @@
  *              msg - message received by the layer
  * RETURN:      none.
  */
-void AppLayerTelnetServer( GlomoNode* nodePtr, Message* msg )
+void 
+AppLayerTelnetServer(GlomoNode *nodePtr, Message *msg)
 {
-    char                    buf[GLOMO_MAX_STRING_LENGTH];
-    GlomoAppTelnetServer*   serverPtr;
+    char buf[GLOMO_MAX_STRING_LENGTH];
+    GlomoAppTelnetServer *serverPtr;
 
-    ctoa( simclock(), buf );
+    ctoa(simclock(), buf);
 
-    switch( msg->eventType ) {
-    case MSG_APP_FromTransListenResult:
+    switch(msg->eventType) 
     {
-        TransportToAppListenResult* listenResult;
+        case MSG_APP_FromTransListenResult: 
+        {
+            TransportToAppListenResult *listenResult;
 
-        listenResult = ( TransportToAppListenResult * ) msg->info;
+            listenResult = (TransportToAppListenResult *) msg->info;
+ 
+            #ifdef DEBUG
+                printf("%s: node %u got listenResult\n", 
+                       buf, nodePtr->nodeAddr);
+            #endif
 
-#ifdef DEBUG
-        printf( "%s: node %u got listenResult\n", buf, nodePtr->nodeAddr );
-#endif
-
-        if( listenResult->connectionId == -1 ) {
-            nodePtr->appData.numAppTcpFailure ++;
-        }
-
-        break;
-    }
-    case MSG_APP_FromTransOpenResult:
-    {
-        TransportToAppOpenResult*   openResult;
-
-        openResult = ( TransportToAppOpenResult * ) msg->info;
-
-#ifdef DEBUG
-        printf( "%s: node %u got OpenResult\n", buf, nodePtr->nodeAddr );
-#endif
-
-        assert( openResult->type == TCP_CONN_PASSIVE_OPEN );
-
-        if( openResult->connectionId < 0 ) {
-            nodePtr->appData.numAppTcpFailure ++;
-        }else {
-            GlomoAppTelnetServer*   serverPtr; 
-            serverPtr = AppTelnetServerNewTelnetServer( nodePtr, openResult );
-            assert( serverPtr != NULL );
-        }
-
-        break;
-    }
-    case MSG_APP_FromTransDataSent:
-    {
-        TransportToAppDataSent* dataSent;
-
-        dataSent = ( TransportToAppDataSent * ) msg->info;
-
-#ifdef DEBUG
-        printf( "%s: node %u sent data %ld\n", buf, nodePtr->nodeAddr, dataSent->length ); 
-#endif
-
-        serverPtr = AppTelnetServerGetTelnetServer( nodePtr, dataSent->connectionId );
-        assert( serverPtr != NULL );
-        serverPtr->numBytesSent += dataSent->length;
-
-        break;
-    }  
-    case MSG_APP_FromTransDataReceived:
-    {
-        TransportToAppDataReceived* dataRecvd;
-
-        dataRecvd = ( TransportToAppDataReceived * ) msg->info;
-
-#ifdef DEBUG
-        printf( "%s: node %u received data %ld\n", buf, nodePtr->nodeAddr, msg->packetSize );
-#endif
-
-        serverPtr = AppTelnetServerGetTelnetServer( nodePtr, dataRecvd->connectionId );
-        assert( serverPtr != NULL );
-
-        serverPtr->numBytesRecvd += msg->packetSize;
-
-        if( msg->packet[msg->packetSize - 1] == 'c' ) {
-            /* 
-             * Client wants to close the session, so server also
-             * initiates a close.
-             */
-            AppTcpCloseConnection( nodePtr, TRANSPORT_PROTOCOL_TCP, serverPtr->connectionId );
-
-            serverPtr->sessionFinish = simclock();
-            serverPtr->sessionIsClosed = TRUE;
-        }else if( msg->packet[msg->packetSize - 1] == 'd' ) {
-            /* Send a response packet back. */
-            if( serverPtr->sessionIsClosed == FALSE ) {
-                AppTelnetServerSendResponse( nodePtr, serverPtr );
+            if (listenResult->connectionId == -1)
+            {
+                nodePtr->appData.numAppTcpFailure ++;
             }
-        }else {
-            assert( 0 );
+
+            break;
         }
+        case MSG_APP_FromTransOpenResult: 
+        {
+            TransportToAppOpenResult *openResult;
 
-        break;
-    }
-    case MSG_APP_FromTransCloseResult:
-    {
-        TransportToAppCloseResult*  closeResult;
+            openResult = (TransportToAppOpenResult *) msg->info;
+ 
+            #ifdef DEBUG
+                printf("%s: node %u got OpenResult\n", buf, nodePtr->nodeAddr);
+            #endif
 
-        closeResult = ( TransportToAppCloseResult * ) msg->info;
+            assert(openResult->type == TCP_CONN_PASSIVE_OPEN);
 
-#ifdef DEBUG
-        printf( "%s: node %u got close result\n", buf, nodePtr->nodeAddr );
-#endif
+            if (openResult->connectionId < 0) 
+            {
+                nodePtr->appData.numAppTcpFailure ++;
+            } 
+            else 
+            {
+                GlomoAppTelnetServer *serverPtr; 
+                serverPtr = AppTelnetServerNewTelnetServer(nodePtr, openResult);
+                assert(serverPtr != NULL);
+            }
 
-        serverPtr = AppTelnetServerGetTelnetServer( nodePtr, closeResult->connectionId );
-
-        assert( serverPtr != NULL );
-
-        if( serverPtr->sessionIsClosed == FALSE ) {
-            serverPtr->sessionIsClosed = TRUE;
-            serverPtr->sessionFinish = simclock();
+            break;
         }
+        case MSG_APP_FromTransDataSent:
+        {
+            TransportToAppDataSent *dataSent;
 
-        break;
-    }
-    default:ctoa( simclock(), buf );
-    printf( "Time %s: Node %u received message of unknown type"
-            " %ld.\n",
-            buf,
-            nodePtr->nodeAddr,
-            msg->eventType );
-    assert( FALSE );
+            dataSent = (TransportToAppDataSent *) msg->info;
+        
+            #ifdef DEBUG
+                printf("%s: node %u sent data %ld\n", buf, nodePtr->nodeAddr,
+                       dataSent->length); 
+            #endif
+
+            serverPtr = AppTelnetServerGetTelnetServer(nodePtr, 
+                                        dataSent->connectionId);
+            assert(serverPtr != NULL);
+            serverPtr->numBytesSent += dataSent->length;
+
+            break;
+        }  
+        case MSG_APP_FromTransDataReceived: 
+        {
+            TransportToAppDataReceived *dataRecvd;
+
+            dataRecvd = (TransportToAppDataReceived *) msg->info;
+
+            #ifdef DEBUG
+                printf("%s: node %u received data %ld\n", 
+                       buf, nodePtr->nodeAddr, msg->packetSize);
+            #endif
+
+            serverPtr = AppTelnetServerGetTelnetServer(nodePtr, 
+                                                       dataRecvd->connectionId);
+            assert(serverPtr != NULL);
+
+            serverPtr->numBytesRecvd += msg->packetSize;
+
+            if (msg->packet[msg->packetSize - 1] == 'c') 
+            {
+                /* 
+                 * Client wants to close the session, so server also
+                 * initiates a close.
+                 */
+                AppTcpCloseConnection(nodePtr, TRANSPORT_PROTOCOL_TCP, 
+                                   serverPtr->connectionId);
+
+                serverPtr->sessionFinish = simclock();
+                serverPtr->sessionIsClosed = TRUE;
+            } 
+            else if (msg->packet[msg->packetSize - 1] == 'd') 
+            {
+                /* Send a response packet back. */
+                if (serverPtr->sessionIsClosed == FALSE)
+                {
+                    AppTelnetServerSendResponse(nodePtr, serverPtr); 
+                }
+            }
+            else
+            {
+                assert(0);
+            }
+
+            break;
+        }
+        case MSG_APP_FromTransCloseResult:
+        {
+            TransportToAppCloseResult *closeResult;
+
+            closeResult = (TransportToAppCloseResult *) msg->info;
+
+            #ifdef DEBUG
+                printf("%s: node %u got close result\n", 
+                       buf, nodePtr->nodeAddr);
+            #endif
+
+            serverPtr = AppTelnetServerGetTelnetServer(nodePtr, 
+                                                 closeResult->connectionId);
+
+            assert(serverPtr != NULL);
+
+            if (serverPtr->sessionIsClosed == FALSE) 
+            {
+                serverPtr->sessionIsClosed = TRUE;
+                serverPtr->sessionFinish = simclock();
+            }
+
+            break;
+        }
+        default:
+            ctoa(simclock(), buf);
+            printf("Time %s: Node %u received message of unknown type"
+                   " %ld.\n", buf, nodePtr->nodeAddr, msg->eventType);
+            assert(FALSE);
     }
 
-    GLOMO_MsgFree( nodePtr, msg );
+    GLOMO_MsgFree(nodePtr, msg);
 }
 
 
@@ -205,13 +224,14 @@ void AppLayerTelnetServer( GlomoNode* nodePtr, Message* msg )
  * PARAMETERS:  nodePtr - pointer to the node.
  * RETURN:      none. 
  */
-void AppTelnetServerInit( GlomoNode* nodePtr )
+void
+AppTelnetServerInit(GlomoNode *nodePtr)
 {
-    AppTcpServerListen( nodePtr,
-                        TRANSPORT_PROTOCOL_TCP,
-                        APP_TELNET_SERVER,
-                        nodePtr->nodeAddr,
-                        ( short ) APP_TELNET_SERVER );
+    AppTcpServerListen(nodePtr, 
+                       TRANSPORT_PROTOCOL_TCP, 
+                       APP_TELNET_SERVER,
+                       nodePtr->nodeAddr, 
+                       (short)APP_TELNET_SERVER);
 }
 
 
@@ -223,48 +243,50 @@ void AppTelnetServerInit( GlomoNode* nodePtr )
  *              serverPtr - pointer to the telnet server data structure. 
  * RETURN:      none. 
  */
-void AppTelnetServerFinalize( GlomoNode* nodePtr, GlomoAppTelnetServer* serverPtr )
+void
+AppTelnetServerFinalize(GlomoNode *nodePtr, GlomoAppTelnetServer *serverPtr)
 {
-    clocktype   throughput;
-    char        clockStr[GLOMO_MAX_STRING_LENGTH];
-    char        startStr[GLOMO_MAX_STRING_LENGTH];
-    char        closeStr[GLOMO_MAX_STRING_LENGTH];
-    char        buf[GLOMO_MAX_STRING_LENGTH];
-    char        throughputStr[GLOMO_MAX_STRING_LENGTH];
+    clocktype throughput;
+    char clockStr[GLOMO_MAX_STRING_LENGTH];
+    char startStr[GLOMO_MAX_STRING_LENGTH];
+    char closeStr[GLOMO_MAX_STRING_LENGTH];
+    char buf[GLOMO_MAX_STRING_LENGTH];
+    char throughputStr[GLOMO_MAX_STRING_LENGTH];
 
-    ctoa( serverPtr->sessionStart, startStr );
+    ctoa(serverPtr->sessionStart, startStr);
 
-    if( serverPtr->sessionIsClosed == FALSE ) {
+    if (serverPtr->sessionIsClosed == FALSE) 
+    {
         serverPtr->sessionFinish = simclock();
-        ctoa( simclock(), clockStr );
-        sprintf( closeStr, "%s ns (not closed)", clockStr );
-    }else {
-        ctoa( serverPtr->sessionFinish, clockStr );
-        sprintf( closeStr, "%s ns (closed)", clockStr );
+        ctoa(simclock(), clockStr);
+        sprintf(closeStr, "%s ns (not closed)", clockStr);
+    } 
+    else 
+    {
+        ctoa(serverPtr->sessionFinish, clockStr);
+        sprintf(closeStr, "%s ns (closed)", clockStr);
     }
 
-    if( serverPtr->sessionFinish <= serverPtr->sessionStart ) {
-        throughput = 0;
-    }else {
-        throughput = ( serverPtr->numBytesRecvd * 8.0 * SECOND ) /
-                     ( serverPtr->sessionFinish - serverPtr->sessionStart );
+    if (serverPtr->sessionFinish <= serverPtr->sessionStart) 
+    {
+        throughput = 0; 
+    } 
+    else 
+    {
+        throughput = (serverPtr->numBytesRecvd * 8.0 * SECOND) /
+                     (serverPtr->sessionFinish - serverPtr->sessionStart);
     }
 
-    ctoa( throughput, throughputStr );
+    ctoa(throughput, throughputStr);
 
-    sprintf( buf,
-             "from %ld to %ld (cid = %d), start = %s, end = %s, "
-             "bytes sent = %ld B, bytes recv =  %ld B, throughput = %s bps",
-             serverPtr->remoteAddr,
-             serverPtr->localAddr,
-             serverPtr->connectionId,
-             startStr,
-             closeStr,
-             serverPtr->numBytesSent,
-             serverPtr->numBytesRecvd,
-             throughputStr );
+    sprintf(buf, "from %ld to %ld (cid = %d), start = %s, end = %s, "
+            "bytes sent = %ld B, bytes recv =  %ld B, throughput = %s bps",
+            serverPtr->remoteAddr, serverPtr->localAddr, 
+            serverPtr->connectionId, startStr, closeStr,
+            serverPtr->numBytesSent, serverPtr->numBytesRecvd,
+            throughputStr);
 
-    GLOMO_PrintStat( nodePtr, "AppTelnetServer", buf );
+    GLOMO_PrintStat(nodePtr, "AppTelnetServer", buf);
 }
 
 
@@ -276,16 +298,20 @@ void AppTelnetServerFinalize( GlomoNode* nodePtr, GlomoAppTelnetServer* serverPt
  * RETURN:      the pointer to the telnet server data structure,
  *              NULL if nothing found.
  */
-static GlomoAppTelnetServer* AppTelnetServerGetTelnetServer( GlomoNode* nodePtr, int connId )
+static GlomoAppTelnetServer *
+AppTelnetServerGetTelnetServer(GlomoNode *nodePtr, int connId)
 {
-    AppInfo*                appList = nodePtr->appData.appPtr;
-    GlomoAppTelnetServer*   telnetServer;
+    AppInfo *appList = nodePtr->appData.appPtr;
+    GlomoAppTelnetServer *telnetServer;
+    
+    for (; appList != NULL; appList = appList->appNext) 
+    {
+        if (appList->appType == APP_TELNET_SERVER) 
+        {
+            telnetServer = (GlomoAppTelnetServer *) appList->appDetail;
 
-    for( ;appList != NULL;appList = appList->appNext ) {
-        if( appList->appType == APP_TELNET_SERVER ) {
-            telnetServer = ( GlomoAppTelnetServer * ) appList->appDetail;
-
-            if( telnetServer->connectionId == connId ) {
+            if (telnetServer->connectionId == connId) 
+            {
                 return telnetServer;
             }
         }
@@ -304,19 +330,22 @@ static GlomoAppTelnetServer* AppTelnetServerGetTelnetServer( GlomoNode* nodePtr,
  * RETRUN:      the pointer to the created telnet server data structure,
  *              NULL if no data structure allocated. 
  */
-static GlomoAppTelnetServer* AppTelnetServerNewTelnetServer( GlomoNode* nodePtr,
-                                                             TransportToAppOpenResult* openResult )
+static GlomoAppTelnetServer *
+AppTelnetServerNewTelnetServer(GlomoNode *nodePtr, 
+                               TransportToAppOpenResult *openResult)
 {
-    AppInfo*                newApp;
-    GlomoAppTelnetServer*   telnetServer;
+    AppInfo *newApp;
+    GlomoAppTelnetServer *telnetServer;
 
-    newApp = ( AppInfo * ) pc_malloc( sizeof( AppInfo ) );
+    newApp = (AppInfo *) pc_malloc(sizeof(AppInfo));
 
-    if( newApp == NULL ) {
-        assert( FALSE );
+    if (newApp == NULL) 
+    {
+        assert(FALSE);
     }
 
-    telnetServer = ( GlomoAppTelnetServer * ) pc_malloc( sizeof( GlomoAppTelnetServer ) );
+    telnetServer = (GlomoAppTelnetServer *) 
+                    pc_malloc(sizeof(GlomoAppTelnetServer));
 
     /*
      * fill in connection id, etc.
@@ -347,14 +376,16 @@ static GlomoAppTelnetServer* AppTelnetServerNewTelnetServer( GlomoNode* nodePtr,
  *              serverPtr - pointer to the server data structure. 
  * RETRUN:      none. 
  */
-static void AppTelnetServerSendResponse( GlomoNode* nodePtr, GlomoAppTelnetServer* serverPtr )
+static void
+AppTelnetServerSendResponse(GlomoNode *nodePtr, GlomoAppTelnetServer *serverPtr)
 {
-    int     pktSize;
-    char    payload[MAX_APP_DATA_UNIT];
+    int pktSize;
+    char payload[MAX_APP_DATA_UNIT];
 
-    pktSize = AppTelnetServerRespPktSize( nodePtr );
+    pktSize = AppTelnetServerRespPktSize(nodePtr);
 
-    AppTcpSendData( nodePtr, TRANSPORT_PROTOCOL_TCP, serverPtr->connectionId, payload, pktSize );
+    AppTcpSendData(nodePtr, TRANSPORT_PROTOCOL_TCP, serverPtr->connectionId, 
+                   payload, pktSize);
 }
 
 
@@ -365,15 +396,16 @@ static void AppTelnetServerSendResponse( GlomoNode* nodePtr, GlomoAppTelnetServe
  * PARAMETERS:  nodePtr - pointer to the node.
  * RETRUN:      telnet control packet size.
  */
-static int AppTelnetServerRespPktSize( GlomoNode* nodePtr )
+static int 
+AppTelnetServerRespPktSize(GlomoNode *nodePtr)
 {
     int ctrlPktSize;
-    ctrlPktSize = telnet_pktsize( nodePtr->seed );
+    ctrlPktSize = telnet_pktsize(nodePtr->seed);
 
-#ifdef DEBUG
-    printf( "TELNET control pktsize = %d\n", ctrlPktSize );
-#endif
+    #ifdef DEBUG
+        printf("TELNET control pktsize = %d\n", ctrlPktSize);
+    #endif
 
-    return ( ctrlPktSize );
+    return (ctrlPktSize);
 }
 

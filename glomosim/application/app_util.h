@@ -58,12 +58,9 @@
  *             payloadSize - size of the data in bytes.
  *             delay - send the data after this delay.
  */
-void AppUdpSendNewData( GlomoNode* node,
-                        APP_TYPE appType,
-                        NODE_ADDR destAddr,
-                        char* payload,
-                        long payloadSize,
-                        clocktype delay );
+void
+AppUdpSendNewData(GlomoNode *node, APP_TYPE appType, NODE_ADDR destAddr,
+                  char *payload, long payloadSize, clocktype delay);
 
 
 /*
@@ -77,13 +74,14 @@ void AppUdpSendNewData( GlomoNode* node,
  *             priority - priority of data.
  *             delay - send the data after this delay.
  */
-void AppUdpSendNewDataWithPriority( GlomoNode* node,
-                                    APP_TYPE appType,
-                                    NODE_ADDR destAddr,
-                                    char* payload,
-                                    long payloadSize,
-                                    NetworkQueueingPriorityType priority,
-                                    clocktype delay );
+void
+AppUdpSendNewDataWithPriority(GlomoNode *node,
+                              APP_TYPE appType,
+                              NODE_ADDR destAddr,
+                              char *payload,
+                              long payloadSize,
+                              NetworkQueueingPriorityType priority,
+                              clocktype delay);
 
 
 /*
@@ -99,14 +97,10 @@ void AppUdpSendNewDataWithPriority( GlomoNode* node,
  *             delay - send the data after this delay.
  */
 
-void AppUdpSendNewHeaderData( GlomoNode* node,
-                              APP_TYPE appType,
-                              NODE_ADDR destAddr,
-                              char* header,
-                              long headerSize,
-                              char* payload,
-                              long payloadSize,
-                              clocktype delay );
+void
+AppUdpSendNewHeaderData(GlomoNode *node, APP_TYPE appType, NODE_ADDR destAddr,
+                        char *header, long headerSize, char *payload,
+                        long payloadSize, clocktype delay);
 
 
 /*
@@ -122,15 +116,16 @@ void AppUdpSendNewHeaderData( GlomoNode* node,
  *             priority - priority of data.
  *             delay - send the data after this delay.
  */
-void AppUdpSendNewHeaderDataWithPriority( GlomoNode* node,
-                                          APP_TYPE appType,
-                                          NODE_ADDR destAddr,
-                                          char* header,
-                                          long headerSize,
-                                          char* payload,
-                                          long payloadSize,
-                                          NetworkQueueingPriorityType priority,
-                                          clocktype delay );
+void
+AppUdpSendNewHeaderDataWithPriority(GlomoNode *node,
+                                    APP_TYPE appType,
+                                    NODE_ADDR destAddr,
+                                    char *header,
+                                    long headerSize,
+                                    char *payload,
+                                    long payloadSize,
+                                    NetworkQueueingPriorityType priority,
+                                    clocktype delay);
 
 
 /*
@@ -143,11 +138,12 @@ void AppUdpSendNewHeaderDataWithPriority( GlomoNode* node,
  *              serverPort - server port number.
  * RETURN:      none.
  */
-void AppTcpServerListen( GlomoNode* nodePtr,
-                         TRANSPORT_PROTOCOL transProtocolType,
-                         APP_TYPE appType,
-                         NODE_ADDR serverAddr,
-                         short serverPort );
+void
+AppTcpServerListen(GlomoNode *nodePtr,
+                   TRANSPORT_PROTOCOL transProtocolType,
+                   APP_TYPE appType,
+                   NODE_ADDR serverAddr,
+                   short serverPort);
 
 
 /*
@@ -161,12 +157,13 @@ void AppTcpServerListen( GlomoNode* nodePtr,
  *              priority - priority of this data for this session.
  * RETURN:      none.
  */
-void AppTcpServerListenWithPriority( GlomoNode* nodePtr,
-                                     TRANSPORT_PROTOCOL transProtocolType,
-                                     APP_TYPE appType,
-                                     NODE_ADDR serverAddr,
-                                     short serverPort,
-                                     NetworkQueueingPriorityType priority );
+void
+AppTcpServerListenWithPriority(GlomoNode *nodePtr,
+                               TRANSPORT_PROTOCOL transProtocolType,
+                               APP_TYPE appType,
+                               NODE_ADDR serverAddr,
+                               short serverPort,
+                               NetworkQueueingPriorityType priority);
 
 
 /*
@@ -182,13 +179,10 @@ void AppTcpServerListenWithPriority( GlomoNode* nodePtr,
  *              waitTime - time until the session starts.
  * RETURN:      none.
  */
-void AppTcpOpenConnection( GlomoNode* nodePtr,
-                           TRANSPORT_PROTOCOL transProtocolType,
-                           APP_TYPE appType,
-                           NODE_ADDR remoteAddr,
-                           short remotePort,
-                           long uniqueId,
-                           clocktype waitTime );
+void
+AppTcpOpenConnection(GlomoNode *nodePtr, TRANSPORT_PROTOCOL transProtocolType,
+                     APP_TYPE appType, NODE_ADDR remoteAddr,
+                     short remotePort, long uniqueId, clocktype waitTime);
 
 
 
@@ -206,14 +200,15 @@ void AppTcpOpenConnection( GlomoNode* nodePtr,
  *              priority - priority of the data.
  * RETURN:      none.
  */
-void AppTcpOpenConnectionWithPriority( GlomoNode* nodePtr,
-                                       TRANSPORT_PROTOCOL transProtocolType,
-                                       APP_TYPE appType,
-                                       NODE_ADDR remoteAddr,
-                                       short remotePort,
-                                       long uniqueId,
-                                       clocktype waitTime,
-                                       NetworkQueueingPriorityType priority );
+void
+AppTcpOpenConnectionWithPriority(GlomoNode *nodePtr,
+                                 TRANSPORT_PROTOCOL transProtocolType,
+                                 APP_TYPE appType,
+                                 NODE_ADDR remoteAddr,
+                                 short remotePort,
+                                 long uniqueId,
+                                 clocktype waitTime,
+                                 NetworkQueueingPriorityType priority);
 
 
 /*
@@ -226,11 +221,9 @@ void AppTcpOpenConnectionWithPriority( GlomoNode* nodePtr,
  *              length - length of the data to send.
  * RETRUN:      none.
  */
-void AppTcpSendData( GlomoNode* nodePtr,
-                     TRANSPORT_PROTOCOL protocolType,
-                     int connId,
-                     char* payload,
-                     int length );
+void
+AppTcpSendData(GlomoNode *nodePtr, TRANSPORT_PROTOCOL protocolType, int connId,
+               char *payload, int length);
 
 
 /*
@@ -241,7 +234,9 @@ void AppTcpSendData( GlomoNode* nodePtr,
  *              connId - connection id.
  * RETRUN:      none.
  */
-void AppTcpCloseConnection( GlomoNode* nodePtr, TRANSPORT_PROTOCOL protocolType, int connId );
+void
+AppTcpCloseConnection(GlomoNode *nodePtr, TRANSPORT_PROTOCOL protocolType,
+                      int connId);
 
 
 

@@ -66,24 +66,20 @@
  * PARAMETERS:  nodePtr - pointer to the node.
  * RETURN:      none. 
  */
-void AppNstelnetServerInit( GlomoNode* nodePtr,
-                            short localPort,
-                            NODE_ADDR remoteAddr,
-                            short remotePort,
-                            int connectionId,
-                            clocktype waitTime )
+void
+AppNstelnetServerInit(GlomoNode *nodePtr,
+                    short localPort, NODE_ADDR remoteAddr, short remotePort,
+                    int connectionId, clocktype waitTime)
 {
-    AppToTcpConnSetup*  connSetup;
-    Message*            msg;
-
-    msg = GLOMO_MsgAlloc( nodePtr,
-                          GLOMO_TRANSPORT_LAYER,
-                          TRANSPORT_PROTOCOL_TCP,
-                          MSG_TCP_SetupConnection );
-    GLOMO_MsgInfoAlloc( nodePtr, msg, sizeof( AppToTcpConnSetup ) );
-
-    connSetup = ( AppToTcpOpen * ) msg->info;
-
+    AppToTcpConnSetup *connSetup;
+    Message *msg;
+    
+    msg = GLOMO_MsgAlloc(nodePtr, GLOMO_TRANSPORT_LAYER,
+                         TRANSPORT_PROTOCOL_TCP, MSG_TCP_SetupConnection);
+    GLOMO_MsgInfoAlloc(nodePtr, msg, sizeof(AppToTcpConnSetup));
+    
+    connSetup = (AppToTcpOpen *) msg->info;
+    
     connSetup->agentType = 1;/* Source */
     connSetup->localAddr = nodePtr->nodeAddr;
     connSetup->localPort = localPort;
@@ -91,6 +87,6 @@ void AppNstelnetServerInit( GlomoNode* nodePtr,
     connSetup->remotePort = remotePort;
     connSetup->connectionId = connectionId;
 
-    GLOMO_MsgSend( nodePtr, msg, ( clocktype ) waitTime );
+    GLOMO_MsgSend(nodePtr, msg, (clocktype) waitTime);
 }
 

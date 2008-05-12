@@ -62,7 +62,7 @@
  * ASSUMPTION:  None.
  */
 
-void RoutingStaticLayer( GlomoNode* node, const Message* msg );
+void RoutingStaticLayer(GlomoNode *node, const Message *msg);
 
 
 /*
@@ -78,7 +78,7 @@ void RoutingStaticLayer( GlomoNode* node, const Message* msg );
  * ASSUMPTION:  None.
  */
 
-void RoutingStaticInit( GlomoNode* node, const GlomoNodeInput* nodeInput );
+void RoutingStaticInit(GlomoNode *node, const GlomoNodeInput *nodeInput);
 
 
 /*
@@ -93,7 +93,7 @@ void RoutingStaticInit( GlomoNode* node, const GlomoNodeInput* nodeInput );
  * ASSUMPTION:  None.
  */
 
-void RoutingStaticFinalize( GlomoNode* node );
+void RoutingStaticFinalize(GlomoNode *node);
 
 
 #endif /* _STATIC_ROUTING_H_ */

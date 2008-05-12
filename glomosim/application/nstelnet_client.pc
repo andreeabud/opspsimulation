@@ -60,11 +60,14 @@
 
 #define noDEBUG
 
-static GlomoAppNstelnetClient* getNstelnetClient( GlomoNode* nodePtr, int connId );
+static GlomoAppNstelnetClient *
+getNstelnetClient(GlomoNode *nodePtr, int connId);
 
-static GlomoAppNstelnetClient* newNstelnetClient( GlomoNode* nodePtr, int connId );
+static GlomoAppNstelnetClient *
+newNstelnetClient(GlomoNode *nodePtr, int connId);
 
-static clocktype nstelnetPktInterval( GlomoNode* nodePtr );
+static clocktype
+nstelnetPktInterval(GlomoNode *nodePtr);
 
 /*
  * NAME:        AppLayerNstelnetClient.
@@ -74,42 +77,42 @@ static clocktype nstelnetPktInterval( GlomoNode* nodePtr );
  *              msg - message received by the layer
  * RETURN:      none.
  */
-void AppLayerNstelnetClient( GlomoNode* nodePtr, Message* msg )
+void 
+AppLayerNstelnetClient(GlomoNode *nodePtr, Message *msg)
 {
-    char    buf[GLOMO_MAX_STRING_LENGTH];
+    char buf[GLOMO_MAX_STRING_LENGTH];
 
-    ctoa( simclock(), buf );
-    switch( msg->eventType ) {
+    ctoa(simclock(), buf);
+    switch(msg->eventType) {  
     case MSG_APP_SetupConnection:
     {
-        newNstelnetClient( nodePtr, *( ( int * ) msg->info ) );
-        GLOMO_MsgFree( nodePtr, msg );
+        newNstelnetClient(nodePtr, *((int *)msg->info));
+        GLOMO_MsgFree(nodePtr, msg);
         break;
     }
     case MSG_APP_NextPkt:
     {
-        char                    payload[10];
-        GlomoAppNstelnetClient* clientPtr;
+        char payload[10];
+        GlomoAppNstelnetClient *clientPtr;
 
-        clientPtr = getNstelnetClient( nodePtr, *( ( int * ) msg->info ) );
-        if( simclock() < clientPtr->sessionFinish ) {
-            appSendData( nodePtr, TRANSPORT_PROTOCOL_TCP, *( ( int * ) msg->info ), payload, 10 );
-            GLOMO_MsgSend( nodePtr, msg, nstelnetPktInterval( nodePtr ) );
-        }else {
+        clientPtr = getNstelnetClient(nodePtr, *((int *)msg->info));
+        if (simclock() <  clientPtr->sessionFinish) {
+            appSendData(nodePtr, TRANSPORT_PROTOCOL_TCP, *((int *)msg->info), 
+                        payload, 10);
+            GLOMO_MsgSend(nodePtr, msg, nstelnetPktInterval(nodePtr));
+        }
+        else {
             clientPtr->sessionIsClosed = TRUE;
-            GLOMO_MsgFree( nodePtr, msg );
+            GLOMO_MsgFree(nodePtr, msg);
         }
         break;
     }
-    default:ctoa( simclock(), buf );
-    fprintf( stderr,
-             "Time %s: Node %u received message of unknown type"
-             " %ld.\n",
-             buf,
-             nodePtr->nodeAddr,
-             msg->eventType );
-    GLOMO_MsgFree( nodePtr, msg );
-    assert( FALSE );
+    default:
+        ctoa(simclock(), buf);
+        fprintf(stderr, "Time %s: Node %u received message of unknown type"
+                " %ld.\n", buf, nodePtr->nodeAddr, msg->eventType);
+        GLOMO_MsgFree(nodePtr, msg);
+        assert(FALSE);
     } /* end of switch */
 }
 
@@ -121,24 +124,20 @@ void AppLayerNstelnetClient( GlomoNode* nodePtr, Message* msg )
  *              waitTime - time until the session starts.
  * RETURN:      none. 
  */
-void AppNstelnetClientInit( GlomoNode* nodePtr,
-                            short localPort,
-                            NODE_ADDR remoteAddr,
-                            short remotePort,
-                            int connectionId,
-                            clocktype waitTime )
+void
+AppNstelnetClientInit(GlomoNode *nodePtr, 
+                    short localPort, NODE_ADDR remoteAddr, short remotePort,
+                    int connectionId, clocktype waitTime)
 {
-    AppToTcpConnSetup*  connSetup;
-    Message*            msg;
+    AppToTcpConnSetup *connSetup;
+    Message *msg;
 
-    msg = GLOMO_MsgAlloc( nodePtr,
-                          GLOMO_TRANSPORT_LAYER,
-                          TRANSPORT_PROTOCOL_TCP,
-                          MSG_TCP_SetupConnection );
-    GLOMO_MsgInfoAlloc( nodePtr, msg, sizeof( AppToTcpConnSetup ) );
-
-    connSetup = ( AppToTcpConnSetup * ) msg->info;
-
+    msg = GLOMO_MsgAlloc(nodePtr, GLOMO_TRANSPORT_LAYER,
+                         TRANSPORT_PROTOCOL_TCP, MSG_TCP_SetupConnection);
+    GLOMO_MsgInfoAlloc(nodePtr, msg, sizeof(AppToTcpConnSetup));
+    
+    connSetup = (AppToTcpConnSetup *) msg->info;
+    
     connSetup->agentType = 0;/* Source */
     connSetup->localAddr = nodePtr->nodeAddr;
     connSetup->localPort = localPort;
@@ -146,19 +145,22 @@ void AppNstelnetClientInit( GlomoNode* nodePtr,
     connSetup->remotePort = remotePort;
     connSetup->connectionId = connectionId;
 
-    GLOMO_MsgSend( nodePtr, msg, ( clocktype ) waitTime );
-
+    GLOMO_MsgSend(nodePtr, msg, (clocktype) waitTime);
+    
     /* Send msg to self for scheduling the first packet */
-    msg = GLOMO_MsgAlloc( nodePtr, GLOMO_APP_LAYER, APP_NSTELNET_CLIENT, MSG_APP_NextPkt );
-    GLOMO_MsgInfoAlloc( nodePtr, msg, sizeof( int ) );
-    *( ( int * ) msg->info ) = connectionId;
-    GLOMO_MsgSend( nodePtr, msg, ( clocktype ) waitTime + nstelnetPktInterval( nodePtr ) );
-
-    msg = GLOMO_MsgAlloc( nodePtr, GLOMO_APP_LAYER, APP_NSTELNET_CLIENT, MSG_APP_SetupConnection );
-
-    GLOMO_MsgInfoAlloc( nodePtr, msg, sizeof( int ) );
-    *( ( int * ) msg->info ) = connectionId;
-    GLOMO_MsgSend( nodePtr, msg, ( clocktype ) waitTime );
+    msg = GLOMO_MsgAlloc(nodePtr, GLOMO_APP_LAYER,
+                         APP_NSTELNET_CLIENT, MSG_APP_NextPkt);
+    GLOMO_MsgInfoAlloc(nodePtr, msg, sizeof(int));
+    *((int *)msg->info) = connectionId;
+    GLOMO_MsgSend(nodePtr, msg, (clocktype) waitTime 
+                  + nstelnetPktInterval(nodePtr));
+    
+    msg = GLOMO_MsgAlloc(nodePtr, GLOMO_APP_LAYER,
+                         APP_NSTELNET_CLIENT, MSG_APP_SetupConnection);
+    
+    GLOMO_MsgInfoAlloc(nodePtr, msg, sizeof(int));
+    *((int *)msg->info) = connectionId;
+    GLOMO_MsgSend(nodePtr, msg, (clocktype) waitTime);
 }
 
 
@@ -169,14 +171,15 @@ void AppNstelnetClientInit( GlomoNode* nodePtr,
  * PARAMETERS:  nodePtr - pointer to the node.
  * RETRUN:      interarrival time in clocktype. 
  */
-static clocktype nstelnetPktInterval( GlomoNode* nodePtr )
+static clocktype
+nstelnetPktInterval(GlomoNode *nodePtr)
 {
-    float   interval;
-    interval = telnet_interarrival( nodePtr->seed );
+    float interval;
+    interval = telnet_interarrival(nodePtr->seed);
 #ifdef DEBUG
-    printf( "NSTELNET interarrival = %f\n", interval );
+    printf("NSTELNET interarrival = %f\n", interval);
 #endif
-    return ( ( ( clocktype ) ( interval + 0.5 ) ) * MILLI_SECOND );
+    return (((clocktype)(interval + 0.5)) * MILLI_SECOND); 
 }
 
 
@@ -189,21 +192,23 @@ static clocktype nstelnetPktInterval( GlomoNode* nodePtr )
  * RETRUN:      the pointer to the created nstelnet client data structure,
  *              NULL if no data structure allocated. 
  */
-static GlomoAppNstelnetClient* newNstelnetClient( GlomoNode* nodePtr, int connId )
+static GlomoAppNstelnetClient *
+newNstelnetClient(GlomoNode *nodePtr, int connId)
 {
-    AppInfo*                newApp;
-    GlomoAppNstelnetClient* nstelnetClient;
-    clocktype               sessionTime;
+    AppInfo *newApp;
+    GlomoAppNstelnetClient *nstelnetClient;
+    clocktype sessionTime;
 
-    newApp = ( AppInfo * ) pc_malloc( sizeof( AppInfo ) );
-    if( newApp == NULL ) {
-        assert( FALSE );
+    newApp = (AppInfo *) pc_malloc(sizeof(AppInfo));
+    if (newApp == NULL) {
+        assert(FALSE);
     }
 
-    nstelnetClient = ( GlomoAppNstelnetClient * ) pc_malloc( sizeof( GlomoAppNstelnetClient ) ); 
-    if( nstelnetClient == NULL ) {
-        pc_free( newApp );
-        assert( FALSE );
+    nstelnetClient = (GlomoAppNstelnetClient *) 
+                    pc_malloc(sizeof(GlomoAppNstelnetClient)); 
+    if (nstelnetClient == NULL) {
+        pc_free(newApp);
+        assert(FALSE);
     }
 
     /*
@@ -212,16 +217,16 @@ static GlomoAppNstelnetClient* newNstelnetClient( GlomoNode* nodePtr, int connId
     newApp->appType = APP_NSTELNET_CLIENT;  
     nstelnetClient->connectionId = connId;
     nstelnetClient->sessionStart = simclock();
-    assert( nodePtr->appData.telnetSessTime > 0 );
+    assert(nodePtr->appData.telnetSessTime > 0);
     sessionTime = nodePtr->appData.telnetSessTime;
     nstelnetClient->sessionFinish = simclock() + sessionTime; 
     nstelnetClient->sessionIsClosed = FALSE;
-
+    
     newApp->appDetail = nstelnetClient;
-
+    
     newApp->appNext = nodePtr->appData.appPtr; 
     nodePtr->appData.appPtr = newApp;
-
+    
     return nstelnetClient;
 }
 
@@ -233,15 +238,16 @@ static GlomoAppNstelnetClient* newNstelnetClient( GlomoNode* nodePtr, int connId
  * RETURN:      the pointer to the nstelnet client data structure,
  *              NULL if nothing found.
  */
-static GlomoAppNstelnetClient* getNstelnetClient( GlomoNode* nodePtr, int connId )
+static GlomoAppNstelnetClient *
+getNstelnetClient(GlomoNode *nodePtr, int connId)
 {
-    AppInfo*                appList = nodePtr->appData.appPtr;
-    GlomoAppNstelnetClient* nstelnetClient;
-
-    for( ;appList != NULL;appList = appList->appNext ) {
-        if( appList->appType == APP_NSTELNET_CLIENT ) {
-            nstelnetClient = ( GlomoAppNstelnetClient * ) appList->appDetail;
-            if( nstelnetClient->connectionId == connId ) {
+    AppInfo *appList = nodePtr->appData.appPtr;
+    GlomoAppNstelnetClient *nstelnetClient;
+    
+    for (; appList != NULL; appList = appList->appNext) {
+        if (appList->appType == APP_NSTELNET_CLIENT) {
+            nstelnetClient = (GlomoAppNstelnetClient *) appList->appDetail;
+            if (nstelnetClient->connectionId == connId) {
                 return nstelnetClient;
             }
         }

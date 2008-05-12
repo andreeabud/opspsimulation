@@ -53,7 +53,8 @@
  * PARAMETERS:  nodePtr - pointer to the node, 
  * RETURN:      none. 
  */
-void AppNstelnetServerInit( GlomoNode*, short, NODE_ADDR, short, int, clocktype );
+void
+AppNstelnetServerInit(GlomoNode *, short, NODE_ADDR, short, int, clocktype);
 
 #endif /* _NSTELNET_SERVER_H_ */
 

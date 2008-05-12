@@ -51,19 +51,18 @@
 
 
 /* Structure containing cbr related information. */
-typedef struct glomo_app_cbr_server_str
-{
-    NODE_ADDR   localAddr;
-    NODE_ADDR   remoteAddr;
-    int         uniqueId;
-    clocktype   sessionStart;
-    clocktype   sessionFinish;
-    clocktype   sessionLastReceived;
-    BOOL        sessionIsClosed;
-    long        numBytesRecvd;
-    long        numPktsRecvd;
-    clocktype   totalEndToEndDelay;
-    long        seqNo;
+typedef struct glomo_app_cbr_server_str {
+    NODE_ADDR localAddr;
+    NODE_ADDR remoteAddr;
+    int uniqueId;
+    clocktype sessionStart;
+    clocktype sessionFinish;
+    clocktype sessionLastReceived;
+    BOOL sessionIsClosed;
+    long numBytesRecvd;
+    long numPktsRecvd;
+    clocktype totalEndToEndDelay;
+    long seqNo;
 } GlomoAppCbrServer;
 
 
@@ -75,7 +74,8 @@ typedef struct glomo_app_cbr_server_str
  *              msg - message received by the layer
  * RETURN:      none.
  */
-void AppLayerCbrServer( GlomoNode* nodePtr, Message* msg );
+void
+AppLayerCbrServer(GlomoNode *nodePtr, Message *msg);
 
 
 /*
@@ -84,7 +84,8 @@ void AppLayerCbrServer( GlomoNode* nodePtr, Message* msg );
  * PARAMETERS:  nodePtr - pointer to the node.
  * RETURN:      none.
  */
-void AppCbrServerInit( GlomoNode* nodePtr );
+void
+AppCbrServerInit(GlomoNode *nodePtr);
 
 
 /*
@@ -94,7 +95,8 @@ void AppCbrServerInit( GlomoNode* nodePtr );
  *              serverPtr - pointer to the cbr server data structure.
  * RETURN:      none.
  */
-void AppCbrServerPrintStats( GlomoNode* nodePtr, GlomoAppCbrServer* serverPtr );
+void
+AppCbrServerPrintStats(GlomoNode *nodePtr, GlomoAppCbrServer *serverPtr);
 
 
 /*
@@ -104,7 +106,8 @@ void AppCbrServerPrintStats( GlomoNode* nodePtr, GlomoAppCbrServer* serverPtr );
  *              serverPtr - pointer to the cbr server data structure.
  * RETURN:      none.
  */
-void AppCbrServerFinalize( GlomoNode* nodePtr, GlomoAppCbrServer* serverPtr );
+void
+AppCbrServerFinalize(GlomoNode *nodePtr, GlomoAppCbrServer *serverPtr);
 
 
 /*
@@ -116,9 +119,10 @@ void AppCbrServerFinalize( GlomoNode* nodePtr, GlomoAppCbrServer* serverPtr );
  * RETURN:      the pointer to the cbr server data structure,
  *              NULL if nothing found.
  */
-static GlomoAppCbrServer* AppCbrServerGetCbrServer( GlomoNode* nodePtr,
-                                                    NODE_ADDR remoteAddr,
-                                                    int uniqueId );
+static GlomoAppCbrServer *
+AppCbrServerGetCbrServer(GlomoNode *nodePtr, 
+                         NODE_ADDR remoteAddr, 
+                         int uniqueId);
 
 
 /*
@@ -131,9 +135,10 @@ static GlomoAppCbrServer* AppCbrServerGetCbrServer( GlomoNode* nodePtr,
  * RETRUN:      the pointer to the created cbr server data structure,
  *              NULL if no data structure allocated.
  */
-static GlomoAppCbrServer* AppCbrServerNewCbrServer( GlomoNode* nodePtr,
-                                                    NODE_ADDR remoteAddr,
-                                                    int uniqueId );
+static GlomoAppCbrServer *
+AppCbrServerNewCbrServer(GlomoNode *nodePtr, 
+                         NODE_ADDR remoteAddr, 
+                         int uniqueId);
 
 
 #endif /* _CBR_SERVER_H_ */

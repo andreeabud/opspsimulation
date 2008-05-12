@@ -69,156 +69,171 @@
  *              msg - message received by the layer
  * RETURN:      none.
  */
-void AppLayerFtpServer( GlomoNode* nodePtr, Message* msg )
+void 
+AppLayerFtpServer(GlomoNode *nodePtr, Message *msg)
 {
-    char                buf[GLOMO_MAX_STRING_LENGTH];
-    GlomoAppFtpServer*  serverPtr;
+    char buf[GLOMO_MAX_STRING_LENGTH];
+    GlomoAppFtpServer *serverPtr;
 
-    ctoa( simclock(), buf );
+    ctoa(simclock(), buf);
 
-    switch( msg->eventType ) {
-    case MSG_APP_FromTransListenResult:
-    {
-        TransportToAppListenResult* listenResult;
+    switch(msg->eventType) 
+    {  
+        case MSG_APP_FromTransListenResult: 
+        {
+            TransportToAppListenResult *listenResult;
 
-        listenResult = ( TransportToAppListenResult * ) msg->info;
+            listenResult = (TransportToAppListenResult *) msg->info;
+ 
+            #ifdef DEBUG
+                printf("FTP Server: Node %ld at %s got listenResult\n",
+                        nodePtr->nodeAddr, buf);
+            #endif
 
-#ifdef DEBUG
-        printf( "FTP Server: Node %ld at %s got listenResult\n", nodePtr->nodeAddr, buf );
-#endif
+            if (listenResult->connectionId == -1)
+            {
+                nodePtr->appData.numAppTcpFailure++;
+            }
 
-        if( listenResult->connectionId == -1 ) {
-            nodePtr->appData.numAppTcpFailure++;
+            break;
         }
 
-        break;
-    }
+        case MSG_APP_FromTransOpenResult: 
+        {
+            TransportToAppOpenResult *openResult;
+            openResult = (TransportToAppOpenResult *) msg->info;
+ 
+            #ifdef DEBUG
+                printf("FTP Server: Node %ld at %s got OpenResult\n", 
+                        nodePtr->nodeAddr, buf);
+            #endif
 
-    case MSG_APP_FromTransOpenResult:
-    {
-        TransportToAppOpenResult*   openResult;
-        openResult = ( TransportToAppOpenResult * ) msg->info;
+            assert(openResult->type == TCP_CONN_PASSIVE_OPEN);
 
-#ifdef DEBUG
-        printf( "FTP Server: Node %ld at %s got OpenResult\n", nodePtr->nodeAddr, buf );
-#endif
+            if (openResult->connectionId < 0)
+            {
+                nodePtr->appData.numAppTcpFailure++;
+            }
+            else 
+            {
+                GlomoAppFtpServer *serverPtr; 
+                serverPtr = AppFtpServerNewFtpServer(nodePtr, openResult);
+                assert(serverPtr != NULL);
+            }
 
-        assert( openResult->type == TCP_CONN_PASSIVE_OPEN );
-
-        if( openResult->connectionId < 0 ) {
-            nodePtr->appData.numAppTcpFailure++;
-        }else {
-            GlomoAppFtpServer*  serverPtr; 
-            serverPtr = AppFtpServerNewFtpServer( nodePtr, openResult );
-            assert( serverPtr != NULL );
+            break;
         }
 
-        break;
-    }
+        case MSG_APP_FromTransDataSent:
+        {
+            TransportToAppDataSent *dataSent;
 
-    case MSG_APP_FromTransDataSent:
-    {
-        TransportToAppDataSent* dataSent;
+            dataSent = (TransportToAppDataSent *) msg->info;
+        
+            #ifdef DEBUG
+                printf("FTP Server Node %ld at %s sent data %ld\n", 
+                        nodePtr->nodeAddr, buf, dataSent->length); 
+            #endif
 
-        dataSent = ( TransportToAppDataSent * ) msg->info;
+            serverPtr = AppFtpServerGetFtpServer(nodePtr, 
+                                     dataSent->connectionId);
 
-#ifdef DEBUG
-        printf( "FTP Server Node %ld at %s sent data %ld\n",
-                nodePtr->nodeAddr,
-                buf,
-                dataSent->length ); 
-#endif
+            assert(serverPtr != NULL);
 
-        serverPtr = AppFtpServerGetFtpServer( nodePtr, dataSent->connectionId );
+            serverPtr->numBytesSent += dataSent->length;
 
-        assert( serverPtr != NULL );
+            break;
+        }
 
-        serverPtr->numBytesSent += dataSent->length;
+        case MSG_APP_FromTransDataReceived: 
+        {
+            TransportToAppDataReceived *dataRecvd;
+            char *packet;
 
-        break;
-    }
+            dataRecvd = (TransportToAppDataReceived *) GLOMO_MsgReturnInfo(msg);
 
-    case MSG_APP_FromTransDataReceived:
-    {
-        TransportToAppDataReceived* dataRecvd;
-        char*                       packet;
+            packet = GLOMO_MsgReturnPacket(msg);
 
-        dataRecvd = ( TransportToAppDataReceived * ) GLOMO_MsgReturnInfo( msg );
+            #ifdef DEBUG
+                printf("FTP Server: Node %ld at %s received data size %d\n", 
+                        nodePtr->nodeAddr, buf, GLOMO_MsgReturnPacketSize(msg));
+            #endif
 
-        packet = GLOMO_MsgReturnPacket( msg );
+            serverPtr = AppFtpServerGetFtpServer(nodePtr, 
+                                                 dataRecvd->connectionId);
 
-#ifdef DEBUG
-        printf( "FTP Server: Node %ld at %s received data size %d\n",
-                nodePtr->nodeAddr,
-                buf,
-                GLOMO_MsgReturnPacketSize( msg ) );
-#endif
+            assert(serverPtr != NULL);
+            assert(serverPtr->sessionIsClosed == FALSE);
 
-        serverPtr = AppFtpServerGetFtpServer( nodePtr, dataRecvd->connectionId );
+            serverPtr->numBytesRecvd += GLOMO_MsgReturnPacketSize(msg);
 
-        assert( serverPtr != NULL );
-        assert( serverPtr->sessionIsClosed == FALSE );
-
-        serverPtr->numBytesRecvd += GLOMO_MsgReturnPacketSize( msg );
-
-        /* 
-         * Test if the received data contains the last byte 
-         * of an item.  If so, send a response packet back.
-         * If the data contains a 'c', close the connection.
-         */
-        if( packet[msg->packetSize - 1] == 'd' ) {
-            /* Do nothing since item is not completely received yet. */
-        }else if( packet[msg->packetSize - 1] == 'e' ) {
-            /* Item completely received, now send control info. */
-            AppFtpServerSendCtrlPkt( nodePtr, serverPtr );
-        }else if( packet[msg->packetSize - 1] == 'c' ) {
             /* 
-             * Client wants to close the session, so server also
-             * initiates a close.
+             * Test if the received data contains the last byte 
+             * of an item.  If so, send a response packet back.
+             * If the data contains a 'c', close the connection.
              */
-            AppTcpCloseConnection( nodePtr, TRANSPORT_PROTOCOL_TCP, serverPtr->connectionId );
+            if (packet[msg->packetSize - 1] == 'd') 
+            {
+                /* Do nothing since item is not completely received yet. */
+            }
+            else if (packet[msg->packetSize - 1] == 'e') 
+            {
+                /* Item completely received, now send control info. */
+                AppFtpServerSendCtrlPkt(nodePtr, serverPtr); 
+            } 
+            else if (packet[msg->packetSize - 1] == 'c') 
+            {
+                /* 
+                 * Client wants to close the session, so server also
+                 * initiates a close.
+                 */
+                AppTcpCloseConnection(nodePtr, TRANSPORT_PROTOCOL_TCP, 
+                                      serverPtr->connectionId);
 
-            serverPtr->sessionFinish = simclock();
-            serverPtr->sessionIsClosed = TRUE;
-        }else {
-            assert( 0 );
+                serverPtr->sessionFinish = simclock();
+                serverPtr->sessionIsClosed = TRUE;
+            }
+            else
+            {
+               assert(0);
+            }
+
+            break;
         }
+    
+        case MSG_APP_FromTransCloseResult:
+        {
+            TransportToAppCloseResult *closeResult;
 
-        break;
-    }
+            closeResult = (TransportToAppCloseResult *) msg->info;
 
-    case MSG_APP_FromTransCloseResult:
-    {
-        TransportToAppCloseResult*  closeResult;
+            #ifdef DEBUG
+                printf("FTP Server: Node %ld at %s got close result\n", 
+                        nodePtr->nodeAddr, buf);
+            #endif
 
-        closeResult = ( TransportToAppCloseResult * ) msg->info;
+            serverPtr = AppFtpServerGetFtpServer(nodePtr, 
+                                                 closeResult->connectionId);
+            assert(serverPtr != NULL);
 
-#ifdef DEBUG
-        printf( "FTP Server: Node %ld at %s got close result\n", nodePtr->nodeAddr, buf );
-#endif
+            if (serverPtr->sessionIsClosed == FALSE) 
+            {
+                serverPtr->sessionIsClosed = TRUE;
+                serverPtr->sessionFinish = simclock();
+            }
 
-        serverPtr = AppFtpServerGetFtpServer( nodePtr, closeResult->connectionId );
-        assert( serverPtr != NULL );
-
-        if( serverPtr->sessionIsClosed == FALSE ) {
-            serverPtr->sessionIsClosed = TRUE;
-            serverPtr->sessionFinish = simclock();
+            break;
         }
-
-        break;
+    
+        default:
+            ctoa(simclock(), buf);
+            printf("FTP Server: Node %u at time %s received "
+                   "message of unknown type"
+                   " %ld.\n", nodePtr->nodeAddr, buf, msg->eventType);
+            assert(FALSE);
     }
 
-    default:ctoa( simclock(), buf );
-    printf( "FTP Server: Node %u at time %s received "
-            "message of unknown type"
-            " %ld.\n",
-            nodePtr->nodeAddr,
-            buf,
-            msg->eventType );
-    assert( FALSE );
-    }
-
-    GLOMO_MsgFree( nodePtr, msg );
+    GLOMO_MsgFree(nodePtr, msg);
 }
 
 
@@ -228,13 +243,14 @@ void AppLayerFtpServer( GlomoNode* nodePtr, Message* msg )
  * PARAMETERS:  nodePtr - pointer to the node.
  * RETURN:      none. 
  */
-void AppFtpServerInit( GlomoNode* nodePtr )
+void
+AppFtpServerInit(GlomoNode *nodePtr)
 {
-    AppTcpServerListen( nodePtr,
-                        TRANSPORT_PROTOCOL_TCP,
-                        APP_FTP_SERVER,
-                        nodePtr->nodeAddr,
-                        ( short ) APP_FTP_SERVER );
+    AppTcpServerListen(nodePtr, 
+                       TRANSPORT_PROTOCOL_TCP, 
+                       APP_FTP_SERVER,
+                       nodePtr->nodeAddr, 
+                       (short)APP_FTP_SERVER);
 }
 
 
@@ -245,48 +261,50 @@ void AppFtpServerInit( GlomoNode* nodePtr )
  *              serverPtr - pointer to the ftp server data structure. 
  * RETURN:      none. 
  */
-static void AppFtpServerPrintStats( GlomoNode* nodePtr, GlomoAppFtpServer* serverPtr )
+static void
+AppFtpServerPrintStats(GlomoNode *nodePtr, GlomoAppFtpServer *serverPtr)
 {
-    clocktype   throughput;
-    char        clockStr[GLOMO_MAX_STRING_LENGTH];
-    char        startStr[GLOMO_MAX_STRING_LENGTH];
-    char        closeStr[GLOMO_MAX_STRING_LENGTH];
-    char        buf[GLOMO_MAX_STRING_LENGTH];
-    char        throughputStr[GLOMO_MAX_STRING_LENGTH];
+    clocktype throughput;
+    char clockStr[GLOMO_MAX_STRING_LENGTH];
+    char startStr[GLOMO_MAX_STRING_LENGTH];
+    char closeStr[GLOMO_MAX_STRING_LENGTH];
+    char buf[GLOMO_MAX_STRING_LENGTH];
+    char throughputStr[GLOMO_MAX_STRING_LENGTH];
 
-    ctoa( serverPtr->sessionStart, startStr );
+    ctoa(serverPtr->sessionStart, startStr);
 
-    if( serverPtr->sessionIsClosed == FALSE ) {
+    if (serverPtr->sessionIsClosed == FALSE) 
+    {
         serverPtr->sessionFinish = simclock();
-        ctoa( simclock(), clockStr );
-        sprintf( closeStr, "%s ns (not closed)", clockStr );
-    }else {
-        ctoa( serverPtr->sessionFinish, clockStr );
-        sprintf( closeStr, "%s ns (closed)", clockStr );
+        ctoa(simclock(), clockStr);
+        sprintf(closeStr, "%s ns (not closed)", clockStr);
+    } 
+    else 
+    {
+        ctoa(serverPtr->sessionFinish, clockStr);
+        sprintf(closeStr, "%s ns (closed)", clockStr);
     }
 
-    if( serverPtr->sessionFinish <= serverPtr->sessionStart ) {
-        throughput = 0;
-    }else {
-        throughput = ( serverPtr->numBytesRecvd * 8.0 * SECOND ) /
-                     ( serverPtr->sessionFinish - serverPtr->sessionStart );
+    if (serverPtr->sessionFinish <= serverPtr->sessionStart) 
+    {
+        throughput = 0; 
+    } 
+    else 
+    {
+        throughput = (serverPtr->numBytesRecvd * 8.0 * SECOND) /
+                     (serverPtr->sessionFinish - serverPtr->sessionStart);
     }
 
-    ctoa( throughput, throughputStr );
+    ctoa(throughput, throughputStr);
 
-    sprintf( buf,
-             "from %ld to %ld (cid = %d), start = %s, end = %s "
-             "bytes sent = %ld B, bytes recv = %ld B, throughput = %s bps",
-             serverPtr->remoteAddr,
-             serverPtr->localAddr,
-             serverPtr->connectionId,
-             startStr,
-             closeStr,
-             serverPtr->numBytesSent,
-             serverPtr->numBytesRecvd,
-             throughputStr );
+    sprintf(buf, "from %ld to %ld (cid = %d), start = %s, end = %s "
+            "bytes sent = %ld B, bytes recv = %ld B, throughput = %s bps",
+            serverPtr->remoteAddr, serverPtr->localAddr, 
+            serverPtr->connectionId, startStr, closeStr,
+            serverPtr->numBytesSent, serverPtr->numBytesRecvd,
+            throughputStr);
 
-    GLOMO_PrintStat( nodePtr, "AppFtpServer", buf );
+    GLOMO_PrintStat(nodePtr, "AppFtpServer", buf);
 }
 
 /*
@@ -296,10 +314,12 @@ static void AppFtpServerPrintStats( GlomoNode* nodePtr, GlomoAppFtpServer* serve
  *              serverPtr - pointer to the ftp server data structure. 
  * RETURN:      none. 
  */
-void AppFtpServerFinalize( GlomoNode* nodePtr, GlomoAppFtpServer* serverPtr )
+void
+AppFtpServerFinalize(GlomoNode *nodePtr, GlomoAppFtpServer *serverPtr)
 {
-    if( nodePtr->appData.appStats == TRUE ) {
-        AppFtpServerPrintStats( nodePtr, serverPtr );
+    if (nodePtr->appData.appStats == TRUE)
+    {
+        AppFtpServerPrintStats(nodePtr, serverPtr);
     }
 }
 
@@ -313,16 +333,20 @@ void AppFtpServerFinalize( GlomoNode* nodePtr, GlomoAppFtpServer* serverPtr )
  * RETURN:      the pointer to the ftp server data structure,
  *              NULL if nothing found.
  */
-static GlomoAppFtpServer* AppFtpServerGetFtpServer( GlomoNode* nodePtr, int connId )
+static GlomoAppFtpServer *
+AppFtpServerGetFtpServer(GlomoNode *nodePtr, int connId)
 {
-    AppInfo*            appList = nodePtr->appData.appPtr;
-    GlomoAppFtpServer*  ftpServer;
+    AppInfo *appList = nodePtr->appData.appPtr;
+    GlomoAppFtpServer *ftpServer;
+    
+    for (; appList != NULL; appList = appList->appNext) 
+    {
+        if (appList->appType == APP_FTP_SERVER)
+        {
+            ftpServer = (GlomoAppFtpServer *) appList->appDetail;
 
-    for( ;appList != NULL;appList = appList->appNext ) {
-        if( appList->appType == APP_FTP_SERVER ) {
-            ftpServer = ( GlomoAppFtpServer * ) appList->appDetail;
-
-            if( ftpServer->connectionId == connId ) {
+            if (ftpServer->connectionId == connId)
+            {
                 return ftpServer;
             }
         }
@@ -342,23 +366,27 @@ static GlomoAppFtpServer* AppFtpServerGetFtpServer( GlomoNode* nodePtr, int conn
  * RETRUN:      the pointer to the created ftp server data structure,
  *              NULL if no data structure allocated. 
  */
-static GlomoAppFtpServer* AppFtpServerNewFtpServer( GlomoNode* nodePtr,
-                                                    TransportToAppOpenResult* openResult )
+static GlomoAppFtpServer *
+AppFtpServerNewFtpServer(GlomoNode *nodePtr, 
+                         TransportToAppOpenResult *openResult)
 {
-    AppInfo*            newApp;
-    GlomoAppFtpServer*  ftpServer;
+    AppInfo *newApp;
+    GlomoAppFtpServer *ftpServer;
 
-    newApp = ( AppInfo * ) pc_malloc( sizeof( AppInfo ) );
+    newApp = (AppInfo *) pc_malloc(sizeof(AppInfo));
 
-    if( newApp == NULL ) {
-        assert( FALSE );
+    if (newApp == NULL) 
+    {
+        assert(FALSE);
     }
 
-    ftpServer = ( GlomoAppFtpServer * ) pc_malloc( sizeof( GlomoAppFtpServer ) );
+    ftpServer = (GlomoAppFtpServer *) pc_malloc(sizeof(GlomoAppFtpServer));
 
-    if( ftpServer == NULL ) {
-        printf( "FTP Server: Node %ld cannot allocate memory for ftp server\n", nodePtr->nodeAddr );
-        assert( FALSE );
+    if (ftpServer == NULL) 
+    {
+        printf("FTP Server: Node %ld cannot allocate memory for ftp server\n",
+                nodePtr->nodeAddr);
+        assert(FALSE);
     }
 
     /*
@@ -380,7 +408,7 @@ static GlomoAppFtpServer* AppFtpServerNewFtpServer( GlomoNode* nodePtr,
     ftpServer->seed[0] = nodePtr->initialSeedValue[0] + ftpServer->connectionId;
     ftpServer->seed[1] = nodePtr->initialSeedValue[1] + openResult->remoteAddr;
     ftpServer->seed[2] = nodePtr->initialSeedValue[2];
-
+    
 
     return ftpServer;
 }
@@ -395,16 +423,18 @@ static GlomoAppFtpServer* AppFtpServerNewFtpServer( GlomoNode* nodePtr,
  *              serverPtr - pointer to the server data structure. 
  * RETRUN:      none. 
  */
-static void AppFtpServerSendCtrlPkt( GlomoNode* nodePtr, GlomoAppFtpServer* serverPtr )
+static void
+AppFtpServerSendCtrlPkt(GlomoNode *nodePtr, GlomoAppFtpServer *serverPtr)
 {
-    int     pktSize;
-    char    payload[MAX_APP_DATA_UNIT];
+    int pktSize;
+    char payload[MAX_APP_DATA_UNIT];
 
-    pktSize = AppFtpServerCtrlPktSize( serverPtr );
+    pktSize = AppFtpServerCtrlPktSize(serverPtr);
 
-    memset( payload, 'd', MAX_APP_DATA_UNIT );
+    memset(payload, 'd', MAX_APP_DATA_UNIT);
 
-    if( pktSize > MAX_APP_DATA_UNIT ) {
+    if (pktSize > MAX_APP_DATA_UNIT) 
+    {
         /*
          * Control packet size is larger than MAX_APP_DATA_UNIT,
          * set it to MAX_APP_DATA_UNIT. This should be rare.
@@ -412,7 +442,8 @@ static void AppFtpServerSendCtrlPkt( GlomoNode* nodePtr, GlomoAppFtpServer* serv
         pktSize = MAX_APP_DATA_UNIT;
     }
 
-    AppTcpSendData( nodePtr, TRANSPORT_PROTOCOL_TCP, serverPtr->connectionId, payload, pktSize );
+    AppTcpSendData(nodePtr, TRANSPORT_PROTOCOL_TCP, serverPtr->connectionId, 
+                   payload, pktSize);
 }
 
 /*
@@ -421,15 +452,17 @@ static void AppFtpServerSendCtrlPkt( GlomoNode* nodePtr, GlomoAppFtpServer* serv
  * PARAMETERS:  nodePtr - pointer to the node.
  * RETRUN:      ftp control packet size.
  */
-int AppFtpServerCtrlPktSize( GlomoAppFtpServer* serverPtr )
+int 
+AppFtpServerCtrlPktSize(GlomoAppFtpServer *serverPtr)
 {
     int ctrlPktSize;
-    ctrlPktSize = ftp_ctlsize( serverPtr->seed );
+    ctrlPktSize = ftp_ctlsize(serverPtr->seed);
+  
+    #ifdef DEBUG
+        printf("FTP: Node %ld ftp control pktsize = %d\n", 
+                nodePtr->nodeAddr, ctrlPktSize);
+    #endif
 
-#ifdef DEBUG
-    printf( "FTP: Node %ld ftp control pktsize = %d\n", nodePtr->nodeAddr, ctrlPktSize );
-#endif
-
-    return ( ctrlPktSize );
+    return (ctrlPktSize);
 }
 

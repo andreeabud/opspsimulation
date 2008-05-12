@@ -59,128 +59,122 @@
 #define WRP_MAX_SEQ_NUM 128
 #define WRP_MRL_RETX_CONST 3 
 
-typedef struct DistEntry_t
-{
-    NODE_ADDR   via;  /* of "through" node */
-    int         dist;
-    NODE_ADDR   pred;
-    int         valid;
+typedef struct DistEntry_t {
+    NODE_ADDR via;  /* of "through" node */
+    int dist;
+    NODE_ADDR pred;
+    int valid;
 } DistEntry;
 
 typedef struct DistTable_t
 {
-    NODE_ADDR   dest;  /* of destination node */
-    DistEntry*  dat;
+   NODE_ADDR dest;  /* of destination node */
+   DistEntry *dat;
 } DistTable;
 
 typedef struct RouteTable_t
 {
-    NODE_ADDR   dest, /* id of dest node */
-    succ,       /* id of successor node */
-    pred;       /* id of predecessor node */
-    int         dist,       /* distance to dest node */
-    tag;        /* tag marker: NULL=unmarked, 1=correct, -1=error/loop */
+   NODE_ADDR dest, /* id of dest node */
+       succ,       /* id of successor node */
+       pred;       /* id of predecessor node */
+   int dist,       /* distance to dest node */
+       tag;        /* tag marker: NULL=unmarked, 1=correct, -1=error/loop */
 } RouteTable;
 
 typedef struct LCTable_t
 {
-    NODE_ADDR   dest;       /* id of neighbor node */
-    int         dist,             /* distance to neighbor node */
-    HelloCount;       /* number of un'ACKd helo messages outstanding */
-    clocktype   HelloTimer, /* Sim Time at which HelloTimer expires */
-    RetxTimer;  /* Sim Time at which to Retx an unACK'd message */
-    int         RetxCount,        /* number of un'ACKd messages outstanding */
-    seqno;            /* sequence number in use for this link */
-    clocktype   x;          /* retx time */
-    int         y,                /* max HelloCount before link failed */
-    z;                /* max retx before link failed */
+   NODE_ADDR dest;       /* id of neighbor node */
+   int dist,             /* distance to neighbor node */
+       HelloCount;       /* number of un'ACKd helo messages outstanding */
+   clocktype HelloTimer, /* Sim Time at which HelloTimer expires */
+             RetxTimer;  /* Sim Time at which to Retx an unACK'd message */
+   int RetxCount,        /* number of un'ACKd messages outstanding */
+       seqno;            /* sequence number in use for this link */
+   clocktype x;          /* retx time */
+   int y,                /* max HelloCount before link failed */
+       z;                /* max retx before link failed */
 } LCTable;
 
-typedef struct wirp_tpl
-{
-    int         u;                         /* ACK or UPDATE */
-    NODE_ADDR   j;           /* destination node */
-    int         RDkj;              /* distance to j */
-    NODE_ADDR   rpkj;        /* predecessor node to j */
+typedef struct wirp_tpl {
+    int u;                         /* ACK or UPDATE */
+    NODE_ADDR j;           /* destination node */
+    int RDkj;              /* distance to j */
+    NODE_ADDR rpkj;        /* predecessor node to j */
 } WrpTuple;
 
-typedef struct wirp_mrl_tpl
-{
-    WrpTuple                entry;
-    struct wirp_mrl_tpl*    next;
+typedef struct wirp_mrl_tpl {
+    WrpTuple entry;
+    struct wirp_mrl_tpl *next;
 } WrpMrlTuple;
 
 typedef struct wirp_mrl_entry_t
 {
-    int         retx_counter;    /* when 0, retransmit the update list */
-    int         retx_count;      /* when retx too many times, need to remove neighbor */
-    int         MRLsize;         /* number of update entries in linked list */
-    NODE_ADDR*  bitmap;   /* nodes that still need to ACK */
-    WrpTuple*   dat;       /* actual routing table update entries */
+   int retx_counter;    /* when 0, retransmit the update list */
+   int retx_count;      /* when retx too many times, need to remove neighbor */
+   int MRLsize;         /* number of update entries in linked list */
+   NODE_ADDR *bitmap;   /* nodes that still need to ACK */
+   WrpTuple *dat;       /* actual routing table update entries */
 } WrpMrlEntry;
 
-typedef struct wirp_pkt_hdr_str
-{
-    int         msgType;                  /* DATA or RT */
-    NODE_ADDR   k;
-    NODE_ADDR   destId;
-    int         seqNum;            /* Sequence Number assigned by WRP */
-    int         valid;                     /* Number of update entries in msg */
-    int         packetSize;               /* payload in bytes */
-    int         hopCount;
-    clocktype   timestamp;
+typedef struct wirp_pkt_hdr_str {
+    int msgType;                  /* DATA or RT */
+    NODE_ADDR k;
+    NODE_ADDR destId;
+    int seqNum;            /* Sequence Number assigned by WRP */
+    int valid;                     /* Number of update entries in msg */
+    int packetSize;               /* payload in bytes */
+    int hopCount;
+    clocktype timestamp;
 } WrpPacketHeader;
 
 #define WRP_PKT_PAYLOAD_SIZE MAX_NW_PAYLOAD_SIZE 
 
-typedef struct wirp_pkt_str
-{
+typedef struct wirp_pkt_str {
     WrpPacketHeader hdr;
-    char            payload[MAX_NW_BROADCAST_RT_SIZE - sizeof( WrpPacketHeader )];
+    char payload[MAX_NW_BROADCAST_RT_SIZE-sizeof(WrpPacketHeader)];
 } WrpPacket;
 
-typedef struct wirp_timer_str
-{
-    int         timerType;
-    NODE_ADDR   k;
+typedef struct wirp_timer_str {
+    int timerType;
+    NODE_ADDR k;
 } WrpTimer;
 
-typedef struct network_wirp_stats_str
-{
+typedef struct network_wirp_stats_str {
     /* Total number of RT packets sent */
     int numRTsent;
 
     /* Total number of packets received from Transport Layer. */
     int numFromTransport;
+
 } WrpStats;
 
-typedef struct glomo_routing_wrp_str
-{
-    DistTable*      DTable;
-    RouteTable*     RTable;
-    LCTable*        LTable;
-    int*            N, * Ni;
+typedef struct glomo_routing_wrp_str {
+    DistTable *DTable;
+    RouteTable *RTable;
+    LCTable *LTable;
+    int *N,
+        *Ni;
 
-    int             LISTmax;
-    WrpTuple*       LIST;
-    int             LISTct;
-    WrpTuple*       V;
-    int             Vct;
-    int*            responseList;
-    int             ACKthis;
-    WrpPacket*      wpkt;
+    int LISTmax;
+    WrpTuple *LIST;
+    int LISTct;
+    WrpTuple *V;
+    int Vct;
+    int *responseList;
+    int ACKthis;
+    WrpPacket *wpkt;
 
-    WrpMrlEntry*    MRL;
-    int             SEQNO;
-    WrpStats        stats;
+    WrpMrlEntry *MRL;
+    int SEQNO;
+    WrpStats stats;
 } GlomoRoutingWrp;
 
 #define MAX_WRP_PKT_SIZE MAX_NW_BROADCAST_RT_SIZE - sizeof(WrpPacketHeader)
 #define MAX_WRP_UPD_SIZE MAX_WRP_PKT_SIZE - (sizeof(NODE_ADDR)*node->numNodes)
 
-void RoutingWrpInit( GlomoNode* node, const GlomoNodeInput* nodeInput );
-void RoutingWrpLayer( GlomoNode* node, Message* msgHdr );
-void RoutingWrpFinalize( GlomoNode* node );
+void RoutingWrpInit(GlomoNode *node, const GlomoNodeInput *nodeInput);
+void RoutingWrpLayer(GlomoNode *node, Message *msgHdr);
+void RoutingWrpFinalize(GlomoNode *node);
 
 #endif /* _WRP_H_ */
 

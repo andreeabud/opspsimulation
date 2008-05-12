@@ -47,16 +47,15 @@
 
 #include "message.h"
 
-typedef struct glomo_app_telnet_server_str
-{
-    int         connectionId;
-    NODE_ADDR   localAddr; 
-    NODE_ADDR   remoteAddr;
-    clocktype   sessionStart;
-    clocktype   sessionFinish;
-    BOOL        sessionIsClosed;
-    long        numBytesSent;
-    long        numBytesRecvd;
+typedef struct glomo_app_telnet_server_str {
+    int connectionId;
+    NODE_ADDR localAddr; 
+    NODE_ADDR remoteAddr;
+    clocktype sessionStart;
+    clocktype sessionFinish;
+    BOOL sessionIsClosed;
+    long numBytesSent;
+    long numBytesRecvd;
 } GlomoAppTelnetServer;
 
 
@@ -69,7 +68,8 @@ typedef struct glomo_app_telnet_server_str
  *              msg - message received by the layer
  * RETURN:      none.
  */
-void AppLayerTelnetServer( GlomoNode* nodePtr, Message* msg );
+void
+AppLayerTelnetServer(GlomoNode *nodePtr, Message *msg);
 
 
 
@@ -79,7 +79,8 @@ void AppLayerTelnetServer( GlomoNode* nodePtr, Message* msg );
  * PARAMETERS:  nodePtr - pointer to the node.
  * RETURN:      none.
  */
-void AppTelnetServerInit( GlomoNode* nodePtr );
+void
+AppTelnetServerInit(GlomoNode *nodePtr);
 
 
 
@@ -90,7 +91,8 @@ void AppTelnetServerInit( GlomoNode* nodePtr );
  *              serverPtr - pointer to the telnet server data structure.
  * RETURN:      none.
  */
-void AppTelnetServerFinalize( GlomoNode* nodePtr, GlomoAppTelnetServer* serverPtr );
+void
+AppTelnetServerFinalize(GlomoNode *nodePtr, GlomoAppTelnetServer *serverPtr);
 
 
 
@@ -102,7 +104,8 @@ void AppTelnetServerFinalize( GlomoNode* nodePtr, GlomoAppTelnetServer* serverPt
  * RETURN:      the pointer to the telnet server data structure,
  *              NULL if nothing found.
  */
-static GlomoAppTelnetServer* AppTelnetServerGetTelnetServer( GlomoNode* nodePtr, int connId );
+static GlomoAppTelnetServer *
+AppTelnetServerGetTelnetServer(GlomoNode *nodePtr, int connId);
 
 
 
@@ -115,8 +118,9 @@ static GlomoAppTelnetServer* AppTelnetServerGetTelnetServer( GlomoNode* nodePtr,
  * RETRUN:      the pointer to the created telnet server data structure,
  *              NULL if no data structure allocated.
  */
-static GlomoAppTelnetServer* AppTelnetServerNewTelnetServer( GlomoNode* nodePtr,
-                                                             TransportToAppOpenResult* openResult );
+static GlomoAppTelnetServer *
+AppTelnetServerNewTelnetServer(GlomoNode *nodePtr,
+                               TransportToAppOpenResult *openResult);
 
 
 
@@ -129,7 +133,9 @@ static GlomoAppTelnetServer* AppTelnetServerNewTelnetServer( GlomoNode* nodePtr,
  *              serverPtr - pointer to the server data structure.
  * RETRUN:      none.
  */
-static void AppTelnetServerSendResponse( GlomoNode* nodePtr, GlomoAppTelnetServer* serverPtr );
+static void
+AppTelnetServerSendResponse(GlomoNode *nodePtr, 
+                            GlomoAppTelnetServer *serverPtr);
 
 
 
@@ -139,7 +145,8 @@ static void AppTelnetServerSendResponse( GlomoNode* nodePtr, GlomoAppTelnetServe
  * PARAMETERS:  nodePtr - pointer to the node.
  * RETRUN:      telnet control packet size.
  */
-static int AppTelnetServerRespPktSize( GlomoNode* nodePtr );
+static int
+AppTelnetServerRespPktSize(GlomoNode *nodePtr);
 
 
 #endif /* _TELNET_SERVER_H_ */

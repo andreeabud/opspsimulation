@@ -47,18 +47,18 @@
 
 #include "structmsg.h"
 
-typedef struct glomo_app_http_server_str
+typedef struct glomo_app_http_server_str 
 {
-    int         connectionId;
-    NODE_ADDR   localAddr; 
-    NODE_ADDR   remoteAddr;
-    clocktype   sessionStart;
-    clocktype   sessionFinish;
-    BOOL        sessionIsClosed;
-    long        numBytesSent;
-    long        numBytesRecvd;
-    long        pagesSent;
-    long        bytesRemaining;
+    int connectionId;
+    NODE_ADDR localAddr; 
+    NODE_ADDR remoteAddr;
+    clocktype sessionStart;
+    clocktype sessionFinish;
+    BOOL sessionIsClosed;
+    long numBytesSent;
+    long numBytesRecvd;
+	long pagesSent;
+	long bytesRemaining;
 } GlomoAppHttpServer;
 
 
@@ -71,7 +71,8 @@ typedef struct glomo_app_http_server_str
  *              msg - message received by the layer
  * RETURN:      none.
  */
-void AppLayerHttpServer( GlomoNode* nodePtr, Message* msg );
+void
+AppLayerHttpServer(GlomoNode *nodePtr, Message *msg);
 
 /*
  * NAME:        AppHttpServerInit.
@@ -79,7 +80,8 @@ void AppLayerHttpServer( GlomoNode* nodePtr, Message* msg );
  * PARAMETERS:  nodePtr - pointer to the node.
  * RETURN:      none.
  */
-void AppHttpServerInit( GlomoNode* nodePtr );
+void
+AppHttpServerInit(GlomoNode *nodePtr);
 
 /*
  * NAME:        AppHttpServerPrintStats.
@@ -88,7 +90,8 @@ void AppHttpServerInit( GlomoNode* nodePtr );
  *              serverPtr - pointer to the http server data structure.
  * RETURN:      none.
  */
-static void AppHttpServerPrintStats( GlomoNode* nodePtr, GlomoAppHttpServer* serverPtr );
+static void
+AppHttpServerPrintStats(GlomoNode *nodePtr, GlomoAppHttpServer *serverPtr);
 
 /*
  * NAME:        AppHttpServerFinalize.
@@ -97,7 +100,8 @@ static void AppHttpServerPrintStats( GlomoNode* nodePtr, GlomoAppHttpServer* ser
  *              serverPtr - pointer to the http server data structure.
  * RETURN:      none.
  */
-void AppHttpServerFinalize( GlomoNode* nodePtr, GlomoAppHttpServer* serverPtr );
+void
+AppHttpServerFinalize(GlomoNode *nodePtr, GlomoAppHttpServer *serverPtr);
 
 /*
  * NAME:        AppHttpServerGetHttpServer.
@@ -107,7 +111,8 @@ void AppHttpServerFinalize( GlomoNode* nodePtr, GlomoAppHttpServer* serverPtr );
  * RETURN:      the pointer to the http server data structure,
  *              NULL if nothing found.
  */
-static GlomoAppHttpServer* AppHttpServerGetHttpServer( GlomoNode* nodePtr, int connId );
+static GlomoAppHttpServer *
+AppHttpServerGetHttpServer(GlomoNode *nodePtr, int connId);
 
 /*
  * NAME:        AppHttpServerRemoveHttpServer.
@@ -117,7 +122,8 @@ static GlomoAppHttpServer* AppHttpServerGetHttpServer( GlomoNode* nodePtr, int c
  *              closeRes - the close connection results from TCP
  * RETURN:      none.
  */
-static void AppHttpServerRemoveHttpServer( GlomoNode* nodePtr, TransportToAppCloseResult* closeRes );
+static void AppHttpServerRemoveHttpServer(GlomoNode *nodePtr,
+                                          TransportToAppCloseResult *closeRes);
 
 /*
  * NAME:        AppHttpServerNewHttpServer.
@@ -128,8 +134,9 @@ static void AppHttpServerRemoveHttpServer( GlomoNode* nodePtr, TransportToAppClo
  * RETRUN:      the pointer to the created http server data structure,
  *              NULL if no data structure allocated.
  */
-static GlomoAppHttpServer* AppHttpServerNewHttpServer( GlomoNode* nodePtr,
-                                                       TransportToAppOpenResult* openResult );
+static GlomoAppHttpServer *
+AppHttpServerNewHttpServer(GlomoNode *nodePtr,
+                         TransportToAppOpenResult *openResult);
 
 /*
  * NAME:        AppHttpServerSendCtrlPkt.
@@ -139,7 +146,8 @@ static GlomoAppHttpServer* AppHttpServerNewHttpServer( GlomoNode* nodePtr,
  *              serverPtr - pointer to the server data structure.
  * RETRUN:      none.
  */
-static void AppHttpServerSendCtrlPkt( GlomoNode* nodePtr, GlomoAppHttpServer* serverPtr );
+static void
+AppHttpServerSendCtrlPkt(GlomoNode *nodePtr, GlomoAppHttpServer *serverPtr);
 
 /*
  * NAME:        AppHttpClientDeterminePrimaryReplyLength.
@@ -147,7 +155,7 @@ static void AppHttpServerSendCtrlPkt( GlomoNode* nodePtr, GlomoAppHttpServer* se
  * PARAMETERS:  clientPtr - pointer to the client's data structure
  * RETURN:      the number of bytes.
  */
-long AppHttpServerDeterminePrimaryReplyLength( GlomoNode* node );
+long AppHttpServerDeterminePrimaryReplyLength(GlomoNode *node);
 
 /*
  * NAME:        AppHttpClientDetermineSecondaryReplyLength.
@@ -155,7 +163,7 @@ long AppHttpServerDeterminePrimaryReplyLength( GlomoNode* node );
  * PARAMETERS:  clientPtr - pointer to the client's data structure
  * RETURN:      the number of bytes.
  */
-long AppHttpServerDetermineSecondaryReplyLength( GlomoNode* node );
+long AppHttpServerDetermineSecondaryReplyLength(GlomoNode *node);
 
 /*
  * NAME:        AppHttpServerSendSecondaryReply.
@@ -165,9 +173,9 @@ long AppHttpServerDetermineSecondaryReplyLength( GlomoNode* node );
  *              secondaryReplyLength - the length in bytes of the reply.
  * RETURN:      none.
  */
-static void AppHttpServerSendSecondaryReply( GlomoNode* node,
-                                             GlomoAppHttpServer* serverPtr,
-                                             long secondaryReplyLength );
+static void AppHttpServerSendSecondaryReply(GlomoNode *node,
+                                          GlomoAppHttpServer *serverPtr,
+                                          long secondaryReplyLength);
 
 /*
  * NAME:        AppHttpServerSendPrimaryReply.
@@ -177,9 +185,9 @@ static void AppHttpServerSendSecondaryReply( GlomoNode* node,
  *              primaryReplyLength - the length in bytes of the reply.
  * RETURN:      none.
  */
-static void AppHttpServerSendPrimaryReply( GlomoNode* node,
-                                           GlomoAppHttpServer* serverPtr,
-                                           long primaryReplyLength );
+static void AppHttpServerSendPrimaryReply(GlomoNode *node,
+				                         GlomoAppHttpServer *serverPtr,
+									     long primaryReplyLength);
 
 #endif /* _HTTP_SERVER_H_ */
 

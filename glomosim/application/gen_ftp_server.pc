@@ -75,164 +75,182 @@
  *              msg - message received by the layer
  * RETURN:      none.
  */
-void AppLayerGenFtpServer( GlomoNode* nodePtr, Message* msg )
+void 
+AppLayerGenFtpServer(GlomoNode *nodePtr, Message *msg)
 {
-    char                    buf[GLOMO_MAX_STRING_LENGTH];
-    GlomoAppGenFtpServer*   serverPtr;
+    char buf[GLOMO_MAX_STRING_LENGTH];
+    GlomoAppGenFtpServer *serverPtr;
 
-    ctoa( simclock(), buf );
+    ctoa(simclock(), buf);
 
-    switch( msg->eventType ) {
-    case MSG_APP_FromTransListenResult:
+    switch(msg->eventType) 
     {
-        TransportToAppListenResult* listenResult;
+        case MSG_APP_FromTransListenResult: 
+        {
+            TransportToAppListenResult *listenResult;
 
-        listenResult = ( TransportToAppListenResult * ) GLOMO_MsgReturnInfo( msg );
+            listenResult = (TransportToAppListenResult *) 
+                           GLOMO_MsgReturnInfo(msg);
+ 
+            #ifdef DEBUG
+                printf("GENERIC FTP Server: Node %ld at %s got ListenResult\n", 
+                       nodePtr->nodeAddr, buf);
+            #endif
 
-#ifdef DEBUG
-        printf( "GENERIC FTP Server: Node %ld at %s got ListenResult\n", nodePtr->nodeAddr, buf );
-#endif
+            if (listenResult->connectionId == -1)
+            {
+                #ifdef DEBUG
+                   printf("    Failed to listen on server port.\n");
+                #endif
 
-        if( listenResult->connectionId == -1 ) {
-#ifdef DEBUG
-            printf( "    Failed to listen on server port.\n" );
-#endif
+                AppTcpServerListen(nodePtr, 
+                                   TRANSPORT_PROTOCOL_TCP, 
+                                   APP_GEN_FTP_SERVER,
+                                   nodePtr->nodeAddr, 
+                                   (short)APP_GEN_FTP_SERVER);
 
-            AppTcpServerListen( nodePtr,
-                                TRANSPORT_PROTOCOL_TCP,
-                                APP_GEN_FTP_SERVER,
-                                nodePtr->nodeAddr,
-                                ( short ) APP_GEN_FTP_SERVER );
-
-            nodePtr->appData.numAppTcpFailure++;
-        }
-
-        break;
-    }
-    case MSG_APP_FromTransOpenResult:
-    {
-        TransportToAppOpenResult*   openResult;
-        openResult = ( TransportToAppOpenResult * ) GLOMO_MsgReturnInfo( msg );
-
-#ifdef DEBUG
-        printf( "GENERIC FTP Server: Node %ld at %s got OpenResult\n", nodePtr->nodeAddr, buf );
-#endif
-
-        assert( openResult->type == TCP_CONN_PASSIVE_OPEN );
-
-        if( openResult->connectionId < 0 ) {
-            nodePtr->appData.numAppTcpFailure++;
-        }else {
-            GlomoAppGenFtpServer*   serverPtr; 
-            serverPtr = AppGenFtpServerNewGenFtpServer( nodePtr, openResult );
-
-            if( serverPtr == NULL ) {
-                printf( "GENERIC FTP SERVER: Node %ld cannot allocate "
-                        "new ftp server\n",
-                        nodePtr->nodeAddr );
-
-                assert( FALSE );
+                nodePtr->appData.numAppTcpFailure++;
             }
-        }
 
-        break;
+            break;
+        }
+        case MSG_APP_FromTransOpenResult: 
+        {
+            TransportToAppOpenResult *openResult;
+            openResult = (TransportToAppOpenResult *) GLOMO_MsgReturnInfo(msg);
+                           
+            #ifdef DEBUG
+                printf("GENERIC FTP Server: Node %ld at %s got OpenResult\n", 
+                       nodePtr->nodeAddr, buf);
+            #endif
+
+            assert(openResult->type == TCP_CONN_PASSIVE_OPEN);
+
+            if (openResult->connectionId < 0)
+            {
+                nodePtr->appData.numAppTcpFailure++;
+            }
+            else 
+            {
+                GlomoAppGenFtpServer *serverPtr; 
+                serverPtr = AppGenFtpServerNewGenFtpServer(nodePtr, openResult);
+
+                if (serverPtr == NULL)
+                {
+                    printf("GENERIC FTP SERVER: Node %ld cannot allocate "
+                           "new ftp server\n", nodePtr->nodeAddr);
+
+                    assert(FALSE);
+                }
+            }
+
+            break;
+        }
+        case MSG_APP_FromTransDataReceived: 
+        {
+            int packetSize;
+            TransportToAppDataReceived *dataRecvd;
+
+            dataRecvd = (TransportToAppDataReceived *) GLOMO_MsgReturnInfo(msg);
+
+            packetSize = GLOMO_MsgReturnPacketSize(msg);
+
+            #ifdef DEBUG
+                printf("GENERIC FTP Server: Node %ld at %s received data %d\n",
+                       nodePtr->nodeAddr, buf, packetSize);
+            #endif
+
+            serverPtr = AppGenFtpServerGetGenFtpServer(nodePtr, 
+                                                       dataRecvd->connectionId);
+
+            if (serverPtr == NULL)
+            {
+                printf("GENERIC FTP Server: Node %ld cannot find ftp server\n",
+                       nodePtr->nodeAddr);
+
+                assert(FALSE);
+            }
+
+            if (serverPtr->sessionIsClosed == TRUE)
+            {
+                printf("GENERIC FTP Server: Node %ld ftp server session "
+                       "should not be closed\n", nodePtr->nodeAddr);
+
+                assert(FALSE);
+            }
+
+            serverPtr->numBytesRecvd += packetSize;
+
+            /* Data packet. */
+            if (msg->packet[packetSize - 1] == 'd')
+            {
+                /* Do nothing since data packet. */
+            } 
+            /* Client closing connection .*/
+            else if (msg->packet[packetSize - 1] == 'c')
+            {
+                /* 
+                 * Client wants to close the session, so server also
+                 * initiates a close.
+                 */
+                AppTcpCloseConnection(nodePtr, TRANSPORT_PROTOCOL_TCP, 
+                                   serverPtr->connectionId);
+
+                serverPtr->sessionFinish = simclock();
+                serverPtr->sessionIsClosed = TRUE;
+            }
+            else
+            {
+                printf("GENERIC FTP Server: Node %ld got unknown pkt type %c\n",
+                       nodePtr->nodeAddr, msg->packet[packetSize - 1]);
+
+                assert(FALSE);
+            }
+
+            break;
+        }
+        case MSG_APP_FromTransCloseResult:
+        {
+            TransportToAppCloseResult *closeResult;
+
+            closeResult = (TransportToAppCloseResult *)GLOMO_MsgReturnInfo(msg);
+
+            #ifdef DEBUG
+                printf("GENERIC FTP Server: Node %ld at %s got close result\n", 
+                       nodePtr->nodeAddr, buf);
+            #endif
+
+            serverPtr = AppGenFtpServerGetGenFtpServer(nodePtr, 
+                                                    closeResult->connectionId);
+
+            if (serverPtr == NULL)
+            {
+                printf("GENERIC FTP Server: Node %ld cannot find ftp server\n",
+                       nodePtr->nodeAddr);
+
+                assert(FALSE);
+            }
+
+            if (serverPtr->sessionIsClosed == FALSE) 
+            {
+                serverPtr->sessionIsClosed = TRUE;
+                serverPtr->sessionFinish = simclock();
+            }
+
+            break;
+        }
+    default:
+        ctoa(simclock(), buf);
+        printf("GENERIC FTP Server: Node %ld at %s received "
+               "message of unknown type %ld.\n",
+               nodePtr->nodeAddr, buf, msg->eventType);
+
+        printf("    MSG_APP_TimerExpired = %d\n", MSG_APP_TimerExpired);
+
+        assert(FALSE);
     }
-    case MSG_APP_FromTransDataReceived:
-    {
-        int                         packetSize;
-        TransportToAppDataReceived* dataRecvd;
 
-        dataRecvd = ( TransportToAppDataReceived * ) GLOMO_MsgReturnInfo( msg );
-
-        packetSize = GLOMO_MsgReturnPacketSize( msg );
-
-#ifdef DEBUG
-        printf( "GENERIC FTP Server: Node %ld at %s received data %d\n",
-                nodePtr->nodeAddr,
-                buf,
-                packetSize );
-#endif
-
-        serverPtr = AppGenFtpServerGetGenFtpServer( nodePtr, dataRecvd->connectionId );
-
-        if( serverPtr == NULL ) {
-            printf( "GENERIC FTP Server: Node %ld cannot find ftp server\n", nodePtr->nodeAddr );
-
-            assert( FALSE );
-        }
-
-        if( serverPtr->sessionIsClosed == TRUE ) {
-            printf( "GENERIC FTP Server: Node %ld ftp server session "
-                    "should not be closed\n",
-                    nodePtr->nodeAddr );
-
-            assert( FALSE );
-        }
-
-        serverPtr->numBytesRecvd += packetSize;
-
-        /* Data packet. */
-        if( msg->packet[packetSize - 1] == 'd' ) {
-            /* Do nothing since data packet. */
-        } 
-        /* Client closing connection .*/
-        else if( msg->packet[packetSize - 1] == 'c' ) {
-            /* 
-             * Client wants to close the session, so server also
-             * initiates a close.
-             */
-            AppTcpCloseConnection( nodePtr, TRANSPORT_PROTOCOL_TCP, serverPtr->connectionId );
-
-            serverPtr->sessionFinish = simclock();
-            serverPtr->sessionIsClosed = TRUE;
-        }else {
-            printf( "GENERIC FTP Server: Node %ld got unknown pkt type %c\n",
-                    nodePtr->nodeAddr,
-                    msg->packet[packetSize - 1] );
-
-            assert( FALSE );
-        }
-
-        break;
-    }
-    case MSG_APP_FromTransCloseResult:
-    {
-        TransportToAppCloseResult*  closeResult;
-
-        closeResult = ( TransportToAppCloseResult * ) GLOMO_MsgReturnInfo( msg );
-
-#ifdef DEBUG
-        printf( "GENERIC FTP Server: Node %ld at %s got close result\n", nodePtr->nodeAddr, buf );
-#endif
-
-        serverPtr = AppGenFtpServerGetGenFtpServer( nodePtr, closeResult->connectionId );
-
-        if( serverPtr == NULL ) {
-            printf( "GENERIC FTP Server: Node %ld cannot find ftp server\n", nodePtr->nodeAddr );
-
-            assert( FALSE );
-        }
-
-        if( serverPtr->sessionIsClosed == FALSE ) {
-            serverPtr->sessionIsClosed = TRUE;
-            serverPtr->sessionFinish = simclock();
-        }
-
-        break;
-    }
-    default:ctoa( simclock(), buf );
-    printf( "GENERIC FTP Server: Node %ld at %s received "
-            "message of unknown type %ld.\n",
-            nodePtr->nodeAddr,
-            buf,
-            msg->eventType );
-
-    printf( "    MSG_APP_TimerExpired = %d\n", MSG_APP_TimerExpired );
-
-    assert( FALSE );
-    }
-
-    GLOMO_MsgFree( nodePtr, msg );
+    GLOMO_MsgFree(nodePtr, msg);
 }
 
 
@@ -242,17 +260,18 @@ void AppLayerGenFtpServer( GlomoNode* nodePtr, Message* msg )
  * PARAMETERS:  nodePtr - pointer to the node.
  * RETURN:      none. 
  */
-void AppGenFtpServerInit( GlomoNode* nodePtr )
+void
+AppGenFtpServerInit(GlomoNode *nodePtr)
 {
-#ifdef EXCEL
-    remove( APP_GEN_FTP_SERVER_FILE );
-#endif
+    #ifdef EXCEL
+        remove(APP_GEN_FTP_SERVER_FILE);
+    #endif
 
-    AppTcpServerListen( nodePtr,
-                        TRANSPORT_PROTOCOL_TCP,
-                        APP_GEN_FTP_SERVER,
-                        nodePtr->nodeAddr,
-                        ( short ) APP_GEN_FTP_SERVER );
+    AppTcpServerListen(nodePtr, 
+                       TRANSPORT_PROTOCOL_TCP, 
+                       APP_GEN_FTP_SERVER,
+                       nodePtr->nodeAddr, 
+                       (short)APP_GEN_FTP_SERVER);
 }
 
 
@@ -263,74 +282,73 @@ void AppGenFtpServerInit( GlomoNode* nodePtr )
  *              serverPtr - pointer to the ftp server data structure. 
  * RETURN:      none. 
  */
-static void AppGenFtpServerPrintStats( GlomoNode* nodePtr, GlomoAppGenFtpServer* serverPtr )
+static void
+AppGenFtpServerPrintStats(GlomoNode *nodePtr, GlomoAppGenFtpServer *serverPtr)
 {
-    FILE*       excel   = NULL;
+    FILE *excel= NULL;
 
-    clocktype   throughput;
-    char        clockStr[GLOMO_MAX_STRING_LENGTH];
-    char        startStr[GLOMO_MAX_STRING_LENGTH];
-    char        closeStr[GLOMO_MAX_STRING_LENGTH];
-    char        buf[GLOMO_MAX_STRING_LENGTH];
-    char        throughputStr[GLOMO_MAX_STRING_LENGTH];
+    clocktype throughput;
+    char clockStr[GLOMO_MAX_STRING_LENGTH];
+    char startStr[GLOMO_MAX_STRING_LENGTH];
+    char closeStr[GLOMO_MAX_STRING_LENGTH];
+    char buf[GLOMO_MAX_STRING_LENGTH];
+    char throughputStr[GLOMO_MAX_STRING_LENGTH];
 
-#ifdef EXCEL
-    excel = fopen( APP_GEN_FTP_SERVER_FILE, "a" );
+    #ifdef EXCEL
+        excel = fopen(APP_GEN_FTP_SERVER_FILE, "a");
 
-    if( excel == NULL ) {
-        fprintf( stderr, "FTP/GENERIC Server: cannot open excel " "stat file.\n" );
+        if (excel == NULL)
+        {
+            fprintf(stderr, "FTP/GENERIC Server: cannot open excel "
+                    "stat file.\n");
 
-        assert( FALSE );
-    }
-#endif
+            assert(FALSE);
+        }
+    #endif
 
-    ctoa( serverPtr->sessionStart, startStr );
+    ctoa(serverPtr->sessionStart, startStr);
 
-    if( serverPtr->sessionIsClosed == FALSE ) {
+    if (serverPtr->sessionIsClosed == FALSE) 
+    {
         serverPtr->sessionFinish = simclock();
-        ctoa( simclock(), clockStr );
-        sprintf( closeStr, "%s ns (not closed)", clockStr );
-    }else {
-        ctoa( serverPtr->sessionFinish, clockStr );
-        sprintf( closeStr, "%s ns (closed)", clockStr );
+        ctoa(simclock(), clockStr);
+        sprintf(closeStr, "%s ns (not closed)", clockStr);
+    } 
+    else 
+    {
+        ctoa(serverPtr->sessionFinish, clockStr);
+        sprintf(closeStr, "%s ns (closed)", clockStr);
     }
 
-    if( serverPtr->sessionFinish <= serverPtr->sessionStart ) {
-        throughput = 0;
-    }else {
-        throughput = ( serverPtr->numBytesRecvd * 8.0 * SECOND ) /
-                     ( serverPtr->sessionFinish - serverPtr->sessionStart );
+    if (serverPtr->sessionFinish <= serverPtr->sessionStart) 
+    {
+        throughput = 0; 
+    } 
+    else 
+    {
+        throughput = (serverPtr->numBytesRecvd * 8.0 * SECOND) /
+                     (serverPtr->sessionFinish - serverPtr->sessionStart);
     }
 
-    ctoa( throughput, throughputStr );
+    ctoa(throughput, throughputStr);
 
-    sprintf( buf,
-             "from %ld to %ld (cid = %d), start = %s ns, end = %s "
-             "bytes recv = %ld B, throughput = %s bps",
-             serverPtr->remoteAddr,
-             serverPtr->localAddr,
-             serverPtr->connectionId,
-             startStr,
-             closeStr,
-             serverPtr->numBytesRecvd,
-             throughputStr );
+    sprintf(buf, "from %ld to %ld (cid = %d), start = %s ns, end = %s "
+            "bytes recv = %ld B, throughput = %s bps",
+            serverPtr->remoteAddr, serverPtr->localAddr, 
+            serverPtr->connectionId, startStr, closeStr,
+            serverPtr->numBytesRecvd, throughputStr);
 
-    GLOMO_PrintStat( nodePtr, "AppGenFtpServer", buf );
+    GLOMO_PrintStat(nodePtr, "AppGenFtpServer", buf);
 
-#ifdef EXCEL
-    fprintf( excel,
-             "%ld\t%ld\t%d\t%s ns\t%s\t%ld\t%s\n",
-             serverPtr->remoteAddr,
-             serverPtr->localAddr,
-             serverPtr->connectionId,
-             startStr,
-             closeStr,
-             serverPtr->numBytesRecvd,
-             throughputStr );
+    #ifdef EXCEL
+        fprintf(excel, "%ld\t%ld\t%d\t%s ns\t%s\t%ld\t%s\n",
+                serverPtr->remoteAddr, serverPtr->localAddr,
+                serverPtr->connectionId, startStr, closeStr,
+                serverPtr->numBytesRecvd, throughputStr);
 
-    fflush( excel );
-    fclose( excel );
-#endif
+        fflush(excel);
+        fclose(excel);
+    #endif
 }
 
 /*
@@ -340,10 +358,12 @@ static void AppGenFtpServerPrintStats( GlomoNode* nodePtr, GlomoAppGenFtpServer*
  *              serverPtr - pointer to the ftp server data structure. 
  * RETURN:      none. 
  */
-void AppGenFtpServerFinalize( GlomoNode* nodePtr, GlomoAppGenFtpServer* serverPtr )
+void
+AppGenFtpServerFinalize(GlomoNode *nodePtr, GlomoAppGenFtpServer *serverPtr)
 {
-    if( nodePtr->appData.appStats == TRUE ) {
-        AppGenFtpServerPrintStats( nodePtr, serverPtr );
+    if (nodePtr->appData.appStats == TRUE)
+    {
+        AppGenFtpServerPrintStats(nodePtr, serverPtr);
     }
 }
 
@@ -355,15 +375,19 @@ void AppGenFtpServerFinalize( GlomoNode* nodePtr, GlomoAppGenFtpServer* serverPt
  * RETURN:      the pointer to the ftp server data structure,
  *              NULL if nothing found.
  */
-static GlomoAppGenFtpServer* AppGenFtpServerGetGenFtpServer( GlomoNode* nodePtr, int connId )
+static GlomoAppGenFtpServer *
+AppGenFtpServerGetGenFtpServer(GlomoNode *nodePtr, int connId)
 {
-    AppInfo*                appList = nodePtr->appData.appPtr;
-    GlomoAppGenFtpServer*   ftpServer;
-
-    for( ;appList != NULL;appList = appList->appNext ) {
-        if( appList->appType == APP_GEN_FTP_SERVER ) {
-            ftpServer = ( GlomoAppGenFtpServer * ) appList->appDetail;
-            if( ftpServer->connectionId == connId ) {
+    AppInfo *appList = nodePtr->appData.appPtr;
+    GlomoAppGenFtpServer *ftpServer;
+    
+    for (; appList != NULL; appList = appList->appNext) 
+    {
+        if (appList->appType == APP_GEN_FTP_SERVER)
+        {
+            ftpServer = (GlomoAppGenFtpServer *) appList->appDetail;
+            if (ftpServer->connectionId == connId)
+            {
                 return ftpServer;
             }
         }
@@ -381,23 +405,27 @@ static GlomoAppGenFtpServer* AppGenFtpServerGetGenFtpServer( GlomoNode* nodePtr,
  * RETRUN:      the pointer to the created ftp server data structure,
  *              NULL if no data structure allocated. 
  */
-static GlomoAppGenFtpServer* AppGenFtpServerNewGenFtpServer( GlomoNode* nodePtr,
-                                                             TransportToAppOpenResult* openResult )
+static GlomoAppGenFtpServer *
+AppGenFtpServerNewGenFtpServer(GlomoNode *nodePtr, 
+                               TransportToAppOpenResult *openResult)
 {
-    char                    clockStr[GLOMO_MAX_STRING_LENGTH];
-    AppInfo*                newApp;
-    GlomoAppGenFtpServer*   ftpServer;
+    char clockStr[GLOMO_MAX_STRING_LENGTH];
+    AppInfo *newApp;
+    GlomoAppGenFtpServer *ftpServer;
 
-    newApp = ( AppInfo * ) pc_malloc( sizeof( AppInfo ) );
+    newApp = (AppInfo *) pc_malloc(sizeof(AppInfo));
 
-    if( newApp == NULL ) {
-        assert( FALSE );
+    if (newApp == NULL) 
+    {
+        assert(FALSE);
     }
 
-    ftpServer = ( GlomoAppGenFtpServer * ) pc_malloc( sizeof( GlomoAppGenFtpServer ) );
+    ftpServer = (GlomoAppGenFtpServer *) 
+                pc_malloc(sizeof(GlomoAppGenFtpServer));
 
-    if( ftpServer == NULL ) {
-        assert( FALSE );
+    if (ftpServer == NULL) 
+    {
+        assert(FALSE);
     }
 
     /*
@@ -413,14 +441,14 @@ static GlomoAppGenFtpServer* AppGenFtpServerNewGenFtpServer( GlomoNode* nodePtr,
     ftpServer->sessionIsClosed = FALSE; 
     ftpServer->numBytesRecvd = 0;
 
-#ifdef DEBUG
-    printf( "GENERIC FTP Server: Node %ld creating new ftp "
-            "server struture\n", nodePtr->nodeAddr );
+    #ifdef DEBUG
+        printf("GENERIC FTP Server: Node %ld creating new ftp "
+               "server struture\n", nodePtr->nodeAddr);
 
-    printf( "    connectionId = %d\n", ftpServer->connectionId );
-    printf( "    localAddr = %d\n", ftpServer->localAddr );
-    printf( "    remoteAddr = %d\n", ftpServer->remoteAddr );
-#endif
+        printf("    connectionId = %d\n", ftpServer->connectionId);
+        printf("    localAddr = %d\n", ftpServer->localAddr);
+        printf("    remoteAddr = %d\n", ftpServer->remoteAddr);
+    #endif
 
 
     newApp->appDetail = ftpServer;

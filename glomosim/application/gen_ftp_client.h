@@ -49,20 +49,20 @@
 #define APP_GEN_FTP_CLIENT_FILE    "GEN_FTP_CLIENT.EXCEL"
 
 
-typedef struct glomo_app_gen_ftp_client_str
+typedef struct glomo_app_gen_ftp_client_str 
 {
-    int         connectionId;
-    NODE_ADDR   localAddr; 
-    NODE_ADDR   remoteAddr;
-    clocktype   sessionStart;
-    clocktype   sessionFinish;
-    BOOL        sessionIsClosed;
-    int         itemSize;
-    long        itemsToSend;
-    long        numBytesSent;
-    clocktype   endTime;
+    int connectionId;
+    NODE_ADDR localAddr; 
+    NODE_ADDR remoteAddr;
+    clocktype sessionStart;
+    clocktype sessionFinish;
+    BOOL sessionIsClosed;
+    int itemSize;
+    long itemsToSend;
+    long numBytesSent;
+    clocktype endTime;
 
-    long        uniqueId;
+    long uniqueId;
 } GlomoAppGenFtpClient;
 
 
@@ -74,7 +74,8 @@ typedef struct glomo_app_gen_ftp_client_str
  *              msg - message received by the layer
  * RETURN:      none.
  */
-void AppLayerGenFtpClient( GlomoNode* nodePtr, Message* msg );
+void
+AppLayerGenFtpClient(GlomoNode *nodePtr, Message *msg);
 
 
 /*
@@ -88,12 +89,13 @@ void AppLayerGenFtpClient( GlomoNode* nodePtr, Message* msg );
  *              endTime - time when session is over.
  * RETURN:      none.
  */
-void AppGenFtpClientInit( GlomoNode* nodePtr,
-                          NODE_ADDR serverAddr,
-                          long itemsToSend,
-                          long itemSize,
-                          clocktype startTime,
-                          clocktype endTime );
+void
+AppGenFtpClientInit(GlomoNode *nodePtr,
+                    NODE_ADDR serverAddr,
+                    long itemsToSend,
+                    long itemSize,
+                    clocktype startTime,
+                    clocktype endTime);
 
 
 
@@ -104,7 +106,8 @@ void AppGenFtpClientInit( GlomoNode* nodePtr,
  *              clientPtr - pointer to the ftp client data structure.
  * RETURN:      none.
  */
-static void AppGenFtpClientPrintStats( GlomoNode* nodePtr, GlomoAppGenFtpClient* clientPtr );
+static void
+AppGenFtpClientPrintStats(GlomoNode *nodePtr, GlomoAppGenFtpClient *clientPtr);
 
 
 
@@ -115,7 +118,8 @@ static void AppGenFtpClientPrintStats( GlomoNode* nodePtr, GlomoAppGenFtpClient*
  *              clientPtr - pointer to the ftp client data structure.
  * RETURN:      none.
  */
-void AppGenFtpClientFinalize( GlomoNode* nodePtr, GlomoAppGenFtpClient* clientPtr );
+void
+AppGenFtpClientFinalize(GlomoNode *nodePtr, GlomoAppGenFtpClient *clientPtr);
 
 
 
@@ -127,7 +131,8 @@ void AppGenFtpClientFinalize( GlomoNode* nodePtr, GlomoAppGenFtpClient* clientPt
  * RETURN:      the pointer to the ftp client data structure,
  *              NULL if nothing found.
  */
-static GlomoAppGenFtpClient* AppGenFtpClientGetGenFtpClient( GlomoNode* nodePtr, int connId );
+static GlomoAppGenFtpClient *
+AppGenFtpClientGetGenFtpClient(GlomoNode *nodePtr, int connId);
 
 
 
@@ -140,8 +145,9 @@ static GlomoAppGenFtpClient* AppGenFtpClientGetGenFtpClient( GlomoNode* nodePtr,
  * RETRUN:      the pointer to the created ftp client data structure,
  *              NULL if no data structure allocated.
  */
-static GlomoAppGenFtpClient* AppGenFtpClientUpdateGenFtpClient( GlomoNode* nodePtr,
-                                                                TransportToAppOpenResult* openResult );
+static GlomoAppGenFtpClient *
+AppGenFtpClientUpdateGenFtpClient(GlomoNode *nodePtr,
+                                  TransportToAppOpenResult *openResult);
 
 
 /*
@@ -156,11 +162,12 @@ static GlomoAppGenFtpClient* AppGenFtpClientUpdateGenFtpClient( GlomoNode* nodeP
  * RETRUN:      the pointer to the created ftp client data structure,
  *              NULL if no data structure allocated.
  */
-static GlomoAppGenFtpClient* AppGenFtpClientNewGenFtpClient( GlomoNode* nodePtr,
-                                                             NODE_ADDR serverAddr,
-                                                             long itemsToSend,
-                                                             long itemSize,
-                                                             clocktype endTime );
+static GlomoAppGenFtpClient *
+AppGenFtpClientNewGenFtpClient(GlomoNode *nodePtr,
+                               NODE_ADDR serverAddr,
+                               long itemsToSend,
+                               long itemSize,
+                               clocktype endTime);
 
 
 
@@ -171,7 +178,9 @@ static GlomoAppGenFtpClient* AppGenFtpClientNewGenFtpClient( GlomoNode* nodePtr,
  *              clientPtr - pointer to the ftp client data structure.
  * RETRUN:      none.
  */
-static void AppGenFtpClientSendNextItem( GlomoNode* nodePtr, GlomoAppGenFtpClient* clientPtr );
+static void
+AppGenFtpClientSendNextItem(GlomoNode *nodePtr, 
+                            GlomoAppGenFtpClient *clientPtr);
 
 
 
@@ -183,7 +192,10 @@ static void AppGenFtpClientSendNextItem( GlomoNode* nodePtr, GlomoAppGenFtpClien
  *              end - end of session.
  * RETRUN:      none.
  */
-static void AppGenFtpClientSendPacket( GlomoNode* nodePtr, GlomoAppGenFtpClient* clientPtr, BOOL end );
+static void
+AppGenFtpClientSendPacket(GlomoNode *nodePtr,
+                          GlomoAppGenFtpClient *clientPtr,
+                          BOOL end);
 
 
 
