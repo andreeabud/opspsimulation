@@ -49,51 +49,54 @@
 #include "structmsg.h"
 #include "fileio.h"
 
-enum { IDLE, BUSY };
+enum {
+    IDLE,
+    BUSY
+};
 
 //
 // MacWiredFrameHeader
 // It is similar to the 802.3 header, but is 28 bytes
 // (2 bytes longer than the 802.3 header and no padding for short packets)
 //
-typedef struct mac_wired_frame_header_str
-{
-    char        framePreamble[8];
-    NODE_ADDR   sourceAddr;
-    char        sourceAddrPadding[6 - sizeof( NODE_ADDR )];
-    NODE_ADDR   destAddr;
-    char        destAddrPadding[6 - sizeof( NODE_ADDR )];
-    char        length[2];
-    char        checksum[4];
+typedef struct mac_wired_frame_header_str {
+    char      framePreamble[8];
+    NODE_ADDR sourceAddr;
+    char      sourceAddrPadding[6 - sizeof(NODE_ADDR)];
+    NODE_ADDR destAddr;
+    char      destAddrPadding[6 - sizeof(NODE_ADDR)];
+    char      length[2];
+    char      checksum[4];
 } MacWiredFrameHeader;
 
-typedef struct glomo_wired_link_stats_str
-{
+typedef struct glomo_wired_link_stats_str {
     int packetsSent;
 } GlomoWiredLinkStats;
 
-typedef struct glomo_wired_if_str
-{
-    GlomoMac*           myGlomoMac;
+typedef struct glomo_wired_if_str {
+    GlomoMac *myGlomoMac;
 
-    int                 status;
-    GlomoNode*          dest;
-    NODE_ADDR           destAddr;
-    int                 destInterfaceId;
+    int status;
+    GlomoNode *dest;
+    NODE_ADDR destAddr;
+    int destInterfaceId;
 
-    int                 partitionIndex; // for multiple partitions
+    int partitionIndex; // for multiple partitions
 
     GlomoWiredLinkStats stats;
 } GlomoWiredLink;
 
-void WiredLinkInit( GlomoNode* node, const GlomoNodeInput* nodeInput );
-void WiredLinkLayer( GlomoNode* node, int interfaceIndex, Message* msg );
-void WiredLinkFinalize( GlomoNode* node, int interfaceIndex );
+void WiredLinkInit(GlomoNode * node, const GlomoNodeInput * nodeInput);
+void WiredLinkLayer(GlomoNode * node, int interfaceIndex, Message * msg);
+void WiredLinkFinalize(GlomoNode * node, int interfaceIndex);
 
-void WiredLinkNetworkLayerHasPacketToSend( GlomoNode* node, GlomoWiredLink* wiredlink );
-void WiredLinkMessageFromWire( GlomoNode* node, int interfaceIndex, Message* msg );
-void WiredLinkTransmissionFinished( GlomoNode* node, int interfaceIndex, Message* msg );
+void WiredLinkNetworkLayerHasPacketToSend(GlomoNode * node,
+                                          GlomoWiredLink * wiredlink);
+void WiredLinkMessageFromWire(GlomoNode *node, int interfaceIndex,
+                                Message *msg);
+void WiredLinkTransmissionFinished(GlomoNode *node, int interfaceIndex,
+                                   Message *msg);
 
-int WiredLinkInterfaceIdForThisDest( GlomoNode* node, NODE_ADDR destAddr );
+int WiredLinkInterfaceIdForThisDest(GlomoNode *node, NODE_ADDR destAddr);
 #endif /* _WIREDLINK_H_ */
 

@@ -55,22 +55,19 @@
 #define MAX_CACHED_PAYLOAD_SIZE 1024
 
 #define MAX_LOOKAHEAD_VALUE  (10 * MILLI_SECOND)
-
-typedef union message_list_cell_str
-{
-    Message                     messageCell;
-    union message_list_cell_str*next;
+   
+typedef union message_list_cell_str {
+    Message messageCell;
+    union message_list_cell_str* next;
 } MessageListCell;
 
-typedef union message_payload_list_cell_str
-{
-    char                                payloadMemory[MAX_CACHED_PAYLOAD_SIZE];
-    union message_payload_list_cell_str*next;
+typedef union message_payload_list_cell_str {
+    char payloadMemory[MAX_CACHED_PAYLOAD_SIZE];
+    union message_payload_list_cell_str* next;
 } MessagePayloadListCell;
 
-typedef union splay_node_list_cell_str
-{
-    SplayNode                       splayNodeCell;
+typedef union splay_node_list_cell_str {
+    SplayNode splayNodeCell;
     union splay_node_list_cell_str* next;
 } SplayNodeListCell;
 
@@ -78,8 +75,7 @@ typedef union splay_node_list_cell_str
  * Information kept about all partitions by
  * the Driver.
  */
-struct glomo_area_str
-{
+struct glomo_area_str {
     ename   partitionEname; /* ename of partition */
     double  start_x;        /* starting x position */
     double  start_y;        /* starting y position */
@@ -88,53 +84,49 @@ struct glomo_area_str
 };
 
 
-struct glomo_area_nearest_str
-{
-    ename   partitionEname;
-    double  nearestX;
-    double  nearestY;
+struct glomo_area_nearest_str {
+    ename  partitionEname;
+    double nearestX;
+    double nearestY;
 };
 
-struct glomo_remote_link_str
-{
-    NODE_ADDR   sourceNodeAddr;
-    NODE_ADDR   destNodeAddr;
-    int         destInterfaceId;
-    GlomoNode*  destNodePtr;
+struct glomo_remote_link_str {
+    NODE_ADDR  sourceNodeAddr;
+    NODE_ADDR  destNodeAddr;
+    int        destInterfaceId;
+    GlomoNode *destNodePtr;
 };
 
-typedef struct glomo_wired_partition_str
-{
-    ename               partitionEname;
-    int                 numLinks;
-    clocktype*          outputTime;
-    GlomoRemoteLink*    link;
+typedef struct glomo_wired_partition_str {
+    ename            partitionEname;
+    int              numLinks;
+    clocktype       *outputTime;
+    GlomoRemoteLink *link;
 } GlomoWiredPartition;
 
 /*
  * typedef to GlomoPartition in main.h
  */
-struct glomo_partition_str
-{
-    int                     partitionId;        // Identifier for this partition
-    int                     indexX;             // Index (x axis) for this partition
-    int                     indexY;             // Index (y axis) for this partition
-    int                     numPartitionsX;
-    int                     numPartitionsY;
-    GlomoAreaInfo           thisArea; // This partition
-    GlomoAreaInfo**         area;     // All the partitions
-    GlomoAreaNearestInfo*   areaNearest;
-    GlomoNodePositionInfo*  nodePositions;
+struct glomo_partition_str {
+    int    partitionId;        // Identifier for this partition
+    int    indexX;             // Index (x axis) for this partition
+    int    indexY;             // Index (y axis) for this partition
+    int    numPartitionsX;
+    int    numPartitionsY;
+    GlomoAreaInfo          thisArea; // This partition
+    GlomoAreaInfo        **area;     // All the partitions
+    GlomoAreaNearestInfo  *areaNearest;
+    GlomoNodePositionInfo *nodePositions;
 
-    int                     numWiredPartitions;
-    GlomoWiredPartition*    wiredPartition;
+    int    numWiredPartitions;
+    GlomoWiredPartition   *wiredPartition;
 
-    double                  extra_x_y_padding;
-    GlomoCoordinates        terrainDimensions;
+    double extra_x_y_padding;
+    GlomoCoordinates terrainDimensions;
 
-    GlomoNode**             nodeData;      /* Information about all nodes */
+    GlomoNode **nodeData;      /* Information about all nodes */
 
-    GlomoProp               propData;
+    GlomoProp propData;
 
     /*
      * This is a pointer to a node in this partition. A node keeps pointers
@@ -142,20 +134,20 @@ struct glomo_partition_str
      * If this partitcular node moves out of this partition, this variable
      * will also have to be updated.
      */
-    GlomoNode*              firstNode;
+    GlomoNode       *firstNode;
 
     /* information about neighbors  */
-    GlomoNeighbor           neighborData[GLOMO_MAX_NEIGHBOR_PARTITIONS];
+    GlomoNeighbor neighborData[GLOMO_MAX_NEIGHBOR_PARTITIONS];
 
-
-
-
-    int                     msgFreeListNum;
-    MessageListCell*        msgFreeList;
-    int                     msgPayloadFreeListNum;
-    MessagePayloadListCell* msgPayloadFreeList;
-    int                     splayNodeFreeListNum;
-    SplayNodeListCell*      splayNodeFreeList;
+    
+    
+    
+    int msgFreeListNum;
+    MessageListCell *msgFreeList;
+    int msgPayloadFreeListNum;
+    MessagePayloadListCell *msgPayloadFreeList;
+    int splayNodeFreeListNum;
+    SplayNodeListCell *splayNodeFreeList;
 
     /*
      * Each node keeps a splay tree of all its future messages.
@@ -163,30 +155,30 @@ struct glomo_partition_str
      * so that we can easily retrieve the earliest message in this
      * particular partition.
      */
-    HeapSplayTree           heapSplayTree;
+    HeapSplayTree heapSplayTree;
 
     /*
      * This heap represents mobility events generated for nodes
      * in this partition.
      */
-    Heap                    mobilityInternal;
-
+    Heap mobilityInternal;
+    
     /* 
     // This heap represents future mobility events leaving to
     // other partitions.  
     //
     */ 
+   
+    Heap mobilityOutgoing;
 
-    Heap                    mobilityOutgoing;
-
-    FILE*                   statFd;       /* file description used for statistics */
+    FILE    *statFd;       /* file description used for statistics */
 };
 
 
 /*
  * The partition entity.
  */
-entity GLOMOPartition( long partitionId, ename creator );
+entity GLOMOPartition(long partitionId, ename creator);
 
 
 /*
@@ -216,7 +208,8 @@ entity GLOMOPartition( long partitionId, ename creator );
  *    dest:       ename of destination entity
  *    delay:      delay suffered by this message.
  */
-void GLOMO_MsgSendReal( GlomoNode* node, Message* msg, ename dest, clocktype delay );
+void GLOMO_MsgSendReal(GlomoNode *node, Message *msg,
+                       ename dest, clocktype delay);
 
 /*
  * FUNCTION     GLOMO_CallLayer
@@ -227,9 +220,9 @@ void GLOMO_MsgSendReal( GlomoNode* node, Message* msg, ename dest, clocktype del
  *     nodeData:     node for which message is to be delivered
  *     msgHdr:       message for which instructions are to be executed
  */
-void GLOMO_CallLayer( GlomoNode* node, Message* msg );
+void GLOMO_CallLayer(GlomoNode *node, Message *msg);
 
-extern clocktype    PrintSimTimeInterval;
+extern clocktype PrintSimTimeInterval;
 #define NUM_SIM_TIME_STATUS_PRINTS 100
 
 #endif /* _GLOMO_H_ */

@@ -132,18 +132,18 @@ static char rcsid[] = "$Id: pathloss_matrix.pc.stub,v 1.2 2001/09/13 07:58:23 jm
 /*
  * GLOMO_MobilityPathlossMatrixInit() -- initialize pathloss matrix mobility
  */
-void GLOMO_MobilityPathlossMatrixInit( GlomoNode* node, GlomoNodeInput* nodeInput )
+void GLOMO_MobilityPathlossMatrixInit(GlomoNode *node, 
+                                      GlomoNodeInput *nodeInput)
 {
-    assert( FALSE ); abort();
+    assert(FALSE); abort();
 } /* GlomoMobilityPathlossMatrixInit() */
 
 
 /*
  * GlomoMobilityPathlossMatrixFinalize() -- finalize pathloss matrix mobility
  */
-void GLOMO_MobilityPathlossMatrixFinalize( GlomoNode* node )
-{
-    assert( FALSE ); abort();
+void GLOMO_MobilityPathlossMatrixFinalize(GlomoNode *node) {
+    assert(FALSE); abort();
 } /* GLOMO_MobilityPathlossMatrixFinalize() */
 
 
@@ -151,27 +151,27 @@ void GLOMO_MobilityPathlossMatrixFinalize( GlomoNode* node )
 /*
  * GLOMO_MobilityPathlossMatrix() -- pathloss matrix mobility
  */
-void GLOMO_MobilityPathlossMatrix( GlomoNode* node )
-{
-    assert( FALSE ); abort();
+void GLOMO_MobilityPathlossMatrix(GlomoNode *node) {
+    assert(FALSE); abort();
 }
 
 /*
  * PathlossMatrixInit() -- initialize pathloss propagation
  */
-void PathlossMatrixInit( GlomoProp* prop, const GlomoNodeInput* nodeInput )
+void PathlossMatrixInit(GlomoProp* prop,
+                        const GlomoNodeInput *nodeInput)
 {
-    assert( FALSE ); abort();
+    assert(FALSE); abort();
 }
 
-double PathlossMatrix( NODE_ADDR txAddr,
-                       NODE_ADDR rxAddr,
-                       float txAntennaGain,
-                       float rxAntennaGain,
-                       GlomoPropPathlossMatrix* pathlossVar,
-                       double* distance )
+double PathlossMatrix(NODE_ADDR txAddr,
+                      NODE_ADDR rxAddr,
+                      float txAntennaGain,
+                      float rxAntennaGain,
+                      GlomoPropPathlossMatrix *pathlossVar,
+                      double *distance)
 {
-    assert( FALSE ); abort();
+    assert(FALSE); abort();
     return 0.0;
 }
 

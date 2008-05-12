@@ -51,33 +51,38 @@
 #include "mobility_waypoint.h"
 
 static
-void FindNextPos( GlomoNode* node,
-                  GlomoMobilityRandomWaypoint* waypoint_mobility,
-                  int* numStepsToDestination )
+void FindNextPos(
+    GlomoNode *node,
+    GlomoMobilityRandomWaypoint* waypoint_mobility, 
+    int* numStepsToDestination)
 {
-    GlomoCoordinates    diff;
-    double              distance, time, speed;
-    int                 num_steps;
+    GlomoCoordinates diff;
+    double distance, time, speed;
+    int num_steps;
+    
+    waypoint_mobility->dest.x =
+        node->partitionData->terrainDimensions.x *
+        pc_erand(node->mobilityData.seed);
 
-    waypoint_mobility->dest.x = node->partitionData->terrainDimensions.x * pc_erand( node->mobilityData.seed );
-
-    waypoint_mobility->dest.y = node->partitionData->terrainDimensions.y * pc_erand( node->mobilityData.seed );
+    waypoint_mobility->dest.y = 
+        node->partitionData->terrainDimensions.y *
+        pc_erand(node->mobilityData.seed);
 
     diff.x = waypoint_mobility->dest.x - node->position.x;
     diff.y = waypoint_mobility->dest.y - node->position.y;
 
     // This model assumes that the z coordinate is always 0.0
-    distance = sqrt( diff.x * diff.x + diff.y * diff.y );
+    distance = sqrt(diff.x * diff.x + diff.y * diff.y);
 
-    speed = waypoint_mobility->MinSpeed +
-            ( pc_erand( node->mobilityData.seed ) * ( waypoint_mobility->MaxSpeed -
-                                                      waypoint_mobility->MinSpeed ) );
+    speed = waypoint_mobility->MinSpeed
+            + (pc_erand(node->mobilityData.seed) *
+               (waypoint_mobility->MaxSpeed - waypoint_mobility->MinSpeed));
 
     time = distance / speed;
 
-    num_steps = ( int ) ceil( distance / node->mobilityData.distance_granularity );
+    num_steps = (int)ceil(distance / node->mobilityData.distance_granularity);
 
-    waypoint_mobility->move_interval = ( clocktype ) ( ( time / num_steps ) * SECOND );
+    waypoint_mobility->move_interval = (clocktype)((time / num_steps) * SECOND);
     waypoint_mobility->move_step.x = diff.x / num_steps;
     waypoint_mobility->move_step.y = diff.y / num_steps;
     *numStepsToDestination = num_steps;
@@ -93,51 +98,57 @@ void FindNextPos( GlomoNode* node,
  *     node:      node being initialized.
  *     nodeInput: structure containing contents of input file
  */
-void GLOMO_MobilityRandomWaypointInit( GlomoNode* node, GlomoNodeInput* nodeInput )
+void GLOMO_MobilityRandomWaypointInit(GlomoNode *node,
+                                      GlomoNodeInput *nodeInput)
 {
-    char                        buf[GLOMO_MAX_STRING_LENGTH];
-    char                        TimeString[80];
-    char                        stringTime[50];
-    double                      doubleTime;
-    clocktype                   mobilityPause;
+    char buf[GLOMO_MAX_STRING_LENGTH];
+    char TimeString[80];
+    char stringTime[50];
+    double doubleTime;
+    clocktype mobilityPause;
 
-    BOOL                        retVal;
+    BOOL retVal;
 
-    clocktype                   startTime;
-    GlomoMobilityRandomWaypoint*mobilityVar = ( GlomoMobilityRandomWaypoint* )
-                                              checked_pc_malloc( sizeof( GlomoMobilityRandomWaypoint ) );
+    clocktype startTime;
+    GlomoMobilityRandomWaypoint* mobilityVar = (GlomoMobilityRandomWaypoint *)
+        checked_pc_malloc(sizeof(GlomoMobilityRandomWaypoint));
+	
+    //--------------tianke on 2008-5-9 17:52 0.01------------>
+    memset( mobilityVar, 0, sizeof( GlomoMobilityRandomWaypoint ) ); 
+    //<-------------tianke on 2008-5-9 17:52 0.01------------
+	
     node->mobilityData.mobilityVar = mobilityVar;
 
 
     /* Read the pause time after reaching destination */
-
-    retVal = GLOMO_ReadString( node->nodeAddr, nodeInput, "MOBILITY-WP-PAUSE", buf );
-    assert( retVal == TRUE );
-    mobilityPause = GLOMO_ConvertToClock( buf );
-
-
+    
+    retVal = GLOMO_ReadString(node->nodeAddr, nodeInput, "MOBILITY-WP-PAUSE", buf);
+    assert(retVal == TRUE);
+    mobilityPause = GLOMO_ConvertToClock(buf);
+    
+    
     /* Read the speed arrange(Min,Max) */
-
-    retVal = GLOMO_ReadDouble( node->nodeAddr,
-                               nodeInput,
-                               "MOBILITY-WP-MIN-SPEED",
-                               &mobilityVar->MinSpeed );
-    assert( retVal == TRUE );
-    retVal = GLOMO_ReadDouble( node->nodeAddr,
-                               nodeInput,
-                               "MOBILITY-WP-MAX-SPEED",
-                               &mobilityVar->MaxSpeed );
-    assert( retVal == TRUE );
+    
+    retVal = GLOMO_ReadDouble(node->nodeAddr, nodeInput, 
+                              "MOBILITY-WP-MIN-SPEED", 
+                              &mobilityVar->MinSpeed);
+    assert(retVal == TRUE);
+    retVal = GLOMO_ReadDouble(node->nodeAddr, 
+                              nodeInput, 
+                              "MOBILITY-WP-MAX-SPEED", 
+                              &mobilityVar->MaxSpeed);
+    assert(retVal == TRUE);
 
 
     /* average speed is set in meters per second */
-
-    node->mobilityData.avgSpeed = ( mobilityVar->MaxSpeed + mobilityVar->MinSpeed ) / 2.0 ;
+    
+    node->mobilityData.avgSpeed = 
+       (mobilityVar->MaxSpeed + mobilityVar->MinSpeed ) / 2.0 ;
 
     // No Initial Pause.
     mobilityVar->mobilityPause = 0;
     mobilityVar->number_moves_left = 0;
-    GLOMO_MobilityRandomWaypoint( node );
+    GLOMO_MobilityRandomWaypoint(node);
     mobilityVar->mobilityPause = mobilityPause;
 }
 
@@ -151,24 +162,27 @@ void GLOMO_MobilityRandomWaypointInit( GlomoNode* node, GlomoNodeInput* nodeInpu
  *     node:     node which received the message
  */
 
-void GLOMO_MobilityRandomWaypoint( GlomoNode* node )
-{
-    GlomoMobilityRandomWaypoint*waypoint_mobility   = ( GlomoMobilityRandomWaypoint* )
-                                                      node->mobilityData.mobilityVar;
-
-    if( waypoint_mobility->number_moves_left == 0 ) {
+void GLOMO_MobilityRandomWaypoint(GlomoNode *node) {
+    GlomoMobilityRandomWaypoint* waypoint_mobility = 
+        (GlomoMobilityRandomWaypoint*)node->mobilityData.mobilityVar;
+    
+    if (waypoint_mobility->number_moves_left == 0) {
         int numStepsToDestination;
-        FindNextPos( node, waypoint_mobility, &numStepsToDestination );
+        FindNextPos(node, waypoint_mobility, &numStepsToDestination);
         waypoint_mobility->number_moves_left = numStepsToDestination - 1;
-        node->mobilityData.nextMoveTime = simclock() +
-                                          waypoint_mobility->mobilityPause +
-                                          waypoint_mobility->move_interval;
-    }else {
+        node->mobilityData.nextMoveTime = 
+            simclock() + 
+            waypoint_mobility->mobilityPause + 
+            waypoint_mobility->move_interval;
+    } else {
         waypoint_mobility->number_moves_left--;
-        node->mobilityData.nextMoveTime = simclock() + waypoint_mobility->move_interval;
+        node->mobilityData.nextMoveTime = 
+           simclock() + waypoint_mobility->move_interval;
     }//if//
-
-    node->mobilityData.next.x = node->position.x + waypoint_mobility->move_step.x;
-    node->mobilityData.next.y = node->position.y + waypoint_mobility->move_step.y;
+    
+    node->mobilityData.next.x
+        = node->position.x + waypoint_mobility->move_step.x;
+    node->mobilityData.next.y
+        = node->position.y + waypoint_mobility->move_step.y;
 }
 

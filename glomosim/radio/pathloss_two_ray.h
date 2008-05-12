@@ -45,14 +45,15 @@
 #include "main.h"
 #include "propagation.h"
 
-void PathlossTwoRayInit( GlomoProp* propData, const GlomoNodeInput* nodeInput );
+void PathlossTwoRayInit(GlomoProp *propData,
+                        const GlomoNodeInput *nodeInput);
 
-double PathlossTwoRay( double distance,
-                       double waveLength,
-                       float txAntennaGain,
-                       float txAntennaHeight,
-                       float rxAntennaGain,
-                       float rxAntennaHeight );
+double PathlossTwoRay(double distance,
+                      double waveLength,
+                      float txAntennaGain,
+                      float txAntennaHeight,
+                      float rxAntennaGain,
+                      float rxAntennaHeight);
 
 #endif /* _PATHLOSS_TWO_RAY_GROUND_H_ */
 

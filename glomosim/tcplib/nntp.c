@@ -62,13 +62,15 @@
 #include "tcplib.h"
 #include "nntp.h"
 
-int nntp_nitems( unsigned short seed[3] )
+int
+nntp_nitems(unsigned short seed[3])
 {
-    return ( ( int ) tcplib( &nntp_histmap[lookup( nntp_histmap, "nitems" )], nitems, seed ) );
+  return ((int) tcplib(&nntp_histmap[lookup(nntp_histmap, "nitems")], nitems, seed));
 }
 
-int nntp_itemsize( unsigned short seed[3] )
+int
+nntp_itemsize(unsigned short seed[3])
 {
-    return ( ( int ) tcplib( &nntp_histmap[lookup( nntp_histmap, "itemsize" )], itemsize, seed ) );
+  return ((int) tcplib(&nntp_histmap[lookup(nntp_histmap, "itemsize")], itemsize, seed));
 }
 

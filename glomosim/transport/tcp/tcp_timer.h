@@ -147,7 +147,7 @@
 #define TCPTV_KEEPINTVL ( 75*PR_SLOWHZ)     /* default probe interval */
 #define TCPTV_KEEPCNT   8                   /* max probes before drop */
 #define TCPTV_MAXIDLE   (TCPTV_KEEPCNT * TCPTV_KEEPINTVL) /* time to drop */ 
-
+ 
 #define TCPTV_MIN       (  1*PR_SLOWHZ)     /* minimum allowable value */
 #define TCPTV_REXMTMAX  ( 64*PR_SLOWHZ)     /* max allowable REXMT value */
 
@@ -171,12 +171,10 @@
 /*
  * Backoff values (exponential increase at first and then remain constant).
  */ 
-static const int    tcp_backoff[TCP_MAXRXTSHIFT + 1]    =
-{
-    1, 2, 4, 8, 16, 32, 64, 64, 64, 64, 64, 64, 64
-};
+static const int tcp_backoff[TCP_MAXRXTSHIFT + 1] =
+    { 1, 2, 4, 8, 16, 32, 64, 64, 64, 64, 64, 64, 64 };
 
-static const int    tcp_totbackoff                      = 511;    /* sum of tcp_backoff[] */
+static const int tcp_totbackoff = 511;    /* sum of tcp_backoff[] */
 
 #endif /* _TCP_TIMER_H_ */
 

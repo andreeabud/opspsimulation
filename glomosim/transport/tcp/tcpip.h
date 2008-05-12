@@ -84,24 +84,22 @@
 /*
  * Overlay for ip header used by other protocols (tcp, udp).
  */
-struct ipovly
-{
-    char*           ih_next, * ih_prev;     /* for protocol sequence q's */
-    unsigned char   ih_x1;        /* (unused) */
-    unsigned char   ih_pr;        /* protocol */
-    short           ih_len;             /* protocol length */
-    long            ih_src;             /* source internet address */
-    long            ih_dst;             /* destination internet address */
+struct ipovly {
+    char *ih_next, *ih_prev;     /* for protocol sequence q's */
+    unsigned char  ih_x1;        /* (unused) */
+    unsigned char  ih_pr;        /* protocol */
+    short    ih_len;             /* protocol length */
+    long     ih_src;             /* source internet address */
+    long     ih_dst;             /* destination internet address */
 };
 
 
 /*
  * Tcp+ip header, after ip options removed.
  */
-struct tcpiphdr
-{
-    struct  ipovly  ti_i;        /* overlaid ip structure */
-    struct  tcphdr  ti_t;        /* tcp header */
+struct tcpiphdr {
+    struct  ipovly ti_i;        /* overlaid ip structure */
+    struct  tcphdr ti_t;        /* tcp header */
 };
 #define ti_next     ti_i.ih_next
 #define ti_prev     ti_i.ih_prev

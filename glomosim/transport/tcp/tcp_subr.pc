@@ -104,40 +104,43 @@
 /*
  * Remove a node from reassembly queue.
  */
-void remque_ti( node )
-struct tcpiphdr*    node;
+void
+remque_ti(node)
+    struct tcpiphdr *node;
 {
-    struct tcpiphdr*    prev;
-    struct tcpiphdr*    next;
-
-    next = ( struct tcpiphdr * ) node->ti_next;
-    prev = ( struct tcpiphdr * ) node->ti_prev;
-    prev->ti_next = ( char * ) next;
-    next->ti_prev = ( char * ) prev;
+    struct tcpiphdr *prev;
+    struct tcpiphdr *next;
+ 
+    next = (struct tcpiphdr *)node->ti_next;
+    prev = (struct tcpiphdr *)node->ti_prev;
+    prev->ti_next = (char *) next;
+    next->ti_prev = (char *) prev;
 }
-
+ 
 /*
  * Insert a node just after prev.
  */
-void insque_ti( node, prev )
-struct tcpiphdr*    node;
-struct tcpiphdr*    prev;
+void
+insque_ti(node, prev)
+    struct tcpiphdr *node;
+    struct tcpiphdr *prev;
 {
-    struct tcpiphdr*    next;
-
-    next = ( struct tcpiphdr * ) prev->ti_next;
-    node->ti_prev = ( char * ) prev;
-    node->ti_next = ( char * ) next;
-    prev->ti_next = ( char * ) node;
-    next->ti_prev = ( char * ) node;
+    struct tcpiphdr *next;
+ 
+    next = (struct tcpiphdr *)prev->ti_next;
+    node->ti_prev = (char *) prev;
+    node->ti_next = (char *) next;
+    prev->ti_next = (char *) node;
+    next->ti_prev = (char *) node;
 }
 
 
 /*
  * Get a new connection id.
  */
-int get_conid( head )
-struct inpcb*   head;
+int 
+get_conid(head)
+    struct inpcb *head;
 {
     return ++head->con_id;
 }
@@ -146,36 +149,37 @@ struct inpcb*   head;
  * in_cksum --
  *      Checksum routine for Internet Protocol family headers (C Version)
  */
-int in_cksum( addr, len )
-unsigned short* addr;
-int             len;
+int
+in_cksum(addr, len)
+    unsigned short *addr;
+    int len;
 {
-    int nleft   = len;
-    unsigned short * w = addr;
+    int nleft = len;
+    unsigned short *w = addr;
     int sum = 0;
     unsigned short answer = 0;
-
+ 
     /*
      * Our algorithm is simple, using a 32 bit accumulator (sum), we add
      * sequential 16 bit words to it, and at the end, fold back all the
      * carry bits from the top 16 bits into the lower 16 bits.
      */
-    while( nleft > 1 ) {
+    while (nleft > 1)  {
         sum += *w++;
         nleft -= 2;
     }
-
+ 
     /* mop up an odd byte, if necessary */
-    if( nleft == 1 ) {
-        *( unsigned char * ) ( &answer ) = *( unsigned char * ) w ;
+    if (nleft == 1) {
+        *(unsigned char *)(&answer) = *(unsigned char *)w ;
         sum += answer;
     }
-
+ 
     /* add back carry outs from top 16 bits to low 16 bits */
-    sum = ( sum >> 16 ) + ( sum & 0xffff );     /* add hi 16 to low 16 */
-    sum += ( sum >> 16 );                     /* add carry */
+    sum = (sum >> 16) + (sum & 0xffff);     /* add hi 16 to low 16 */
+    sum += (sum >> 16);                     /* add carry */
     answer = ~sum;                          /* truncate to 16 bits */
-    return( answer );
+    return(answer);
 }      
 
 
@@ -185,21 +189,22 @@ int             len;
  * in a skeletal tcp/ip header, minimizing the amount of work
  * necessary when the connection is used.
  */
-struct tcpiphdr* tcp_template( tp )
-struct tcpcb*   tp;
+struct tcpiphdr *
+tcp_template(tp)
+    struct tcpcb *tp;
 {
-    struct inpcb*       inp = tp->t_inpcb;
-    struct tcpiphdr*    n;
-
-    if( ( n = tp->t_template ) == 0 ) {
-        n = ( struct tcpiphdr * ) pc_malloc( sizeof( struct tcpiphdr ) );
+    struct inpcb *inp = tp->t_inpcb;
+    struct tcpiphdr *n;
+ 
+    if ((n = tp->t_template) == 0) {
+        n = (struct tcpiphdr *)pc_malloc(sizeof(struct tcpiphdr));
     }
-    assert( n != NULL );
+    assert (n != NULL);
 
     n->ti_next = n->ti_prev = 0;
     n->ti_x1 = 0;
     n->ti_pr = IPPROTO_TCP;
-    n->ti_len = sizeof( struct tcpiphdr ) - sizeof( struct ip );
+    n->ti_len = sizeof (struct tcpiphdr) - sizeof (struct ip);
     n->ti_src = inp->inp_local_addr;
     n->ti_dst = inp->inp_remote_addr;
     n->ti_sport = inp->inp_local_port;
@@ -212,7 +217,7 @@ struct tcpcb*   tp;
     n->ti_win = 0;
     n->ti_sum = 0;
     n->ti_urp = 0;
-    return ( n );
+    return (n);
 }
 
 /*
@@ -228,86 +233,84 @@ struct tcpcb*   tp;
  * In any case the ack and sequence number of the transmitted
  * segment are as specified by the parameters.
  */
-void tcp_respond( node, tp, old_ti, m, ack, seq, flags, tcp_stat )
-GlomoNode*          node;
-struct tcpcb*       tp;
-struct tcpiphdr*    old_ti;
-tcp_seq             ack, seq;
-int                 flags, m;
-struct tcpstat*     tcp_stat;
+void
+tcp_respond(node, tp, old_ti, m, ack, seq, flags, tcp_stat)
+    GlomoNode *node;
+    struct tcpcb *tp;
+    struct tcpiphdr *old_ti;
+    tcp_seq ack, seq;
+    int flags, m;
+    struct tcpstat *tcp_stat;
 {
-    int                 win         = 0;
-    struct tcpiphdr*    ti;
-    struct inpcb*       inp         = tp->t_inpcb;
-    int                 priority    = inp->priority;
+    int win = 0;
+    struct tcpiphdr *ti;
+    struct inpcb *inp = tp->t_inpcb;
+    int priority = inp->priority;
 
-    Message*            msg;
-
-    if( tcp_stat != NULL ) {
+    Message *msg;
+ 
+    if (tcp_stat != NULL) {
         tcp_stat->tcps_sndtotal++;
-        if( flags & ( TH_SYN | TH_FIN | TH_RST ) ) {
+        if (flags & (TH_SYN|TH_FIN|TH_RST))
             tcp_stat->tcps_sndctrl++;
-        }else if( tp->t_flags & TF_ACKNOW ) {
+        else if (tp->t_flags & TF_ACKNOW)
             tcp_stat->tcps_sndacks++;
-        }else if( SEQ_GT( tp->snd_up, tp->snd_una ) ) {
+        else if (SEQ_GT(tp->snd_up, tp->snd_una))
             tcp_stat->tcps_sndurg++;
-        }else {
+        else
             tcp_stat->tcps_sndwinup++;
-        }
     }
 
-    if( tp ) {
-        win = sbspace( tp->t_inpcb );
+    if (tp) {
+        win = sbspace(tp->t_inpcb);
     }
 
-    msg = GLOMO_MsgAlloc( node, 0, 0, 0 );
-    GLOMO_MsgPacketAlloc( node, msg, sizeof( struct tcpiphdr ) );
-    ti = ( struct tcpiphdr * ) msg->packet;
-    assert( ti != NULL );
+    msg = GLOMO_MsgAlloc(node, 0, 0, 0);
+    GLOMO_MsgPacketAlloc(node, msg, sizeof(struct tcpiphdr));
+    ti = (struct tcpiphdr *) msg->packet;
+    assert (ti != NULL);
 
-    memcpy( ti, old_ti, sizeof( struct tcpiphdr ) );
+    memcpy(ti, old_ti, sizeof(struct tcpiphdr));
 
-    if( m == 0 ) {
+    if (m == 0) {
         flags = TH_ACK;
-    }else {
+    } 
+    else {
 #define xchg(a,b,type) { type t; t=a; a=b; b=t; }
-        xchg( ti->ti_dst, ti->ti_src, unsigned long );
-        xchg( ti->ti_dport, ti->ti_sport, unsigned short );
+        xchg(ti->ti_dst, ti->ti_src, unsigned long);
+        xchg(ti->ti_dport, ti->ti_sport, unsigned short);
 #undef xchg
     } 
-    ti->ti_len = ( unsigned short ) ( sizeof( struct tcphdr ) );
+    ti->ti_len = (unsigned short)(sizeof (struct tcphdr));
     ti->ti_next = ti->ti_prev = 0;
     ti->ti_x1 = 0;
     ti->ti_seq = seq;
     ti->ti_ack = ack;
     ti->ti_x2 = 0;
-    ti->ti_off = sizeof( struct tcphdr ) >> 2;
+    ti->ti_off = sizeof (struct tcphdr) >> 2;
     ti->ti_flags = flags;
-    if( tp ) {
-        ti->ti_win = ( unsigned short ) ( win >> tp->rcv_scale );
-    }else {
-        ti->ti_win = ( unsigned short ) win;
-    }
+    if (tp)
+        ti->ti_win = (unsigned short) (win >> tp->rcv_scale);
+    else
+        ti->ti_win = (unsigned short)win;
     ti->ti_urp = 0;
     ti->ti_sum = 0;
-    ti->ti_sum = in_cksum( ( unsigned short * ) ti, sizeof( struct tcpiphdr ) );
-    ( ( struct ip * ) ti )->ip_len = sizeof( struct tcpiphdr ); 
-    ( ( struct ip * ) ti )->ip_ttl = IPDEFTTL;
+    ti->ti_sum = in_cksum((unsigned short *)ti, sizeof (struct tcpiphdr));
+    ((struct ip *)ti)->ip_len = sizeof (struct tcpiphdr); 
+    ((struct ip *)ti)->ip_ttl = IPDEFTTL;
 
     /*
     *    Send the packet and remove the extended pseudoheader so that
     *    so that a real IP header can be put on at the IP Layer.  
     */
-    {
-        NODE_ADDR   destinationAddress  = ti->ti_dst;
 
-        GLOMO_MsgRemoveHeader( node, msg, sizeof( struct ipovly ) );
-        NetworkIpReceivePacketFromTransportLayer( node,
-                                                  msg,
-                                                  destinationAddress,
-                                                  priority,
-                                                  IPPROTO_TCP,
-                                                  TRANSPORT_DELAY );
+    { 
+        NODE_ADDR destinationAddress = ti->ti_dst;
+       
+        GLOMO_MsgRemoveHeader(node, msg, sizeof(struct ipovly));
+        NetworkIpReceivePacketFromTransportLayer(node, msg, destinationAddress, 
+                                                 priority, 
+                                                 IPPROTO_TCP, TRANSPORT_DELAY); 
     }
 }
 
@@ -316,33 +319,30 @@ struct tcpstat*     tcp_stat;
  * empty reassembly queue and hooking it to the argument
  * protocol control block.
  */
-struct tcpcb* tcp_newtcpcb( inp )
-struct inpcb*   inp;
+struct tcpcb *
+tcp_newtcpcb(inp)
+    struct inpcb *inp;
 {
-    struct tcpcb*   tp;
+    struct tcpcb *tp;
 
-    tp = ( struct tcpcb * ) pc_malloc( sizeof( struct tcpcb ) );
-    assert( tp != NULL );
+    tp = (struct tcpcb *)pc_malloc(sizeof(struct tcpcb));
+    assert(tp != NULL);
 
-    memset( ( char * ) tp, 0, sizeof( struct tcpcb ) );
-    tp->seg_next = tp->seg_prev = ( struct tcpiphdr * ) tp;
+    memset ((char *) tp, 0, sizeof(struct tcpcb));
+    tp->seg_next = tp->seg_prev = (struct tcpiphdr *)tp;
     tp->t_maxseg = tp->t_maxopd = TCP_MSS;
 
     /*
      * Set flags
      */
-    if( TCP_DO_RFC1323 ) {
-        tp->t_flags = ( TF_REQ_SCALE | TF_REQ_TSTMP );
-    }
-    if( TCP_NODELAY ) {
-        tp->t_flags |= TF_NODELAY;
-    } 
-    if( TCP_NOOPT ) {
+    if (TCP_DO_RFC1323)
+        tp->t_flags = (TF_REQ_SCALE|TF_REQ_TSTMP);
+    if (TCP_NODELAY)
+        tp->t_flags |= TF_NODELAY; 
+    if (TCP_NOOPT)
         tp->t_flags |= TF_NOOPT;
-    }
-    if( TCP_NOPUSH ) {
+    if (TCP_NOPUSH)
         tp->t_flags |= TF_NOPUSH;
-    }
 
     tp->t_inpcb = inp;
 
@@ -352,14 +352,14 @@ struct inpcb*   inp;
      * reasonable initial retransmit time.
      */
     tp->t_srtt = TCPTV_SRTTBASE;
-    tp->t_rttvar = ( ( TCPTV_RTOBASE - TCPTV_SRTTBASE ) << TCP_RTTVAR_SHIFT ) / 4;
+    tp->t_rttvar = ((TCPTV_RTOBASE - TCPTV_SRTTBASE) << TCP_RTTVAR_SHIFT)/4;
     tp->t_rttmin = TCPTV_MIN;
     tp->t_rxtcur = TCPTV_RTOBASE;
     tp->snd_cwnd = TCP_MAXWIN << TCP_MAX_WINSHIFT;
     tp->snd_ssthresh = TCP_MAXWIN << TCP_MAX_WINSHIFT;
-    inp->inp_ppcb = ( char * ) tp;
+    inp->inp_ppcb = (char *)tp;
 
-    return ( tp );
+    return (tp);
 }
 
 /*
@@ -367,24 +367,24 @@ struct inpcb*   inp;
  * If connection is synchronized,
  * then send a RST to peer.
  */
-struct tcpcb* tcp_drop( node, tp, tcp_now, tcp_stat )
-GlomoNode*      node;
-struct tcpcb*   tp;
-unsigned long   tcp_now;
-struct tcpstat* tcp_stat;
+struct tcpcb *
+tcp_drop(node, tp, tcp_now, tcp_stat)
+    GlomoNode *node;
+    struct tcpcb *tp;
+    unsigned long tcp_now;
+    struct tcpstat *tcp_stat;
 {
-    if( TCPS_HAVERCVDSYN( tp->t_state ) ) {
+
+    if (TCPS_HAVERCVDSYN(tp->t_state)){
         tp->t_state = TCPS_CLOSED;
-        tcp_output( node, tp, tcp_now, tcp_stat );
-        if( tcp_stat ) {
+        tcp_output(node, tp, tcp_now, tcp_stat);
+        if (tcp_stat)
             tcp_stat->tcps_drops++;
-        }
-    }else {
-        if( tcp_stat ) {
+    } else {
+        if (tcp_stat)
             tcp_stat->tcps_conndrops++;
-        }
     }
-    return ( tcp_close( node, tp, tcp_stat ) );
+    return (tcp_close(node, tp, tcp_stat));
 }
 
 /*
@@ -393,78 +393,79 @@ struct tcpstat* tcp_stat;
  *      discard internet protocol block
  *      wake up any sleepers
  */
-struct tcpcb* tcp_close( node, tp, tcp_stat )
-GlomoNode*      node;
-struct tcpcb*   tp;
-struct tcpstat* tcp_stat;
+struct tcpcb *
+tcp_close(node, tp, tcp_stat)
+    GlomoNode *node;
+    struct tcpcb *tp;
+    struct tcpstat *tcp_stat;
 {
-    struct tcpiphdr*            t, * t1;
-    struct inpcb*               inp = tp->t_inpcb;
-    Message*                    msg;
-    TransportToAppOpenResult*   tcpOpenResult;      
-    TransportToAppCloseResult*  tcpCloseResult;
+    struct tcpiphdr *t, *t1;
+    struct inpcb *inp = tp->t_inpcb;
+    Message *msg;
+    TransportToAppOpenResult *tcpOpenResult;      
+    TransportToAppCloseResult *tcpCloseResult;
 
     /* free the reassembly queue, if any */
     t = tp->seg_next;
-    while( t != ( struct tcpiphdr * ) tp ) {
+    while (t != (struct tcpiphdr *)tp) {
         t1 = t;
-        t = ( struct tcpiphdr * ) t->ti_next;
-        remque_ti( t1 );
-        pc_free( t1 );
+        t = (struct tcpiphdr *)t->ti_next;
+        remque_ti(t1);
+        pc_free(t1);
     }
-    if( tp->t_template ) {
-        pc_free( tp->t_template );
-    }
-    pc_free( tp );
+    if (tp->t_template)
+        pc_free(tp->t_template);
+    pc_free(tp);
     inp->inp_ppcb = 0;
 
-    switch( inp->usrreq ) {
-    case INPCB_USRREQ_OPEN:msg = GLOMO_MsgAlloc( node,
-                                                 GLOMO_APP_LAYER,
-                                                 inp->app_proto_type,
-                                                 MSG_APP_FromTransOpenResult );
-    GLOMO_MsgInfoAlloc( node, msg, sizeof( TransportToAppOpenResult ) );
-    tcpOpenResult = ( TransportToAppOpenResult * ) msg->info;
-    tcpOpenResult->type = TCP_CONN_ACTIVE_OPEN;
-    tcpOpenResult->localAddr = inp->inp_local_addr;
-    tcpOpenResult->localPort = inp->inp_local_port;
-    tcpOpenResult->remoteAddr = inp->inp_remote_addr;
-    tcpOpenResult->remotePort = inp->inp_remote_port;
-    tcpOpenResult->connectionId = -1;
+    switch (inp->usrreq){
+    case INPCB_USRREQ_OPEN:
 
-    tcpOpenResult->uniqueId = inp->unique_id;
+        msg = GLOMO_MsgAlloc(node, GLOMO_APP_LAYER,
+                             inp->app_proto_type, MSG_APP_FromTransOpenResult);
+        GLOMO_MsgInfoAlloc(node, msg, sizeof(TransportToAppOpenResult));
+        tcpOpenResult = (TransportToAppOpenResult *) msg->info;
+        tcpOpenResult->type = TCP_CONN_ACTIVE_OPEN;
+        tcpOpenResult->localAddr = inp->inp_local_addr;
+        tcpOpenResult->localPort = inp->inp_local_port;
+        tcpOpenResult->remoteAddr = inp->inp_remote_addr;
+        tcpOpenResult->remotePort = inp->inp_remote_port;
+        tcpOpenResult->connectionId = -1;
 
-    GLOMO_MsgSend( node, msg, TRANSPORT_DELAY ); 
+        tcpOpenResult->uniqueId = inp->unique_id;
 
-    break;
+        GLOMO_MsgSend(node, msg, TRANSPORT_DELAY); 
 
-    case INPCB_USRREQ_CONNECTED:case INPCB_USRREQ_CLOSE:msg = GLOMO_MsgAlloc( node,
-                                                                              GLOMO_APP_LAYER,
-                                                                              inp->app_proto_type,
-                                                                              MSG_APP_FromTransCloseResult );
-    GLOMO_MsgInfoAlloc( node, msg, sizeof( TransportToAppCloseResult ) );
-    tcpCloseResult = ( TransportToAppCloseResult * ) msg->info; 
-    if( inp->usrreq == INPCB_USRREQ_CONNECTED ) {
-        tcpCloseResult->type = TCP_CONN_PASSIVE_CLOSE;
-    }else {
-        tcpCloseResult->type = TCP_CONN_ACTIVE_CLOSE;
-    }
-    tcpCloseResult->connectionId = inp->con_id;
+        break;
 
-    GLOMO_MsgSend( node, msg, TRANSPORT_DELAY ); 
-    break;
+    case INPCB_USRREQ_CONNECTED:
+    case INPCB_USRREQ_CLOSE:
 
-    case INPCB_USRREQ_NONE:break;
-    default:fprintf( stderr, "TCP: unknown user request %d\n", inp->usrreq );
-    assert( FALSE );
+        msg = GLOMO_MsgAlloc(node, GLOMO_APP_LAYER,
+                             inp->app_proto_type, MSG_APP_FromTransCloseResult);
+        GLOMO_MsgInfoAlloc(node, msg, sizeof(TransportToAppCloseResult));
+        tcpCloseResult = (TransportToAppCloseResult *) msg->info; 
+        if (inp->usrreq == INPCB_USRREQ_CONNECTED) {
+            tcpCloseResult->type = TCP_CONN_PASSIVE_CLOSE;
+        } else {
+            tcpCloseResult->type = TCP_CONN_ACTIVE_CLOSE;
+        }
+        tcpCloseResult->connectionId = inp->con_id;
+
+        GLOMO_MsgSend(node, msg, TRANSPORT_DELAY); 
+        break;
+
+    case INPCB_USRREQ_NONE: break;
+    default: 
+        fprintf(stderr, "TCP: unknown user request %d\n", inp->usrreq);
+        assert(FALSE);
     }                   
 
-    in_pcbdetach( inp );
+    in_pcbdetach(inp);
 
-    if( tcp_stat ) {
+    if (tcp_stat)
         tcp_stat->tcps_closed++;
-    }
 
-    return ( ( struct tcpcb * ) 0 );
+    return ((struct tcpcb *)0);
 }
 

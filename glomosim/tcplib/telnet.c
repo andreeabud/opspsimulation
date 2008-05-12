@@ -63,22 +63,21 @@
 #include "tcplib.h"
 #include "telnet.h"
 
-int telnet_pktsize( unsigned short seed[3] )
+int
+telnet_pktsize(unsigned short seed[3])
 {
-    return ( ( int ) tcplib( &telnet_histmap[lookup( telnet_histmap, "pktsize" )], pktsize, seed ) );
+  return ((int) tcplib(&telnet_histmap[lookup(telnet_histmap, "pktsize")], pktsize, seed));
 }
 
-float telnet_interarrival( unsigned short seed[3] )
+float
+telnet_interarrival(unsigned short seed[3])
 {
-    return ( ( float ) tcplib( &telnet_histmap[lookup( telnet_histmap, "interarrival" )],
-                               interarrival,
-                               seed ) );
+  return ((float) tcplib(&telnet_histmap[lookup(telnet_histmap, "interarrival")], interarrival, seed));
 }
 
-float telnet_duration( unsigned short seed[3] )
+float
+telnet_duration(unsigned short seed[3])
 {
-    return ( ( float ) tcplib( &telnet_histmap[lookup( telnet_histmap, "duration" )],
-                               duration,
-                               seed ) );
+  return ((float) tcplib(&telnet_histmap[lookup(telnet_histmap, "duration")], duration, seed));
 }
 

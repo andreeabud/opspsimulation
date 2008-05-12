@@ -65,25 +65,24 @@
 #include <string.h>
 #include "tcplib.h"
 
-extern long pc_nrand( unsigned short seed[3] );
+extern long pc_nrand(unsigned short seed[3]);
 
-int lookup( struct histmap* hmp, char* h_name )
+int lookup (struct histmap *hmp, char *h_name)
 {
-    int             i;
-    struct histmap* p;
+  int i;
+  struct histmap *p;
 
-    for( i = 0, p = hmp;i < MAXHIST && p->h_name != 0 && strcmp( p->h_name, h_name );i++, ++p )
-        ;
-    if( i == MAXHIST ) {
-        perror( "Too many characteristics." );
-        exit( 1 );
-    }
-    if( p->h_name == 0 ) {
-        perror( "Characteristic not found." );
-        exit( 1 );
-    }
+  for (i = 0, p = hmp; i < MAXHIST && p->h_name != 0 && strcmp(p->h_name, h_name); i++, ++p);
+  if (i == MAXHIST) {
+    perror("Too many characteristics.");
+    exit(1);
+  }
+  if (p->h_name == 0) {
+    perror("Characteristic not found.");
+    exit(1);
+  }
 
-    return( i );
+  return(i);
 }
 
 #define MAXRAND 2147483647
@@ -91,31 +90,31 @@ int lookup( struct histmap* hmp, char* h_name )
   ((from) + (((double) pc_nrand((seed))/MAXRAND) * ((to) - (from))))
 
 
-double tcplib( struct histmap* hmp, struct entry* tbl, unsigned short seed[3] )
+double tcplib(struct histmap *hmp, struct entry *tbl, unsigned short seed[3])
 {
-    float   prob;
-    int     maxbin  = hmp->nbins - 1;
-    int     base    = 0;
-    int     bound   = maxbin;
-    int     mid     = ( int ) ( ( float ) maxbin / 2.0 + 0.5 );
+  float prob;
+  int maxbin = hmp->nbins-1;
+  int base = 0;
+  int bound = maxbin;
+  int mid = (int)((float)maxbin / 2.0 + 0.5);
+  
+  prob = ((float) (pc_nrand(seed) % PRECIS)) / (float) PRECIS;
 
-    prob = ( ( float ) ( pc_nrand( seed ) % PRECIS ) ) / ( float ) PRECIS;
-
-    do {
-        while( prob <= tbl[mid - 1].prob && mid != 1 ) {
-            bound = mid;
-            mid -= ( int ) ( ( ( float ) ( mid - base ) ) / 2.0 + 0.5 );
-        } 
-        while( prob > tbl[mid].prob ) {
-            base = mid;
-            mid += ( int ) ( ( ( float ) ( bound - mid ) ) / 2.0 + 0.5 );
-        }
-    }while( !( mid == 1 || ( prob >= tbl[mid - 1].prob && prob <= tbl[mid].prob ) ) );
-
-    if( mid == 1 && prob < tbl[0].prob ) {
-        return ( ( double ) tbl[0].value );
-    }else {
-        return ( ( double ) uniform_rand( tbl[mid - 1].value, tbl[mid].value, seed ) );
+  do {
+    while (prob <= tbl[mid-1].prob && mid != 1) {
+      bound = mid;
+      mid -= (int)(((float)(mid - base)) / 2.0 + 0.5);
+    } 
+    while (prob > tbl[mid].prob) {
+      base = mid;
+      mid += (int)(((float)(bound - mid)) / 2.0 + 0.5);
     }
+  } while (!(mid == 1 || (prob >= tbl[mid-1].prob && prob <= tbl[mid].prob)));
+      
+  if (mid == 1 && prob < tbl[0].prob) {
+    return ((double) tbl[0].value);
+  } else {
+    return ((double) uniform_rand(tbl[mid-1].value, tbl[mid].value, seed));
+  }
 }
 

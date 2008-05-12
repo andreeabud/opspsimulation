@@ -64,13 +64,13 @@
  *     node:      node being initialized.
  *     nodeInput: structure containing contents of input file
  */
-void GLOMO_TransportInit( GlomoNode* node, const GlomoNodeInput* nodeInput )
+void GLOMO_TransportInit(GlomoNode *node, const GlomoNodeInput *nodeInput)
 {
     node->transportData.tcp = NULL;
     node->transportData.udp = NULL;
-
-    TransportTcpInit( node, nodeInput );
-    TransportUdpInit( node, nodeInput );
+    
+    TransportTcpInit(node, nodeInput);
+    TransportUdpInit(node, nodeInput); 
 }
 
 
@@ -82,10 +82,10 @@ void GLOMO_TransportInit( GlomoNode* node, const GlomoNodeInput* nodeInput )
  * Parameter:
  *     node:     node for which results are to be collected.
  */
-void GLOMO_TransportFinalize( GlomoNode* node )
+void GLOMO_TransportFinalize(GlomoNode *node)
 {
-    TransportUdpFinalize( node ); 
-    TransportTcpFinalize( node );
+    TransportUdpFinalize(node); 
+    TransportTcpFinalize(node); 
 }
 
 
@@ -98,17 +98,21 @@ void GLOMO_TransportFinalize( GlomoNode* node )
  *     node:     node which received the message
  *     msg:      message received by the layer
  */
-void GLOMO_TransportLayer( GlomoNode* node, Message* msg )
+void GLOMO_TransportLayer(GlomoNode *node, Message *msg)
 {
-    switch( GLOMO_MsgGetProtocol( msg ) ) {
-    case TRANSPORT_PROTOCOL_UDP:TransportUdpLayer( node, msg );
-    break;
-
-    case TRANSPORT_PROTOCOL_TCP:TransportTcpLayer( node, msg );
-    break;
-
-    default:assert( FALSE ); abort();
-    break;
+    switch (GLOMO_MsgGetProtocol(msg))
+    {
+        case TRANSPORT_PROTOCOL_UDP:
+            TransportUdpLayer(node, msg);
+            break;
+       
+        case TRANSPORT_PROTOCOL_TCP: 
+            TransportTcpLayer(node, msg);
+            break;
+        
+        default:
+            assert(FALSE); abort();
+            break;
     }
 }
 

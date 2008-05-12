@@ -53,27 +53,27 @@
 /*
  * GlomoPropagatePathlossMatrix -- per partition info
  */
-typedef struct glomo_propagate_pathloss_matrix_str
-{
-    GlomoNode*  master;        /* control partition's trace */
-    FILE*       tracein;       /* trace file */
-    int*        threshold;     /* attenuation error thresh */
-    int**       range;         /* range map */
-    int**       attenuation;   /* attenuation map */
+typedef struct glomo_propagate_pathloss_matrix_str {
+    GlomoNode  *master;        /* control partition's trace */
+    FILE       *tracein;       /* trace file */
+    int        *threshold;     /* attenuation error thresh */
+    int       **range;         /* range map */
+    int       **attenuation;   /* attenuation map */
 } GlomoPropPathlossMatrix;
 
-void GLOMO_MobilityPathlossMatrixInit( GlomoNode*, GlomoNodeInput* );
-void GLOMO_MobilityPathlossMatrixFinalize( GlomoNode* );
-void GLOMO_MobilityPathlossMatrix( GlomoNode* );
+void GLOMO_MobilityPathlossMatrixInit(GlomoNode *, GlomoNodeInput *);
+void GLOMO_MobilityPathlossMatrixFinalize(GlomoNode *);
+void GLOMO_MobilityPathlossMatrix(GlomoNode *);
 
-void PathlossMatrixInit( GlomoProp* propData, const GlomoNodeInput* nodeInput );
+void PathlossMatrixInit(GlomoProp *propData,
+                        const GlomoNodeInput *nodeInput);
 
-double PathlossMatrix( NODE_ADDR txAddr,
-                       NODE_ADDR rxAddr,
-                       float txAntennaGain,
-                       float rxAntennaGain,
-                       GlomoPropPathlossMatrix* pathlossVar,
-                       double* distance );
+double PathlossMatrix(NODE_ADDR txAddr,
+                      NODE_ADDR rxAddr,
+                      float txAntennaGain,
+                      float rxAntennaGain,
+                      GlomoPropPathlossMatrix *pathlossVar,
+                      double *distance);
 
 #endif /* PATHLOSS_MATRIX_H */
 

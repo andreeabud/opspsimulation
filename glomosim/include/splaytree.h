@@ -41,41 +41,38 @@
 #include "main.h"
 
 /* A Heap that determines the earliest time from a bunch of splay trees */
-typedef struct heap_splay_tree_str
-{
-    GlomoNode** heapNodePtr;
-    long        heapSize;
-    long        length;
+typedef struct heap_splay_tree_str {
+    GlomoNode **heapNodePtr;
+    long heapSize;
+    long length;
 } HeapSplayTree;
 
 
 
-void GLOMO_HeapSplayInsert( HeapSplayTree* heapSplayTreePtr, GlomoNode* node );
-void GLOMO_HeapSplayDelete( HeapSplayTree* heapSplayTreePtr, GlomoNode* node );
+void GLOMO_HeapSplayInsert(HeapSplayTree *heapSplayTreePtr, GlomoNode *node);
+void GLOMO_HeapSplayDelete(HeapSplayTree *heapSplayTreePtr, GlomoNode *node);
 
 
 #define SPLAYTREE_MAX_FREE_LIST 50000
 
-typedef struct splay_node_str
-{
-    clocktype               timeValue;
-    void*                   msg;
-    struct splay_node_str*  leftPtr;
-    struct splay_node_str*  rightPtr;
-    struct splay_node_str*  parentPtr;
+typedef struct splay_node_str {
+    clocktype timeValue;
+    void *msg;
+    struct splay_node_str *leftPtr;
+    struct splay_node_str *rightPtr;
+    struct splay_node_str *parentPtr;
 } SplayNode;
 
 
-typedef struct splay_tree_str
-{
-    SplayNode*  rootPtr;
-    SplayNode*  leastPtr;
-    long        heapPos;
+typedef struct splay_tree_str {
+    SplayNode *rootPtr;
+    SplayNode *leastPtr;
+    long heapPos;
 } SplayTree;
 
 
-void GLOMO_SplayTreeInsert( GlomoNode* node, SplayNode* splayNodePtr );
-SplayNode* GLOMO_SplayTreeExtractMin( GlomoNode* node );
+void GLOMO_SplayTreeInsert(GlomoNode *node, SplayNode *splayNodePtr);
+SplayNode* GLOMO_SplayTreeExtractMin(GlomoNode *node);
 
 
 #endif /* _SPLAYTREE_H_ */

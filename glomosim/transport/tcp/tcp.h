@@ -64,15 +64,14 @@
 
 // Typedef GlomoTransportTcp;
 
-struct GlomoTransportTcpStruct
-{
-    struct inpcb    head;       /* head of queue of active inpcb's */
-    tcp_seq         tcpIss;          /* initial sequence number */
-    unsigned long   tcpNow;    /* current time in ticks, 1 tick = 500 ms */
-    BOOL            tcpIsStarted;       /* whether TCP timers are going */
-    BOOL            tcpStatsEnabled;    /* whether to collect stats */
-    struct tcpstat* tcpStat; /* statistics */
-    struct tcpcb*   tp;
+struct GlomoTransportTcpStruct {
+    struct inpcb head;       /* head of queue of active inpcb's */
+    tcp_seq tcpIss;          /* initial sequence number */
+    unsigned long tcpNow;    /* current time in ticks, 1 tick = 500 ms */
+    BOOL tcpIsStarted;       /* whether TCP timers are going */
+    BOOL tcpStatsEnabled;    /* whether to collect stats */
+    struct tcpstat *tcpStat; /* statistics */
+    struct tcpcb *tp;
 };
 
 /*
@@ -83,7 +82,7 @@ struct GlomoTransportTcpStruct
  *     node:      node being initialized.
  *     nodeInput: structure containing contents of input file
  */
-void TransportTcpInit( GlomoNode* node, const GlomoNodeInput* nodeInput ); 
+void TransportTcpInit(GlomoNode *node, const GlomoNodeInput *nodeInput); 
 
 
 /*
@@ -95,7 +94,7 @@ void TransportTcpInit( GlomoNode* node, const GlomoNodeInput* nodeInput );
  *     node:     node which received the message
  *     msgHdr:   message received by the layer
  */
-void TransportTcpLayer( GlomoNode* node, Message* msg );
+void TransportTcpLayer(GlomoNode *node, Message *msg);
 
 
 /*
@@ -106,7 +105,7 @@ void TransportTcpLayer( GlomoNode* node, Message* msg );
  * Parameter:
  *     node:     node for which results are to be collected.
  */
-void TransportTcpFinalize( GlomoNode* node );
+void TransportTcpFinalize(GlomoNode *node);
 
 #endif /* _TCP_H_ */
 

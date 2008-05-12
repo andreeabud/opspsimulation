@@ -81,67 +81,75 @@
 #include "mac.h"
 
 
-typedef enum { TSMA_BPKT, TSMA_UPKT, TSMA_ACK }  MacTsmaPktType;
+typedef enum 
+{ 
+  TSMA_BPKT, 
+  TSMA_UPKT, 
+  TSMA_ACK 
+} MacTsmaPktType;
 
 
-typedef enum { MAC_TSMA_READY,
-               MAC_TSMA_WF_USLOT,
-               MAC_TSMA_WF_BSLOT,
-               MAC_TSMA_XMT_UPKT,
-               MAC_TSMA_XMT_BPKT,
-               MAC_TSMA_XMT_UACK,
-               MAC_TSMA_WF_UACK } MacTsmaState;
+typedef enum 
+{
+  MAC_TSMA_READY,
+  MAC_TSMA_WF_USLOT,
+  MAC_TSMA_WF_BSLOT,
+  MAC_TSMA_XMT_UPKT,
+  MAC_TSMA_XMT_BPKT,
+  MAC_TSMA_XMT_UACK,
+  MAC_TSMA_WF_UACK
+} MacTsmaState;
 
 
 typedef struct mac_tsma_hdr_str
 {
-    NODE_ADDR       sourceAddr;
-    NODE_ADDR       destAddr;
+  NODE_ADDR sourceAddr;
+  NODE_ADDR destAddr;
+  
+  MacTsmaPktType type;
 
-    MacTsmaPktType  type;
+  int seqNum;
 
-    int             seqNum;
-
-    //int priority;
+  //int priority;
 } MacTsmaHeader;
 
 
 typedef struct glomo_mac_tsma_str
 {
-    GlomoMac*       myGlomoMac;
+  GlomoMac *myGlomoMac;
 
-    Message*        currentOutgoingFrame;
-    NODE_ADDR       currentOutgoingFrameNextHopAddress;
-    //MacPacketQueue queue;
+  Message* currentOutgoingFrame;
+  NODE_ADDR currentOutgoingFrameNextHopAddress;
+  //MacPacketQueue queue;
 
-    /* MAC frame management. */
-    int*            pktIds;
-    int             seqNum;
-    int             maxReps;
-    int             pktReps;
+  /* MAC frame management. */
+  int *pktIds;
+  int seqNum;
+  int maxReps;
+  int pktReps;
 
-    /* MAC states. */
-    MacTsmaState    currentState;
-    MacTsmaState    prevState;
+  /* MAC states. */
+  MacTsmaState currentState;
+  MacTsmaState prevState;
 
-    /* MAC TSMA parameters. */
-    char*           schedule;
-    int             frameLength;
-    int             currentSlot;
+  /* MAC TSMA parameters. */
+  char *schedule;
+  int frameLength;
+  int currentSlot;
 
-    /* MAC frame counters. */
-    int             pktsToSend;
-    int             pktsLostOverflow;
-    int             pktsSentUnicast;
-    int             pktsSentBroadcast;
-    int             pktsGotUnicast;
-    int             pktsGotBroadcast;
+  /* MAC frame counters. */
+  int pktsToSend;
+  int pktsLostOverflow;
+  int pktsSentUnicast;
+  int pktsSentBroadcast;
+  int pktsGotUnicast;
+  int pktsGotBroadcast;
 } GlomoMacTsma;
 
 
 typedef struct mac_tsma_synch_pkt_str
 {
-    clocktype   slotInterval;
+  clocktype slotInterval;
 } MacTsmaSynchPkt;
 
 /*
@@ -157,7 +165,7 @@ typedef struct mac_tsma_synch_pkt_str
  * ASSUMPTIONS: None
  */
 
-void MacTsmaInit( GlomoNode* node, int index, const GlomoNodeInput* input );
+void MacTsmaInit(GlomoNode *node, int index, const GlomoNodeInput* input);
 
 /*
  * NAME:        MacTsmaLayer
@@ -173,7 +181,7 @@ void MacTsmaInit( GlomoNode* node, int index, const GlomoNodeInput* input );
  * ASSUMPTIONS: None
  */
 
-void MacTsmaLayer( GlomoNode* node, int index, Message* msg );
+void MacTsmaLayer(GlomoNode *node, int index, Message *msg);
 
 /*
  * NAME:        MacTsmaFinalize
@@ -188,7 +196,7 @@ void MacTsmaLayer( GlomoNode* node, int index, Message* msg );
  * ASSUMPTIONS: None
  */
 
-void MacTsmaFinalize( GlomoNode* node, int index );
+void MacTsmaFinalize(GlomoNode *node, int index);
 
 /*
  * FUNCTION    MacTsmaNetworkLayerHasPacketToSend.
@@ -196,7 +204,7 @@ void MacTsmaFinalize( GlomoNode* node, int index );
  *             is ready to be sent.
 */
 
-void MacTsmaNetworkLayerHasPacketToSend( GlomoNode* node, GlomoMacTsma* tsma );
+void MacTsmaNetworkLayerHasPacketToSend(GlomoNode *node, GlomoMacTsma *tsma);
 
 
 /*
@@ -214,13 +222,15 @@ void MacTsmaNetworkLayerHasPacketToSend( GlomoNode* node, GlomoMacTsma* tsma );
  */
 
 
-void MacTsmaReceivePacketFromRadio( GlomoNode* node, GlomoMacTsma* tsma, Message* msg );
+void MacTsmaReceivePacketFromRadio(
+  GlomoNode* node, GlomoMacTsma* tsma, Message* msg);
 
-
-void MacTsmaReceiveRadioStatusChangeNotification( GlomoNode* node,
-                                                  GlomoMacTsma* tsma,
-                                                  RadioStatusType oldRadioStatus,
-                                                  RadioStatusType newRadioStatus );
+    
+void MacTsmaReceiveRadioStatusChangeNotification(
+   GlomoNode* node,
+   GlomoMacTsma* tsma,
+   RadioStatusType oldRadioStatus,
+   RadioStatusType newRadioStatus);
 
 
 #endif

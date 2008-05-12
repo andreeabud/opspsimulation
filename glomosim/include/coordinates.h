@@ -40,11 +40,10 @@
 
 #include <math.h>
 
-struct glomo_coordinates_str
-{
-    double  x;
-    double  y;
-    double  z;
+struct glomo_coordinates_str {
+    double x;
+    double y;
+    double z;
 };
 
 #endif /* _COORDINATES_H_ */

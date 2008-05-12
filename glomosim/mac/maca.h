@@ -56,19 +56,28 @@
 #define MACA_BO_MIN     (20 * MICRO_SECOND)
 #define MACA_BO_MAX     (16 * MACA_BO_MIN)
 
-typedef enum { MACA_RTS, MACA_CTS, MACA_UNICAST, MACA_BROADCAST }    MacaFrameType;
+typedef enum
+{
+    MACA_RTS,
+    MACA_CTS,
+    MACA_UNICAST,
+    MACA_BROADCAST
+} MacaFrameType;
 
 
-typedef enum { MACA_S_PASSIVE,
-               MACA_S_RTS,
-               MACA_S_BACKOFF,
-               MACA_S_REMOTE,
-               MACA_S_XMIT,
-               MACA_S_YIELD,
-               MACA_S_IN_XMITING_RTS,
-               MACA_S_IN_XMITING_CTS,
-               MACA_S_IN_XMITING_UNICAST,
-               MACA_S_IN_XMITING_BROADCAST }  MacaStateType;
+typedef enum
+{
+    MACA_S_PASSIVE,
+    MACA_S_RTS,
+    MACA_S_BACKOFF,
+    MACA_S_REMOTE,
+    MACA_S_XMIT,
+    MACA_S_YIELD,
+    MACA_S_IN_XMITING_RTS,
+    MACA_S_IN_XMITING_CTS,
+    MACA_S_IN_XMITING_UNICAST,
+    MACA_S_IN_XMITING_BROADCAST
+} MacaStateType;
 
 
 #define MACA_TIMER_SWITCH       0x1     /* bit 0000 0001 is used for ON/OFF*/ 
@@ -83,50 +92,49 @@ typedef enum { MACA_S_PASSIVE,
 #define MACA_T_YIELD    0x8     /* bit 0000 1000 */
 #define MACA_T_UNDEFINED 0xE    /* bit 0000 1110 */ 
 
-typedef struct _maca_timer
+typedef struct _maca_timer 
 {
-    int             seq;
+    int            seq;
     unsigned char   flag;
 } MacaTimer;
 
-typedef struct maca_header_str
-{
-    NODE_ADDR   sourceAddr;
-    NODE_ADDR   destAddr;
-    int         payloadSize;
-    int         frameType;  /* RTS, CTS, MAC_DATA */
-    int         priority;
+typedef struct maca_header_str {
+    NODE_ADDR sourceAddr;
+    NODE_ADDR destAddr;
+    int payloadSize;
+    int frameType;  /* RTS, CTS, MAC_DATA */
+    int priority;
 } MacaHeader;
 
-typedef struct glomo_mac_maca_str
+typedef struct glomo_mac_maca_str 
 {
-    GlomoMac*                   myGlomoMac;
-    int                         state;         
+    GlomoMac* myGlomoMac;
+    int state;         
 
-    int                         BOmin;          /* minimum backoff */
-    int                         BOmax;          /* maximum backoff */
-    int                         BOtimes;        /* how many times has it backed off? */
+    int BOmin;          /* minimum backoff */
+    int BOmax;          /* maximum backoff */
+    int BOtimes;        /* how many times has it backed off? */
 
-    MacaTimer                   timer;
+    MacaTimer timer;
 
-    int                         payloadSizeExpected;
+    int payloadSizeExpected;
 
-    int                         pktsToSend;
-    int                         pktsLostOverflow;
+    int pktsToSend;
+    int pktsLostOverflow;
 
-    int                         pktsSentUnicast;
-    int                         pktsSentBroadcast;
+    int pktsSentUnicast;
+    int pktsSentBroadcast;
 
-    int                         pktsGotUnicast;
-    int                         pktsGotBroadcast;
+    int pktsGotUnicast;
+    int pktsGotBroadcast;
 
-    int                         RtsPacketSent;
-    int                         CtsPacketSent;
+    int RtsPacketSent;
+    int CtsPacketSent;
 
-    int                         RtsPacketGot;
-    int                         CtsPacketGot;
+    int RtsPacketGot;
+    int CtsPacketGot;
 
-    int                         NoisyPacketGot;
+    int NoisyPacketGot;
 
     NetworkQueueingPriorityType currentPriority;
 } GlomoMacMaca;
@@ -142,7 +150,8 @@ typedef struct glomo_mac_maca_str
  *     msg:      message received by the layer.
  */
 
-void MacMacaLayer( GlomoNode* node, int InterfaceIndex, Message* msg );
+void MacMacaLayer(
+   GlomoNode *node, int InterfaceIndex, Message *msg);
 
 
 /*
@@ -154,7 +163,8 @@ void MacMacaLayer( GlomoNode* node, int InterfaceIndex, Message* msg );
  *     nodeInput: structure containing contents of input file.
  */
 
-void MacMacaInit( GlomoNode* node, int interfaceIndex, const GlomoNodeInput* nodeInput );
+void MacMacaInit(
+   GlomoNode *node, int interfaceIndex, const GlomoNodeInput *nodeInput);
 
 
 /*
@@ -166,7 +176,7 @@ void MacMacaInit( GlomoNode* node, int interfaceIndex, const GlomoNodeInput* nod
  *     node:     node for which results are to be collected.
  */
 
-void MacMacaFinalize( GlomoNode* node, int interfaceIndex );
+void MacMacaFinalize(GlomoNode *node, int interfaceIndex);
 
 /*
  * FUNCTION    MacMacaNetworkLayerHasPacketToSend.
@@ -174,16 +184,18 @@ void MacMacaFinalize( GlomoNode* node, int interfaceIndex );
  *             is ready to be sent.
  */
 
-void MacMacaNetworkLayerHasPacketToSend( GlomoNode* node, GlomoMacMaca* maca );
+void MacMacaNetworkLayerHasPacketToSend(GlomoNode* node, GlomoMacMaca* maca);
 
 
-void MacMacaReceivePacketFromRadio( GlomoNode* node, GlomoMacMaca* maca, Message* msg );
-
-
-void MacMacaReceiveRadioStatusChangeNotification( GlomoNode* node,
-                                                  GlomoMacMaca* maca,
-                                                  RadioStatusType oldRadioStatus,
-                                                  RadioStatusType newRadioStatus );
+void MacMacaReceivePacketFromRadio(
+    GlomoNode* node, GlomoMacMaca* maca, Message* msg);
+    
+    
+void MacMacaReceiveRadioStatusChangeNotification(
+   GlomoNode* node,
+   GlomoMacMaca* maca,
+   RadioStatusType oldRadioStatus,
+   RadioStatusType newRadioStatus);
 
 
 #endif

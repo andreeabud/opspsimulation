@@ -52,21 +52,20 @@
 #include "api.h"
 
 
-void GLOMO_FreeNodeInput( GlomoNodeInput* nodeInput )
+void GLOMO_FreeNodeInput(GlomoNodeInput *nodeInput)
 {
     int i;
-    for( i = 0;i < nodeInput->numLines;i++ ) {
-        pc_free( nodeInput->inputStrings[i] );
+    for (i = 0; i < nodeInput->numLines; i++) {
+        pc_free(nodeInput->inputStrings[i]);
     }
-    pc_free( nodeInput->inputStrings );
+    pc_free(nodeInput->inputStrings);
 }
 
 static
-BOOL BlankLine( char String[] )
-{
+BOOL BlankLine(char String[]) {
     int I;
-    for( I = 0;I < strlen( String );I++ ) {
-        if( ( int ) String[I] > ( int ) ( ' ' ) ) {
+    for (I = 0; I < strlen(String);I++) {
+        if ((int)String[I] > (int)(' ')) {
             return FALSE;
         }
     }
@@ -78,61 +77,65 @@ BOOL BlankLine( char String[] )
  * We will assume that the maximum length of any single line
  * in the input file is thrice the value of GLOMO_MAX_STRING_LENGTH.
  */
-void GLOMO_ReadFile( GlomoNodeInput* nodeInput, const char* filename )
-{
-    FILE*   fd;
-    char    readStr[3 * GLOMO_MAX_STRING_LENGTH];
-    char    arg1[GLOMO_MAX_STRING_LENGTH];
-    int     maxNumLines     = 10;
-    int     numLines        = 0;
-    char**  inputStrings    = NULL;
-
-    fd = fopen( filename, "r" );
-    if( fd == NULL ) {
-        fprintf( stderr, "GLOMO Error: Can't open %s.\n", filename );
-        assert( 0 );
+void GLOMO_ReadFile(GlomoNodeInput *nodeInput, const char *filename) {
+    FILE *fd;
+    char readStr[3 * GLOMO_MAX_STRING_LENGTH];
+    char arg1[GLOMO_MAX_STRING_LENGTH];
+    int  maxNumLines = 10;
+    int  numLines = 0;
+    char **inputStrings = NULL;
+    
+    fd = fopen(filename, "r");
+    if (fd == NULL) {
+        fprintf(stderr, "GLOMO Error: Can't open %s.\n", filename);
+        assert(0);
     }
 
-    inputStrings = ( char * * ) pc_malloc( 10 * sizeof( char * ) );
-    assert( inputStrings != NULL );
+    inputStrings = (char **)pc_malloc(10 * sizeof(char *));
+    assert(inputStrings != NULL);
 
-    while( fgets( readStr, 3 * GLOMO_MAX_STRING_LENGTH, fd ) != NULL ) {
-        if( ( readStr[0] == '#' ) || ( BlankLine( readStr ) ) ) {
+    while (fgets(readStr, 3 * GLOMO_MAX_STRING_LENGTH, fd) != NULL) {
+        if ((readStr[0] == '#') || (BlankLine(readStr))) {
             continue;
         }
 
-        if( numLines == maxNumLines ) {
-            char**  tempStrings;
+        if (numLines == maxNumLines) {
+            char **tempStrings;
 
             tempStrings = inputStrings;
             maxNumLines += 10;
-            inputStrings = ( char * * ) pc_malloc( maxNumLines * sizeof( char * ) );
-            assert( inputStrings != NULL );
-            memcpy( inputStrings, tempStrings, numLines * sizeof( char * ) );
-            pc_free( tempStrings );
+            inputStrings = (char **)pc_malloc(maxNumLines * sizeof(char *));
+            assert(inputStrings != NULL);
+            memcpy(inputStrings, tempStrings, numLines * sizeof(char *));
+            pc_free(tempStrings);
         }
         /*
          * Scan the first argument into arg1.
          * If arg1 has "-FILE" at the end, load the file.
          */
-        sscanf( readStr, "%s", arg1 );
-        if( ( strlen( arg1 ) > 5 ) && ( strcmp( &arg1[strlen( arg1 ) - 5], "-FILE" ) == 0 ) ) {
-            char            arg2[GLOMO_MAX_STRING_LENGTH];
-            GlomoNodeInput  nodeInput2;
+        sscanf(readStr, "%s", arg1);
+        if ((strlen(arg1) > 5) &&
+            (strcmp(&arg1[strlen(arg1) - 5], "-FILE") == 0))
+        {
+            char arg2[GLOMO_MAX_STRING_LENGTH];
+            GlomoNodeInput nodeInput2;
 
-            sscanf( readStr, "%s %s", arg1, arg2 );
-            GLOMO_ReadFile( &nodeInput2, arg2 );
-            inputStrings[numLines] = ( char * ) pc_malloc( strlen( readStr ) +
-                                                           sizeof( GlomoNodeInput ) +
-                                                           1 );
-            assert( inputStrings[numLines] != NULL );
-            memcpy( inputStrings[numLines], readStr, strlen( readStr ) + 1 );
-            memcpy( &inputStrings[numLines][strlen( readStr ) + 1],
-                    &nodeInput2,
-                    sizeof( GlomoNodeInput ) );
-        }else {
-            inputStrings[numLines] = ( char * ) checked_pc_malloc( strlen( readStr ) + 1 );
-            memcpy( inputStrings[numLines], readStr, strlen( readStr ) + 1 );
+            sscanf(readStr, "%s %s", arg1, arg2);
+            GLOMO_ReadFile(&nodeInput2, arg2);
+            inputStrings[numLines]
+                = (char *)pc_malloc(strlen(readStr)
+                                    + sizeof(GlomoNodeInput)
+                                    + 1);
+            assert(inputStrings[numLines] != NULL);
+            memcpy(inputStrings[numLines], readStr, strlen(readStr) + 1);
+            memcpy(&inputStrings[numLines][strlen(readStr) + 1],
+                   &nodeInput2,
+                   sizeof(GlomoNodeInput));
+        }
+        else {
+            inputStrings[numLines] = 
+                (char *)checked_pc_malloc(strlen(readStr) + 1);
+            memcpy(inputStrings[numLines], readStr, strlen(readStr) + 1);
         }
         numLines++;
     }
@@ -140,35 +143,37 @@ void GLOMO_ReadFile( GlomoNodeInput* nodeInput, const char* filename )
     nodeInput->numLines = numLines;
     nodeInput->inputStrings = inputStrings;
 
-    fclose( fd );
+    fclose(fd);
 }
 
 
 
-BOOL GLOMO_ReadCachedFile( const GlomoNodeInput* nodeInput, char* index, GlomoNodeInput* readVal )
+BOOL GLOMO_ReadCachedFile(const GlomoNodeInput *nodeInput,
+                          char *index,
+                          GlomoNodeInput *readVal)
 {
-    int         i;
-    char        arg1[GLOMO_MAX_STRING_LENGTH];
-    const int   numLines        = nodeInput->numLines;
-    char**      inputStrings    = nodeInput->inputStrings;
+    int  i;
+    char arg1[GLOMO_MAX_STRING_LENGTH];
+    const int  numLines = nodeInput->numLines;
+    char **inputStrings = nodeInput->inputStrings;
 
     /*
      * Go through each line of the input file
      */
-    for( i = 0;i < numLines;i++ ) {
+    for (i = 0; i < numLines; i++) {
         /*
          * Scan the first argument into arg1.
          */
-        sscanf( inputStrings[i], "%s", arg1 );
+        sscanf(inputStrings[i], "%s", arg1);
 
         /*
          * If it matches the index provided by the user,
          * get the pointer to the cached file.
          */
-        if( strcmp( arg1, index ) == 0 ) {
-            memcpy( readVal,
-                    &inputStrings[i][strlen( inputStrings[i] ) + 1],
-                    sizeof( GlomoNodeInput ) );
+        if (strcmp(arg1, index) == 0) {
+            memcpy(readVal,
+                   &inputStrings[i][strlen(inputStrings[i]) + 1],
+                   sizeof(GlomoNodeInput));
             return TRUE;
         }
     }
@@ -178,11 +183,10 @@ BOOL GLOMO_ReadCachedFile( const GlomoNodeInput* nodeInput, char* index, GlomoNo
 
 
 static /*inline*/
-void AbortBecauseDuplicateParameterFound( char* InputFileLine )
-{
-    printf( "Error: Found Duplicate Parameter in input file.\n" );
-    printf( InputFileLine );
-    printf( "\n" );
+void AbortBecauseDuplicateParameterFound(char* InputFileLine) {
+    printf("Error: Found Duplicate Parameter in input file.\n");
+    printf(InputFileLine);
+    printf("\n");
     abort();
 }
 
@@ -216,67 +220,62 @@ void AbortBecauseDuplicateParameterFound( char* InputFileLine )
  */
 
 
-static void RetrieveGlomoParameter( const NODE_ADDR nodeAddr,
-                                    const GlomoNodeInput* nodeInput,
-                                    const char* parameterName,
-                                    const int parameterInstanceNumber,
-                                    const BOOL fallbackToDefault,
-                                    BOOL* parameterFound,
-                                    char  parameterValue[] )
+static void RetrieveGlomoParameter(
+    const NODE_ADDR nodeAddr,
+    const GlomoNodeInput *nodeInput, 
+    const char* parameterName,
+    const int parameterInstanceNumber,
+    const BOOL fallbackToDefault,
+    BOOL* parameterFound,
+    char  parameterValue[])
 {
-    int     i;
-    BOOL    addressSpecificMatchFound   = FALSE;
-    BOOL    instanceSpecificMatchFound  = FALSE;
-
+    int i;
+    BOOL addressSpecificMatchFound = FALSE;
+    BOOL instanceSpecificMatchFound = FALSE;
+    
     *parameterFound = FALSE;
-
+    
     /*
      * Go through each line of the input file
      * (which is stored in the nodeInput structure)
      */
+    
+    for (i = 0; i < nodeInput->numLines; i++) {
+        char range[GLOMO_MAX_STRING_LENGTH];
+        char key[GLOMO_MAX_STRING_LENGTH];
+        char value[GLOMO_MAX_STRING_LENGTH];
+        char value2[GLOMO_MAX_STRING_LENGTH];
+        char value3[GLOMO_MAX_STRING_LENGTH];
+        BOOL addressSpecific = FALSE;
+        int instanceNumber;
+        char* leftBracketPtr;
+        int numValues = 0;
 
-    for( i = 0;i < nodeInput->numLines;i++ ) {
-        char    range[GLOMO_MAX_STRING_LENGTH];
-        char    key[GLOMO_MAX_STRING_LENGTH];
-        char    value[GLOMO_MAX_STRING_LENGTH];
-        char    value2[GLOMO_MAX_STRING_LENGTH];
-        char    value3[GLOMO_MAX_STRING_LENGTH];
-        BOOL    addressSpecific = FALSE;
-        int     instanceNumber;
-        char*   leftBracketPtr;
-        int     numValues       = 0;
-
-        sscanf( nodeInput->inputStrings[i], "%s", range );
-
-        if( strncmp( range, "NODE-ADDRESS[", 13 ) == 0 ) {
+        sscanf(nodeInput->inputStrings[i], "%s", range);
+        
+        if (strncmp(range, "NODE-ADDRESS[", 13) == 0) {
             int start;
             int end;
 
-            numValues = sscanf( nodeInput->inputStrings[i],
-                                "%s %s %s %s %s",
-                                range,
-                                key,
-                                value,
-                                value2,
-                                value3 );
+            numValues = sscanf(nodeInput->inputStrings[i],
+                               "%s %s %s %s %s", 
+                               range, key, value, value2, value3);
             // Subtract "range" and "key"
             numValues -= 2;
 
-            sscanf( range, "NODE-ADDRESS[%d:%d]", &start, &end );
-
-            if( ( nodeAddr >= start ) && ( nodeAddr <= end ) ) {
+            sscanf(range, "NODE-ADDRESS[%d:%d]", &start, &end);
+            
+            if ((nodeAddr >= start) && (nodeAddr <= end)) {
                 addressSpecific = TRUE;
-            }else {
+            } else {
                 // Wrong Address, forget it.
                 continue;
             }
-        }else {
-            numValues = sscanf( nodeInput->inputStrings[i],
-                                "%s %s %s %s",
-                                key,
-                                value,
-                                value2,
-                                value3 );
+            
+        } else {
+            numValues = sscanf(nodeInput->inputStrings[i],
+                               "%s %s %s %s",
+                               key, value, value2, value3);
             // Subtract "key"
             numValues--;
         }
@@ -285,16 +284,16 @@ static void RetrieveGlomoParameter( const NODE_ADDR nodeAddr,
         //
         // Concatenate values for the coordinates.
         //
-        if( strncmp( value, "(", 1 ) == 0 ) {
-            if( numValues == 2 ) {
-                strcat( value, value2 );
-            }else if( numValues == 3 ) {
-                strcat( value, value2 );
-                strcat( value, value3 );
-            }else {
-                fprintf( stderr,
-                         "Coordinates expression must be either"
-                         "(v1, v2) or (v1, v2, v3)\n" );
+        if (strncmp(value, "(", 1) == 0) {
+            if (numValues == 2) {
+                strcat(value, value2);
+            } else if (numValues == 3) {
+                strcat(value, value2);
+                strcat(value, value3);
+            } else {
+                fprintf(stderr,
+                        "Coordinates expression must be either"
+                        "(v1, v2) or (v1, v2, v3)\n");
                 abort();
             }
         }
@@ -303,62 +302,72 @@ static void RetrieveGlomoParameter( const NODE_ADDR nodeAddr,
          * If it matches the index provided by the user,
          * get the corresponding integer value.
          */
-
-        leftBracketPtr = strstr( key, "[" );
-        if( leftBracketPtr != NULL ) {
-            assert( strstr( key, "]" ) != NULL );
-            sscanf( &leftBracketPtr[1], "%d", &instanceNumber );
-            if( instanceNumber != parameterInstanceNumber ) {
+         
+        leftBracketPtr = strstr(key,"[");
+        if (leftBracketPtr != NULL) {
+            assert(strstr(key,"]") != NULL);
+            sscanf(&leftBracketPtr[1], "%d", &instanceNumber);
+            if (instanceNumber != parameterInstanceNumber) {
                 // Wrong instance number, forget it.
                 continue;
             }
-
+            
             // Wack off "[n]" part of string.
             *leftBracketPtr = 0;
-        }else {
+        } else {
             instanceNumber = DEFAULT_NO_INSTANCE_NUMBER;
         }
-
+    
         // A matching address specific parameter overides any non-address
         // specific parameter.   A specific instance overrides a default
         // instance.
 
-        if( strcmp( key, parameterName ) == 0 ) {
-            if( addressSpecific ) {
-                if( instanceNumber == parameterInstanceNumber ) {
-                    if( ( instanceSpecificMatchFound ) && ( addressSpecificMatchFound ) ) {
-                        AbortBecauseDuplicateParameterFound( nodeInput->inputStrings[i] );
+        if (strcmp(key, parameterName) == 0) {
+            if (addressSpecific) {
+                if (instanceNumber == parameterInstanceNumber) {
+                    if ((instanceSpecificMatchFound) &&
+                        (addressSpecificMatchFound)) 
+                    {
+                        AbortBecauseDuplicateParameterFound(
+                            nodeInput->inputStrings[i]);
                     }//if//
                     instanceSpecificMatchFound = TRUE;
                     addressSpecificMatchFound = TRUE;
                     *parameterFound = TRUE;
-                    strcpy( parameterValue, value );
-                }else if( ( fallbackToDefault ) &&
-                          ( ( !instanceSpecificMatchFound ) || ( !addressSpecificMatchFound ) ) ) {
-                    assert( instanceNumber == DEFAULT_NO_INSTANCE_NUMBER );
-                    if( addressSpecificMatchFound ) {
-                        AbortBecauseDuplicateParameterFound( nodeInput->inputStrings[i] );
+                    strcpy(parameterValue, value);
+               } else if ((fallbackToDefault) && 
+                          ((!instanceSpecificMatchFound) ||
+                            (!addressSpecificMatchFound)))
+               {
+                    assert(instanceNumber == DEFAULT_NO_INSTANCE_NUMBER);
+                    if (addressSpecificMatchFound) {
+                        AbortBecauseDuplicateParameterFound(
+                            nodeInput->inputStrings[i]);
                     }//if//
                     instanceSpecificMatchFound = FALSE;
                     addressSpecificMatchFound = TRUE;
                     *parameterFound = TRUE;
-                    strcpy( parameterValue, value );
-                }//if//
-            }else if( !addressSpecificMatchFound ) {
-                if( instanceNumber == parameterInstanceNumber ) {
-                    if( instanceSpecificMatchFound ) {
-                        AbortBecauseDuplicateParameterFound( nodeInput->inputStrings[i] );
+                    strcpy(parameterValue, value);
+               }//if//
+            } else if (!addressSpecificMatchFound) {
+                if (instanceNumber == parameterInstanceNumber) {
+                    if (instanceSpecificMatchFound) {
+                        AbortBecauseDuplicateParameterFound(
+                            nodeInput->inputStrings[i]);
                     }//if//
                     instanceSpecificMatchFound = TRUE;
                     *parameterFound = TRUE;
-                    strcpy( parameterValue, value );
-                }else if( ( fallbackToDefault ) && ( !instanceSpecificMatchFound ) ) {
-                    assert( instanceNumber == DEFAULT_NO_INSTANCE_NUMBER );
-                    if( *parameterFound ) {
-                        AbortBecauseDuplicateParameterFound( nodeInput->inputStrings[i] );
+                    strcpy(parameterValue, value);
+                } else if ((fallbackToDefault) && 
+                           (!instanceSpecificMatchFound)) 
+                {
+                    assert(instanceNumber == DEFAULT_NO_INSTANCE_NUMBER);
+                    if (*parameterFound) {
+                        AbortBecauseDuplicateParameterFound(
+                            nodeInput->inputStrings[i]);
                     }//if//
                     *parameterFound = TRUE;
-                    strcpy( parameterValue, value );
+                    strcpy(parameterValue, value);
                 }//if//
             }//if//
         }//if//
@@ -385,86 +394,74 @@ static void RetrieveGlomoParameter( const NODE_ADDR nodeAddr,
  *
  */
 
-
-BOOL GLOMO_ReadString( const NODE_ADDR nodeAddr,
-                       const GlomoNodeInput* nodeInput,
-                       const char* parameterName,
-                       char* parameterValue )
+ 
+BOOL GLOMO_ReadString(
+    const NODE_ADDR nodeAddr,
+    const GlomoNodeInput *nodeInput, 
+    const char* parameterName, 
+    char* parameterValue)
 {
-    BOOL    WasFound;
-
-    RetrieveGlomoParameter( nodeAddr,
-                            nodeInput,
-                            parameterName,
-                            DEFAULT_NO_INSTANCE_NUMBER,
-                            FALSE,
-                            &WasFound,
-                            parameterValue );
+    BOOL WasFound;
+    
+    RetrieveGlomoParameter(
+        nodeAddr, nodeInput, parameterName, DEFAULT_NO_INSTANCE_NUMBER, FALSE,
+        &WasFound, parameterValue);
     return WasFound;
 }               
 
 
-BOOL GLOMO_ReadInt( const NODE_ADDR nodeAddr,
-                    const GlomoNodeInput* nodeInput,
-                    const char* parameterName,
-                    int* parameterValue )
+BOOL GLOMO_ReadInt(
+    const NODE_ADDR nodeAddr,
+    const GlomoNodeInput *nodeInput, 
+    const char* parameterName, 
+    int* parameterValue)
 {
-    BOOL    WasFound;
-    char    stringValue[GLOMO_MAX_STRING_LENGTH];
-
-    RetrieveGlomoParameter( nodeAddr,
-                            nodeInput,
-                            parameterName,
-                            DEFAULT_NO_INSTANCE_NUMBER,
-                            FALSE,
-                            &WasFound,
-                            stringValue );
-    if( WasFound ) {
-        sscanf( stringValue, "%d", parameterValue );
+    BOOL WasFound;
+    char stringValue[GLOMO_MAX_STRING_LENGTH];
+    
+    RetrieveGlomoParameter(
+        nodeAddr, nodeInput, parameterName, DEFAULT_NO_INSTANCE_NUMBER, FALSE, 
+        &WasFound, stringValue);
+    if (WasFound) { 
+        sscanf(stringValue,"%d", parameterValue); 
     }   
     return WasFound;
 }               
 
 
-BOOL GLOMO_ReadDouble( const NODE_ADDR nodeAddr,
-                       const GlomoNodeInput* nodeInput,
-                       const char* parameterName,
-                       double* parameterValue )
+BOOL GLOMO_ReadDouble(
+    const NODE_ADDR nodeAddr,
+    const GlomoNodeInput *nodeInput, 
+    const char* parameterName, 
+    double* parameterValue)
 {
-    BOOL    WasFound;
-    char    stringValue[GLOMO_MAX_STRING_LENGTH];
-
-    RetrieveGlomoParameter( nodeAddr,
-                            nodeInput,
-                            parameterName,
-                            DEFAULT_NO_INSTANCE_NUMBER,
-                            FALSE,
-                            &WasFound,
-                            stringValue );
-    if( WasFound ) {
-        sscanf( stringValue, "%lf", parameterValue );
+    BOOL WasFound;
+    char stringValue[GLOMO_MAX_STRING_LENGTH];
+    
+    RetrieveGlomoParameter(
+        nodeAddr, nodeInput, parameterName, DEFAULT_NO_INSTANCE_NUMBER, FALSE,
+        &WasFound, stringValue);
+    if (WasFound) { 
+        sscanf(stringValue,"%lf", parameterValue); 
     }   
     return WasFound;
 }               
 
 
-BOOL GLOMO_ReadTime( const NODE_ADDR nodeAddr,
-                     const GlomoNodeInput* nodeInput,
-                     const char* parameterName,
-                     clocktype* parameterValue )
+BOOL GLOMO_ReadTime(
+    const NODE_ADDR nodeAddr,
+    const GlomoNodeInput *nodeInput, 
+    const char* parameterName, 
+    clocktype* parameterValue)
 {
-    BOOL    WasFound;
-    char    stringValue[GLOMO_MAX_STRING_LENGTH];
-
-    RetrieveGlomoParameter( nodeAddr,
-                            nodeInput,
-                            parameterName,
-                            DEFAULT_NO_INSTANCE_NUMBER,
-                            FALSE,
-                            &WasFound,
-                            stringValue );
-    if( WasFound ) {
-        *parameterValue = GLOMO_ConvertToClock( stringValue );
+    BOOL WasFound;
+    char stringValue[GLOMO_MAX_STRING_LENGTH];
+    
+    RetrieveGlomoParameter(
+        nodeAddr, nodeInput, parameterName, DEFAULT_NO_INSTANCE_NUMBER, FALSE, 
+        &WasFound, stringValue);
+    if (WasFound) { 
+        *parameterValue = GLOMO_ConvertToClock(stringValue);
     }   
     return WasFound;
 }               
@@ -501,88 +498,76 @@ BOOL GLOMO_ReadTime( const NODE_ADDR nodeAddr,
  *
  */
 
-void GLOMO_ReadStringInstance( const NODE_ADDR nodeAddr,
-                               const GlomoNodeInput* nodeInput,
-                               const char parameterName[],
-                               const int parameterInstanceNumber,
-                               const BOOL fallbackToDefault,
-                               BOOL* WasFound,
-                               char  parameterValue[] )
+void GLOMO_ReadStringInstance(
+    const NODE_ADDR nodeAddr,
+    const GlomoNodeInput *nodeInput, 
+    const char parameterName[],
+    const int parameterInstanceNumber, 
+    const BOOL fallbackToDefault,
+    BOOL* WasFound,
+    char  parameterValue[])
 {
-    RetrieveGlomoParameter( nodeAddr,
-                            nodeInput,
-                            parameterName,
-                            parameterInstanceNumber,
-                            fallbackToDefault,
-                            WasFound,
-                            parameterValue );
+    RetrieveGlomoParameter(
+        nodeAddr, nodeInput, parameterName, parameterInstanceNumber, 
+        fallbackToDefault, WasFound, parameterValue);
 }
 
-void GLOMO_ReadIntInstance( const NODE_ADDR nodeAddr,
-                            const GlomoNodeInput* nodeInput,
-                            const char parameterName[],
-                            const int parameterInstanceNumber,
-                            const BOOL fallbackToDefault,
-                            BOOL* WasFound,
-                            int* parameterValue )
+void GLOMO_ReadIntInstance(
+    const NODE_ADDR nodeAddr,
+    const GlomoNodeInput *nodeInput, 
+    const char parameterName[],
+    const int parameterInstanceNumber, 
+    const BOOL fallbackToDefault,
+    BOOL* WasFound,
+    int*  parameterValue)
 {
-    char    stringValue[GLOMO_MAX_STRING_LENGTH];
-
-    RetrieveGlomoParameter( nodeAddr,
-                            nodeInput,
-                            parameterName,
-                            parameterInstanceNumber,
-                            fallbackToDefault,
-                            WasFound,
-                            stringValue );
-    if( *WasFound ) {
-        sscanf( stringValue, "%d", parameterValue );
+    char stringValue[GLOMO_MAX_STRING_LENGTH];
+    
+    RetrieveGlomoParameter(
+        nodeAddr, nodeInput, parameterName, parameterInstanceNumber, 
+        fallbackToDefault, WasFound, stringValue);
+    if (*WasFound) {
+        sscanf(stringValue,"%d", parameterValue); 
     }
 }
 
 
-void GLOMO_ReadDoubleInstance( const NODE_ADDR nodeAddr,
-                               const GlomoNodeInput* nodeInput,
-                               const char parameterName[],
-                               const int parameterInstanceNumber,
-                               const BOOL fallbackToDefault,
-                               BOOL* WasFound,
-                               double* parameterValue )
+void GLOMO_ReadDoubleInstance(
+    const NODE_ADDR nodeAddr,
+    const GlomoNodeInput* nodeInput, 
+    const char parameterName[],
+    const int parameterInstanceNumber, 
+    const BOOL fallbackToDefault,
+    BOOL* WasFound,
+    double* parameterValue)
 {
-    char    stringValue[GLOMO_MAX_STRING_LENGTH];
-
-    RetrieveGlomoParameter( nodeAddr,
-                            nodeInput,
-                            parameterName,
-                            parameterInstanceNumber,
-                            fallbackToDefault,
-                            WasFound,
-                            stringValue );
-    if( *WasFound ) {
-        sscanf( stringValue, "%lf", parameterValue );
+    char stringValue[GLOMO_MAX_STRING_LENGTH];
+    
+    RetrieveGlomoParameter(
+        nodeAddr, nodeInput, parameterName, parameterInstanceNumber, 
+        fallbackToDefault, WasFound, stringValue);
+    if (*WasFound) {
+        sscanf(stringValue,"%lf", parameterValue); 
     }
 }
 
 
-void GLOMO_ReadTimeInstance( const   NODE_ADDR nodeAddr,
-                             const   GlomoNodeInput* nodeInput,
-                             const   char parameterName[],
-                             const   int parameterInstanceNumber,
-                             const   BOOL fallbackToDefault,
-                             BOOL* WasFound,
-                             clocktype* parameterValue )
+void GLOMO_ReadTimeInstance(
+    const   NODE_ADDR nodeAddr,
+    const   GlomoNodeInput *nodeInput, 
+    const   char parameterName[],
+    const   int parameterInstanceNumber, 
+    const   BOOL fallbackToDefault,
+    BOOL*   WasFound,
+    clocktype* parameterValue)
 {
-    char    stringValue[GLOMO_MAX_STRING_LENGTH];
-
-    RetrieveGlomoParameter( nodeAddr,
-                            nodeInput,
-                            parameterName,
-                            parameterInstanceNumber,
-                            fallbackToDefault,
-                            WasFound,
-                            stringValue );
-    if( *WasFound ) {
-        *parameterValue = GLOMO_ConvertToClock( stringValue );
+    char stringValue[GLOMO_MAX_STRING_LENGTH];
+    
+    RetrieveGlomoParameter(
+        nodeAddr, nodeInput, parameterName, parameterInstanceNumber, 
+        fallbackToDefault, WasFound, stringValue);
+    if (*WasFound) {
+        *parameterValue = GLOMO_ConvertToClock(stringValue);
     }
 }
 

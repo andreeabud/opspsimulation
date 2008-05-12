@@ -107,23 +107,23 @@
  ****   top bit is also set version "13" (version # not "simulated").
  ****/
 
-typedef struct ip
-{
-    unsigned int    ip_v    : 3,        /* version */
-                     ip_hl : 5,       /* header length */
-                     ip_tos : 8,      /* type of service */
-                     ip_len : 16;     /* total length */
-
-    unsigned int    ip_id   : 16,
-                     ip_reserved : 1,
-                     ip_dont_fragment : 1,
-                     ip_more_fragments : 1,
-                     ip_fragment_offset : 13;
-
-    unsigned char   ip_ttl;      /* time to live */
-    unsigned char   ip_p;        /* protocol */
-    unsigned short  ip_sum;      /* checksum */
-    long            ip_src, ip_dst;      /* source and dest address */
+typedef struct ip {
+    unsigned int ip_v:3,        /* version */
+                 ip_hl:5,       /* header length */
+                 ip_tos:8,      /* type of service */
+                 ip_len:16;     /* total length */
+    
+    unsigned int ip_id:16,
+                 ip_reserved:1,
+                 ip_dont_fragment:1,
+                 ip_more_fragments:1,
+                 ip_fragment_offset:13;
+                 
+    unsigned char  ip_ttl;      /* time to live */
+    unsigned char  ip_p;        /* protocol */
+    unsigned short ip_sum;      /* checksum */
+    long    ip_src,ip_dst;      /* source and dest address */
+    
 } IpHeaderType;
 
 
@@ -162,10 +162,11 @@ typedef struct ip
 //                       route, before this index is the recorded route.
 
 
-void ExtractIpSourceAndRecordedRoute( Message* msg,
-                                      NODE_ADDR RouteAddresses[],
-                                      int* NumAddresses,
-                                      int* RouteAddressIndex );
+void ExtractIpSourceAndRecordedRoute(
+   Message* msg, 
+   NODE_ADDR RouteAddresses[],
+   int*  NumAddresses,
+   int*  RouteAddressIndex);
 
 
 /*
@@ -222,20 +223,17 @@ void ExtractIpSourceAndRecordedRoute( Message* msg,
 /*
  * Time stamp option structure.
  */
-struct  ip_timestamp
-{
-    unsigned int    ipt_code    : 8,       /* IPOPT_TS */
-                     ipt_len : 8,        /* size of structure (variable) */
-                     ipt_ptr : 8,        /* index of current entry */
-                     ipt_flg : 4,        /* flags, see below */
-                     ipt_oflw : 4;       /* overflow counter */
-    union ipt_timestamp
-    {
-        unsigned long   ipt_time[1];
-        struct  ipt_ta
-        {
-            NODE_ADDR       ipt_addr;
-            unsigned long   ipt_time;
+struct  ip_timestamp {
+    unsigned int ipt_code:8,       /* IPOPT_TS */
+                 ipt_len:8,        /* size of structure (variable) */
+                 ipt_ptr:8,        /* index of current entry */
+                 ipt_flg:4,        /* flags, see below */
+                 ipt_oflw:4;       /* overflow counter */
+    union ipt_timestamp {
+        unsigned long  ipt_time[1];
+        struct  ipt_ta {
+            NODE_ADDR ipt_addr;
+            unsigned long ipt_time;
         } ipt_ta[1];
     } ipt_timestamp;
 };
@@ -244,7 +242,7 @@ struct  ip_timestamp
 #define IPOPT_TS_TSONLY     0       /* timestamps only */
 #define IPOPT_TS_TSANDADDR  1       /* timestamps and addresses */
 #define IPOPT_TS_PRESPEC    3       /* specified modules only */
-
+ 
 /* bits for security (not byte swapped) */
 #define IPOPT_SECUR_UNCLASS 0x0000
 #define IPOPT_SECUR_CONFID  0xf135
@@ -262,19 +260,17 @@ struct  ip_timestamp
 #define IPFRAGTTL   60      /* time to live for frags, slowhz */
 #define IPTTLDEC    1       /* subtracted when forwarding */
 #define IPDEFTOS    0x10    /* default TOS */
-
+ 
 #define IP_MSS      576     /* default maximum segment size */
 
-struct ip_options
-{
-    /* options header */
-    unsigned char               code;
-    unsigned char               len;
-    unsigned char               ptr;
+struct ip_options {         /* options header */
+    unsigned char code;
+    unsigned char len;
+    unsigned char ptr;
 };
 
 
-typedef struct ip_options   IpOptionsHeaderType;
+typedef struct ip_options IpOptionsHeaderType;
 
 
 //
@@ -284,24 +280,27 @@ typedef struct ip_options   IpOptionsHeaderType;
 //
 
 static
-IpOptionsHeaderType* FindAnIpOptionField( const IpHeaderType* ipHeader, const int OptionCode )
+IpOptionsHeaderType* FindAnIpOptionField(
+   const IpHeaderType* ipHeader, 
+   const int OptionCode)
 {
-    IpOptionsHeaderType*ipOption;
+   IpOptionsHeaderType* ipOption;
 
-    if( IpHeaderSize( ipHeader ) == sizeof( IpHeaderType ) ) {
-        return NULL;
-    }
+   if (IpHeaderSize(ipHeader) == sizeof(IpHeaderType)) {
+      return NULL;
+   }
+   
+   ipOption = (IpOptionsHeaderType*)((char*)ipHeader + sizeof(IpHeaderType));
 
-    ipOption = ( IpOptionsHeaderType * ) ( ( char * ) ipHeader + sizeof( IpHeaderType ) );
-
-    while( ipOption->code != OptionCode ) {
-        ipOption = ( IpOptionsHeaderType * ) ( ( char * ) ipOption + ipOption->len );
-        if( ( ( char * ) ipOption ) >= ( ( char * ) ipHeader + IpHeaderSize( ipHeader ) ) ) {
-            ipOption = NULL;
-            break;
-        }/*if*/
-    }/*while*/
-    return ipOption;
+   while (ipOption->code != OptionCode) {
+      ipOption = 
+         (IpOptionsHeaderType*)((char*)ipOption + ipOption->len);
+      if (((char*)ipOption) >= ((char*)ipHeader + IpHeaderSize(ipHeader))) {
+         ipOption = NULL;
+         break;
+      }/*if*/
+   }/*while*/
+   return ipOption;
 }
 
 

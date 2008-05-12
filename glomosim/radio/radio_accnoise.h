@@ -45,20 +45,22 @@
 
 #include "main.h"
 
-typedef enum { SNR_BOUNDED = 1, BER_BASED }  RADIO_RX_TYPE;
+typedef enum {
+    SNR_BOUNDED = 1,
+    BER_BASED
+} RADIO_RX_TYPE;
 
 /*
  * Structure for radio statistics variables
  */
-typedef struct radio_accnoise_stats_str
-{
-    int         totalTxSignals;
-    int         totalRxSignalsAboveRX;
-    int         totalRxSignalsAboveCS;
-    int         totalRxSignalsToMac;
-    int         totalCollisions;
-    double      energyConsumed;
-    clocktype   turnOnTime;
+typedef struct radio_accnoise_stats_str {
+    int totalTxSignals;
+    int totalRxSignalsAboveRX;
+    int totalRxSignalsAboveCS;
+    int totalRxSignalsToMac;
+    int totalCollisions;
+    double energyConsumed;
+    clocktype turnOnTime;
 } RadioAccnoiseStats;
 
 
@@ -67,27 +69,29 @@ typedef struct radio_accnoise_stats_str
 /*
  * Structure for Radio.
  */
-typedef struct glomo_radio_accnoise_str
-{
-    int                 radioIdNumber;
+typedef struct glomo_radio_accnoise_str {
+    int              radioIdNumber;
+    
+    RADIO_RX_TYPE    radioRxType;
+    double           radioRxSnrThreshold;
+    double           radioRxSnrThreshold_dB;
 
-    RADIO_RX_TYPE       radioRxType;
-    double              radioRxSnrThreshold;
-    double              radioRxSnrThreshold_dB;
+    Message     *rxMsg;
+    double       rxMsgPower_mW;
+    clocktype    rxStartTime;
+    long double  noisePower_mW;
+    int          numSignals;
+    clocktype    lastReceivedFrameTime;
+    double       lastReceivedFrameFastFading_dB;
+    NODE_ADDR    lastReceivedFrameSourceNode; 
 
-    Message*            rxMsg;
-    double              rxMsgPower_mW;
-    clocktype           rxStartTime;
-    long double         noisePower_mW;
-    int                 numSignals;
-    clocktype           lastReceivedFrameTime;
-    double              lastReceivedFrameFastFading_dB;
-    NODE_ADDR           lastReceivedFrameSourceNode; 
+    RadioStatusType mode;
+    RadioStatusType previousMode;
 
-    RadioStatusType     mode;
-    RadioStatusType     previousMode;
-
-    RadioAccnoiseStats  stats; /* Stores statistical results */
+    RadioAccnoiseStats    stats; /* Stores statistical results */
+    
+    
+    
 } GlomoRadioAccnoise;
 
 
@@ -100,26 +104,25 @@ typedef struct glomo_radio_accnoise_str
  *     node:     node which received the message
  *     msgHdr:   message received by the layer
  */
-void RadioAccnoiseLayer( GlomoNode* node, const int radioNum, Message* msgHdr );
+void RadioAccnoiseLayer(GlomoNode *node, const int radioNum, Message *msgHdr);
 
-void RadioAccnoiseInit( GlomoNode* node, const int radioNum, const GlomoNodeInput* nodeInput );
+void RadioAccnoiseInit(GlomoNode *node, const int radioNum, 
+                      const GlomoNodeInput *nodeInput);
 
-void RadioAccnoiseFinalize( GlomoNode* node, const int radioNum );
+void RadioAccnoiseFinalize(GlomoNode *node, const int radioNum);
 
 static /*inline*/
-RadioStatusType RadioAccnoiseGetStatus( GlomoNode* node, int radioNum )
-{
-    GlomoRadioAccnoise* radioAccnoise   = ( GlomoRadioAccnoise* )
-                                          node->radioData[radioNum]->radioVar;
-    return ( radioAccnoise->mode );
+RadioStatusType RadioAccnoiseGetStatus(GlomoNode *node, int radioNum) {
+    GlomoRadioAccnoise* radioAccnoise = 
+       (GlomoRadioAccnoise *)node->radioData[radioNum]->radioVar;
+    return (radioAccnoise->mode);
 }
 
-void RadioAccnoiseStartTransmittingPacket( GlomoNode* node,
-                                           int radioNum,
-                                           Message* packet,
-                                           NODE_ADDR receivingNode,
-                                           BOOL useMacLayerSpecifiedDelay,
-                                           clocktype delayUntilAirborne );
+void RadioAccnoiseStartTransmittingPacket(
+   GlomoNode* node, int radioNum, 
+   Message* packet, NODE_ADDR receivingNode,
+   BOOL useMacLayerSpecifiedDelay,
+   clocktype delayUntilAirborne);
 
 #endif /* _RADIO_ACCNOISE_H_ */
 

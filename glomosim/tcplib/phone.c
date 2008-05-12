@@ -63,15 +63,15 @@
 #include "tcplib.h"
 #include "phone.h"
 
-float phone_talkspurt( unsigned short seed[3] )
+float
+phone_talkspurt(unsigned short seed[3])
 {
-    return ( ( float ) tcplib( &phone_histmap[lookup( phone_histmap, "talkspurt" )],
-                               talkspurt,
-                               seed ) );
+  return ((float) tcplib(&phone_histmap[lookup(phone_histmap, "talkspurt")], talkspurt, seed));
 }
 
-float phone_pause( unsigned short seed[3] )
+float
+phone_pause(unsigned short seed[3])
 {
-    return ( ( float ) tcplib( &phone_histmap[lookup( phone_histmap, "pause" )], pause, seed ) );
+  return ((float) tcplib(&phone_histmap[lookup(phone_histmap, "pause")], pause, seed));
 }
 

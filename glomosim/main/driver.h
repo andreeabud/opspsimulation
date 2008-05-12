@@ -60,22 +60,16 @@
  *     dir1:      position of 2nd partition with respect to 1st partition
  *     dir2:      position of 1st partition with respect to 2nd partition
  */
-void DriverSendNeighborInfo( int to_x,
-                             int to_y,
-                             GlomoAreaInfo** channel,
-                             int from_x,
-                             int from_y,
-                             int dir1,
-                             int dir2 );
+void DriverSendNeighborInfo(int to_x, int to_y,
+                            GlomoAreaInfo **channel,
+                            int from_x, int from_y, int dir1, int dir2);
 
 /*
  * Map entities to processors. Current empty.
  */
-void DriverMapEntities( int** mapping,
-                        int partitionNum_x,
-                        int partitionNum_y,
-                        int  numProcessorsX,
-                        int  numProcessorsY );
+void DriverMapEntities(int **mapping,
+                       int partitionNum_x, int partitionNum_y,
+                       int  numProcessorsX, int  numProcessorsY);
 
 /*
  * The following functions are for generating nodes in the simulation.
@@ -86,33 +80,28 @@ void DriverMapEntities( int** mapping,
 /*
  * Function for generating random nodes in the simulation.
  */
-int DriverGenerateRandomNodes( GlomoNodePositionInfo* nodeData,
-                               int nodeNum,
-                               GlomoCoordinates terrainDimensions,
-                               unsigned short seed[3] );
+int DriverGenerateRandomNodes(GlomoNodePositionInfo *nodeData, int nodeNum,
+                              GlomoCoordinates terrainDimensions,
+                              unsigned short seed[3]);
 /*
  * Function for generating uniform nodes in the simulation.
  */
-int DriverGenerateUniformNodes( GlomoNodePositionInfo* nodeData,
-                                int nodeNum,
-                                GlomoCoordinates terrainDimensions,
-                                unsigned short seed[3] );
+int DriverGenerateUniformNodes(GlomoNodePositionInfo *nodeData, int nodeNum,
+                               GlomoCoordinates terrainDimensions,
+                               unsigned short seed[3]);
 
 /*
  * Function for generating nodes in a grid topology.
  */
-int DriverGenerateGridNodes( GlomoNodePositionInfo* nodeData,
-                             int nodeNum,
-                             int gridUnit,
-                             GlomoCoordinates terrainDimensions );
+int DriverGenerateGridNodes(GlomoNodePositionInfo *nodeData, int nodeNum,
+                            int gridUnit, GlomoCoordinates terrainDimensions);
 
 /*
  * Function for generating nodes based on input file.
  */
-int DriverGenerateInputNodes( GlomoNodePositionInfo* nodeData,
-                              int nodeNum,
-                              GlomoCoordinates terrainDimensions,
-                              GlomoNodeInput* nodeInput );
+int DriverGenerateInputNodes(GlomoNodePositionInfo *nodeData, int nodeNum,
+                             GlomoCoordinates terrainDimensions,
+                             GlomoNodeInput *nodeInput);
 
 #endif /* _DRIVER_H_ */
 

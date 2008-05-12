@@ -61,5 +61,5 @@
  *
 */
 #define exp_dist(l) ((float)((-(l)) * log(drand48())))
-extern float gam_dist( float n, float n2, float s, unsigned short seed[3] );
+extern float gam_dist(float n, float n2, float s, unsigned short seed[3]);
 

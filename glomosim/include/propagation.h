@@ -67,14 +67,21 @@
             ((node)->propData->backgroundNoise_dBm * channelBandwidth)
 
 
-typedef enum { FREE_SPACE = 0, TWO_RAY, PATHLOSS_MATRIX }    PATHLOSS_MODEL;
+typedef enum {
+    FREE_SPACE = 0,
+    TWO_RAY,
+    PATHLOSS_MATRIX
+} PATHLOSS_MODEL;
 
-typedef enum { NONE, RAYLEIGH, RICIAN }  FADING_MODEL;
+typedef enum {
+    NONE,
+    RAYLEIGH,
+    RICIAN
+} FADING_MODEL;
 
-typedef struct
-{
-    double  snr;
-    double  ber;
+typedef struct {
+    double snr;
+    double ber;
 } GlomoPropBerTable;
 
 
@@ -82,20 +89,19 @@ typedef struct
 /*
  * typedef to GlomoProp in main.h
  */
-struct glomo_prop_str
-{
-    GlomoChannel*       channelData[MAX_NUM_CHANNELS];
-    int                 numberChannels;
-    double              backgroundNoise_mW;
-    double              backgroundNoise_dBm;
-    double              propLimit_dBm;
-    PATHLOSS_MODEL      pathlossModel;
-    FADING_MODEL        fadingModel;
-    double              ricianKFactor;
-    double              ricianStandardDeviation;
-    void*               pathlossVar;
-    int                 numBerDataItems;
-    GlomoPropBerTable*  berTable;
+struct glomo_prop_str {
+    GlomoChannel *channelData[MAX_NUM_CHANNELS];
+    int numberChannels;
+    double backgroundNoise_mW;
+    double backgroundNoise_dBm;
+    double propLimit_dBm;
+    PATHLOSS_MODEL pathlossModel;
+    FADING_MODEL fadingModel;
+    double ricianKFactor;
+    double ricianStandardDeviation;
+    void           *pathlossVar;
+    int             numBerDataItems;
+    GlomoPropBerTable *berTable;
 };
 
 
@@ -104,19 +110,18 @@ struct glomo_prop_str
  * This structure is used for fields related to channel layer information
  * that need to be sent with a message.
  */
-typedef struct propagation_info_str
-{
-    GlomoCoordinates    txPosition;
-    clocktype           txStartTime; // transmit starting time at the transmitter
-    clocktype           txDuration;  // transmiting duration time
-    NODE_ADDR           txAddr;      // address of node that is sending message
-    float               txPower_dBm;   /* transmit power */
-    float               txAntennaGain_dB;
-    float               txAntennaHeight;
-    float               wavelength;    /* Channel wavelength */
-    double              rxPower_mW;    /* the received power of the signal */
-    float               correlatedFastFading_dB; // Frame sequences can have same fast fade.
-    NODE_ADDR           correlatedFastFadingDestinationNode;
+typedef struct propagation_info_str {
+    GlomoCoordinates txPosition;
+    clocktype txStartTime; // transmit starting time at the transmitter
+    clocktype txDuration;  // transmiting duration time
+    NODE_ADDR txAddr;      // address of node that is sending message
+    float txPower_dBm;   /* transmit power */
+    float txAntennaGain_dB;
+    float txAntennaHeight;
+    float wavelength;    /* Channel wavelength */
+    double rxPower_mW;    /* the received power of the signal */
+    float correlatedFastFading_dB; // Frame sequences can have same fast fade.
+    NODE_ADDR correlatedFastFadingDestinationNode; 
 } PropInfo;
 
 /*
@@ -125,15 +130,14 @@ typedef struct propagation_info_str
  *
  * typdef to GlomoNeighbor in main.h
  */
-typedef struct glomo_neighbor_str
-{
-    ename   partitionEname; /* The ename used for sending message */
-    BOOL    status;          /* Used to indicate if neighbor exists.
-                                If this field is FALSE, neighbor doesn't exist.*/
-    double  start_x;     /* The Starting X Position  */
-    double  start_y;     /* The Starting Y Position */
-    double  end_x;       /* The Ending X Position    */
-    double  end_y;       /* The Ending Y Position    */
+typedef struct glomo_neighbor_str {
+    ename partitionEname; /* The ename used for sending message */
+    BOOL status;          /* Used to indicate if neighbor exists.
+                             If this field is FALSE, neighbor doesn't exist.*/
+    double start_x;     /* The Starting X Position  */
+    double start_y;     /* The Starting Y Position */
+    double end_x;       /* The Ending X Position    */
+    double end_y;       /* The Ending Y Position    */
 } GlomoNeighbor;
 
 /*
@@ -144,14 +148,17 @@ typedef struct glomo_neighbor_str
  *     propagateData: structure shared among nodes
  *     nodeInput: structure containing contents of input file
  */
-void GLOMO_GlobalPropInit( GlomoProp* propData, const GlomoNodeInput* nodeInput );
+void GLOMO_GlobalPropInit(GlomoProp *propData,
+                          const GlomoNodeInput *nodeInput);
 
-void GLOMO_PropInit( GlomoNode* node, GlomoProp* propData );
+void GLOMO_PropInit(GlomoNode *node, GlomoProp *propData);
 
-void GLOMO_PropBroadcast( GlomoPartition* partitionData, Message* msg );
+void GLOMO_PropBroadcast(GlomoPartition *partitionData, Message *msg);
 
 
-double GLOMO_PropBER( const GlomoNode* node, const double signalPower, const double noisePower );
+double GLOMO_PropBER(const GlomoNode *node,
+                     const double signalPower,
+                     const double noisePower);
 
 
 

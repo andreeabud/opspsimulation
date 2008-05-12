@@ -121,7 +121,7 @@
         (tp)->iss
 
 #define TCP_PAWS_IDLE   (24 * 24 * 60 * 60 * PR_SLOWHZ)
-/* timestamp wrap-around time */
+                    /* timestamp wrap-around time */
 
 /*
  * Increment for tcp_iss each second.

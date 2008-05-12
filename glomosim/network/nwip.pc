@@ -66,10 +66,7 @@
 #include "application.h"
 #include "transport.h"
 #include "nwlar1.h"
-//----------------------------------tianke--------------------begin
 #include "aomdv.h"
-//#include "aodv.h"
-//----------------------------------tianke-----------------------end
 #include "dsr.h"
 #include "odmrp.h"
 #include "zrp.h"
@@ -1572,7 +1569,7 @@ void NetworkIpSetPacketDropNotificationFunction( GlomoNode* node,
 //
 // PARAMETERS  msg - The message being peeked at from the MAC layer.  Must
 //                   not be freed or modified!
-//在混杂模式下mac层调用网络层的接口。
+//
 
 
 void NetworkIpSneakPeekAtMacPacket( GlomoNode* node, const Message* msg )
@@ -1801,10 +1798,9 @@ void ProcessPacketForMeFromMac( GlomoNode* node, Message* msg, NODE_ADDR lastAdd
                   * We have modified this function to include the lastAddr 
                   * the address of the node from whom we received the packet.
                   */
-	
 #ifdef AOMDV
-            //printf( "ipLayer->routerFunction: %s", *ipLayer->routerFunction );
-            ( ipLayer->routerFunction ) ( node, msg, ipHeader->ip_dst, lastAddr, & PacketWasRouted );
+            ( ipLayer->routerFunction )
+            ( node, msg, ipHeader->ip_dst, lastAddr, & PacketWasRouted );
 #else
             ( ipLayer->routerFunction ) ( node, msg, ipHeader->ip_dst, & PacketWasRouted );
 #endif
@@ -1820,6 +1816,7 @@ void ProcessPacketForMeFromMac( GlomoNode* node, Message* msg, NODE_ADDR lastAdd
                              &priority,
                              &IpProtocol,
                              &ttl );
+
 
     switch( IpProtocol ) {
     case IPPROTO_UDP:
@@ -2042,14 +2039,6 @@ void NetworkIpLayer( GlomoNode* node, Message* msg )
         break;
     }
 
-    //----------------------------------tianke------------------------begin
-    case ROUTING_PROTOCOL_AOMDV:
-    {
-        RoutingAodvHandleProtocolEvent( node, msg );
-        break;
-    }
-    //----------------------------------tianke-----------------------end   
-
     case ROUTING_PROTOCOL_DSR:
     {
         RoutingDsrHandleProtocolEvent( node, msg );
@@ -2212,30 +2201,23 @@ void NetworkIpInit( GlomoNode* node, const GlomoNodeInput* nodeInput )
     }else if( strcmp( protocolString, "AODV" ) == 0 ) {
         ipLayer->routingProtocolChoice = ROUTING_PROTOCOL_AODV;
         RoutingAodvInit( node, ( GlomoRoutingAodv * * ) &ipLayer->routingProtocol, nodeInput );
-    }
-        //----------------------------------tianke------------------------begin
-    else if( strcmp( protocolString, "AOMDV" ) == 0 ) {
-        ipLayer->routingProtocolChoice = ROUTING_PROTOCOL_AODV;
-        RoutingAodvInit( node, ( GlomoRoutingAodv * * ) &ipLayer->routingProtocol, nodeInput );
-    }
-          //----------------------------------tianke-----------------------end
-    else if( strcmp( protocolString, "DSR" ) == 0 ) {
+    }else if( strcmp( protocolString, "DSR" ) == 0 ) {
         ipLayer->routingProtocolChoice = ROUTING_PROTOCOL_DSR;
         RoutingDsrInit( node, ( GlomoRoutingDsr * * ) &ipLayer->routingProtocol, nodeInput );
     }else if( strcmp( protocolString, "ZRP" ) == 0 ) {
         ipLayer->routingProtocolChoice = ROUTING_PROTOCOL_ZRP;
         RoutingZrpInit( node, ( GlomoRoutingZrp * * ) &ipLayer->routingProtocol, nodeInput );
     }
-         //else if (strcmp(protocolString, "OSPF") == 0) {
-         //   ipLayer->routingProtocolChoice = ROUTING_PROTOCOL_OSPF;
-         //   OspfInit(node, (GlomoRoutingOspf**)&ipLayer->routingProtocol, nodeInput);
-         //} 
+    //else if (strcmp(protocolString, "OSPF") == 0) {
+    //   ipLayer->routingProtocolChoice = ROUTING_PROTOCOL_OSPF;
+    //   OspfInit(node, (GlomoRoutingOspf**)&ipLayer->routingProtocol, nodeInput);
+    //} 
     else if( ( strcmp( protocolString, "BELLMANFORD" ) == 0 ) ||
              ( strcmp( protocolString, "WRP" ) == 0 ) ||
              ( strcmp( protocolString, "FISHEYE" ) == 0 ) ||
              ( strcmp( protocolString, "NS_DSDV" ) == 0 ) ||
              ( strcmp( protocolString, "STATIC" ) == 0 ) ) {
-             // These routing protocols are in application layer.
+        // These routing protocols are in application layer.
     }else {
         NetworkIpUserProtocolInit( node,
                                    nodeInput,
@@ -2327,10 +2309,6 @@ void NetworkIpFinalize( GlomoNode* node )
     break;
     case ROUTING_PROTOCOL_AODV:RoutingAodvFinalize( node );
     break;
-    //----------------------------------tianke------------------------begin
-    case ROUTING_PROTOCOL_AOMDV:RoutingAodvFinalize( node );
-    break;
-    //----------------------------------tianke-----------------------end
     case ROUTING_PROTOCOL_DSR:RoutingDsrFinalize( node );
     break;
     case ROUTING_PROTOCOL_ZRP:RoutingZrpFinalize( node );

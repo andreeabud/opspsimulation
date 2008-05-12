@@ -81,7 +81,7 @@
  *  @(#)in_pcb.h    8.1 (Berkeley) 6/10/93
  * $Id: in_pcb.h,v 1.5 1999/09/28 05:54:07 ktang Exp $
  */
-
+ 
 #include "main.h"
 #include "application.h"
 
@@ -92,46 +92,43 @@
 
 #define sbspace(inp) ((inp)->inp_rcv_hiwat) 
 
-struct inp_buf
-{
-    unsigned long   cc;              /* actual chars in buffer */
-    unsigned long   hiwat;           /* max actual char count */
-    unsigned char*  buffer;         /* buffer content */
+struct inp_buf {
+    unsigned long cc;              /* actual chars in buffer */
+    unsigned long hiwat;           /* max actual char count */
+    unsigned char *buffer;         /* buffer content */
 };
 
 /*
  * Data structure for blocked user data.
  */
-struct pending_buf
-{
-    unsigned long   cc;              /* number of bytes moved to send buffer */
-    unsigned long   hiwat;           /* length of the payload */ 
-    unsigned char*  buffer;   /* payload of the blocked packet */
+struct pending_buf{
+    unsigned long cc;              /* number of bytes moved to send buffer */
+    unsigned long hiwat;           /* length of the payload */ 
+    unsigned char *buffer;   /* payload of the blocked packet */
 };
 
-struct inpcb
-{
-    struct inpcb*       inp_next, * inp_prev; /* doubly linked list of inpcb */
-    struct inpcb*       inp_head;            /* pointer back to chain of inpcb's 
-                                                for this protocol */
-    APP_TYPE            app_proto_type;           /* app this connection belongs to */
+struct inpcb {
+    struct inpcb *inp_next, *inp_prev; /* doubly linked list of inpcb */
+    struct inpcb *inp_head;            /* pointer back to chain of inpcb's 
+                                          for this protocol */
+    APP_TYPE app_proto_type;           /* app this connection belongs to */
     /* four-tuple used to identify a connection */
-    NODE_ADDR           inp_remote_addr;           /* remote address    */
-    short               inp_remote_port;           /* remote port       */
-    NODE_ADDR           inp_local_addr;            /* local address     */
-    short               inp_local_port;            /* local port        */
+    NODE_ADDR inp_remote_addr;           /* remote address    */
+    short     inp_remote_port;           /* remote port       */
+    NODE_ADDR inp_local_addr;            /* local address     */
+    short     inp_local_port;            /* local port        */
 
-    char*               inp_ppcb;                 /* pointer to per protocol PCB */
-    int                 con_id;                    /* connection id #    */
-    unsigned long       inp_rcv_hiwat;       /* receive buffer size */
-    struct inp_buf      inp_snd;            /* send buffer */  
-    struct pending_buf  blocked_pkt;    /* data blocked to send */
-    int                 usrreq;                    /* user request */ 
-
-    long                unique_id; 
-    int                 priority;
+    char    *inp_ppcb;                 /* pointer to per protocol PCB */
+    int     con_id;                    /* connection id #    */
+    unsigned long inp_rcv_hiwat;       /* receive buffer size */
+    struct inp_buf inp_snd;            /* send buffer */  
+    struct pending_buf blocked_pkt;    /* data blocked to send */
+    int     usrreq;                    /* user request */ 
+   
+    long unique_id; 
+    int priority;
 };
-
+ 
 /* 
  * Possible values of usrreq.
  */
@@ -140,12 +137,14 @@ struct inpcb
 #define INPCB_USRREQ_CONNECTED    2
 #define INPCB_USRREQ_CLOSE        3
 
-extern int append_buf( GlomoNode*, struct inpcb*, unsigned char*, int );
-extern void del_buf( GlomoNode*, struct inpcb*, int );
-extern struct inpcb* in_pcballoc( struct inpcb*, int, int );
-extern void in_pcbdetach( struct inpcb* );
-extern struct inpcb* in_pcblookup( struct inpcb*, NODE_ADDR, short, NODE_ADDR, short, int );
-extern struct inpcb* in_pcbsearch( struct inpcb*, int );
+extern int append_buf(GlomoNode *, struct inpcb *, unsigned char *,
+                      int);
+extern void del_buf(GlomoNode *, struct inpcb *, int);
+extern struct inpcb *in_pcballoc(struct inpcb *, int, int);
+extern void in_pcbdetach(struct inpcb *);
+extern struct inpcb *in_pcblookup(struct inpcb *, NODE_ADDR, short,
+                                  NODE_ADDR, short, int);
+extern struct inpcb *in_pcbsearch(struct inpcb *, int);
 
 #endif /* _IN_PCB_H_ */
 

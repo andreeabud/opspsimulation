@@ -95,37 +95,48 @@
 #include "tcp_seq.h"
 #include "tcp_var.h"
 
-static struct tcpcb* tcp_usrclosed( GlomoNode*, struct tcpcb*, struct tcpstat* );
+static struct tcpcb *tcp_usrclosed(GlomoNode *,
+                                   struct tcpcb *,
+                                   struct tcpstat *);
 
 /*
  * Prepare to accept connections.
  */
-void tcp_listen( GlomoNode* node,
-                 struct inpcb* phead,
-                 APP_TYPE app_type,
-                 NODE_ADDR local_addr,
-                 short local_port,
-                 int priority )
+void tcp_listen (GlomoNode *node, struct inpcb *phead, APP_TYPE app_type,
+                 NODE_ADDR local_addr, short local_port, int priority)
 {
-    struct inpcb*               inp;
-    int                         result  = 0;
-    struct tcpcb*               tp;
-    Message*                    msg;
-    TransportToAppListenResult* tcpListenResult;
-
+    struct inpcb *inp;
+    int result = 0;
+    struct tcpcb *tp;
+    Message *msg;
+    TransportToAppListenResult *tcpListenResult;
+ 
     /* check whether this server already exists */ 
-    inp = ( struct inpcb * ) in_pcblookup( phead, local_addr, local_port, 0, 0, INPCB_WILDCARD ); 
+    inp = (struct inpcb *) in_pcblookup(phead,  
+                                        local_addr,
+                                        local_port,
+                                        0,
+                                        0,
+                                        INPCB_WILDCARD); 
 
-    if( inp != phead ) {
-        result = -2;      /* listen failed, server already set up */
-    }else {
-        inp = tcp_attach( phead, app_type, local_addr, local_port, -1, -1, -1, priority );
+    if (inp != phead) {
+        result = -2;      /* listen failed, server already set up */ 
+    } else { 
 
-        if( inp == NULL ) {
+        inp =   tcp_attach(phead,
+                           app_type,
+                           local_addr,  
+                           local_port,
+                           -1,
+                           -1,
+                           -1,
+                           priority);
+
+        if (inp == NULL){
             result = -1;  /* listen failed */
-        }else {
+        } else {
             result = inp->con_id; /* listen succeeded */
-            tp = intotcpcb( inp );   
+            tp = intotcpcb(inp);   
             tp->t_state = TCPS_LISTEN;
         }
     }
@@ -136,50 +147,53 @@ void tcp_listen( GlomoNode* node,
      * result = -1, failed to set up the server port
      * result >= 0, succeeded
      */
-    msg = GLOMO_MsgAlloc( node, GLOMO_APP_LAYER, app_type, MSG_APP_FromTransListenResult );
-    GLOMO_MsgInfoAlloc( node, msg, sizeof( TransportToAppListenResult ) );
-    tcpListenResult = ( TransportToAppListenResult * ) msg->info;
+    msg = GLOMO_MsgAlloc(node, GLOMO_APP_LAYER,
+                         app_type, MSG_APP_FromTransListenResult);
+    GLOMO_MsgInfoAlloc(node, msg, sizeof(TransportToAppListenResult));
+    tcpListenResult = (TransportToAppListenResult *) msg->info;
     tcpListenResult->localAddr = local_addr;
     tcpListenResult->localPort = local_port;
     tcpListenResult->connectionId = result;
-
-    GLOMO_MsgSend( node, msg, TRANSPORT_DELAY );
+    
+    GLOMO_MsgSend(node, msg, TRANSPORT_DELAY); 
 }
 
 /*
  * Do a send by putting data in output queue and
  * possibly send more data.
  */
-void tcp_send( node, phead, conn_id, payload, length, tcp_now, tcp_stat )
-GlomoNode*      node;
-struct inpcb*   phead;
-int             conn_id;
-unsigned char*  payload;
-int             length;
-unsigned long   tcp_now;
-struct tcpstat* tcp_stat;
+void
+tcp_send(node, phead, conn_id, payload, length, tcp_now, tcp_stat)
+    GlomoNode *node;
+    struct inpcb *phead;
+    int conn_id;
+    unsigned char *payload;
+    int length;
+    unsigned long tcp_now;
+    struct tcpstat *tcp_stat;
 {
-    struct inpcb*   inp;
-    struct tcpcb*   tp;
+    struct inpcb *inp;
+    struct tcpcb *tp;
 
-    inp = in_pcbsearch( phead, conn_id );
-    if( inp == phead ) {
+    inp  = in_pcbsearch(phead, conn_id);
+    if (inp == phead) {
         /*
          * can't find the in_pcb of the connection
          */
-        fprintf( stderr, "TCP: can't find (id=%u,conn=%d)\n", node->nodeAddr, conn_id );
-        assert( FALSE );
+        fprintf(stderr, "TCP: can't find (id=%u,conn=%d)\n", node->nodeAddr,
+                conn_id);
+        assert(FALSE);
     } 
-
+ 
     /* 
      * put data in the send buffer of the connection
      * and call tcp_output to send data
      */
-    tp = intotcpcb( inp ); 
-    length = append_buf( node, inp, payload, length );
-
-    if( length > 0 ) {
-        tcp_output( node, tp, tcp_now, tcp_stat );
+    tp = intotcpcb(inp); 
+    length = append_buf(node, inp, payload, length);
+ 
+    if (length > 0){
+        tcp_output(node, tp, tcp_now, tcp_stat);
     }
 }
 
@@ -188,72 +202,67 @@ struct tcpstat* tcp_stat;
  * by remote_addr.  
  * Initialize connection parameters and enter SYN-SENT state.
  */
-void tcp_connect( GlomoNode* node,
-                  struct inpcb* phead,
-                  APP_TYPE app_type,
-                  NODE_ADDR local_addr,
-                  short local_port,
-                  NODE_ADDR remote_addr,
-                  short remote_port,
-                  unsigned long tcp_now,
-                  tcp_seq* tcp_iss,
-                  struct tcpstat* tcp_stat,
-                  long unique_id,
-                  int priority )
+void tcp_connect(GlomoNode *node, struct inpcb *phead, APP_TYPE app_type,
+                 NODE_ADDR local_addr, short local_port, NODE_ADDR remote_addr,
+                 short remote_port, unsigned long tcp_now, tcp_seq *tcp_iss,
+                 struct tcpstat *tcp_stat, long unique_id, int priority)
 {
-    struct inpcb*               inp;
-    int                         result  = 0;
-    struct tcpcb*               tp;
-    Message*                    msg;
-    TransportToAppOpenResult*   tcpOpenResult; 
+
+    struct inpcb *inp;
+    int result = 0;
+    struct tcpcb *tp;
+    Message *msg;
+    TransportToAppOpenResult *tcpOpenResult; 
 
     /* check whether this connection already exists */ 
-    inp = ( struct inpcb * ) in_pcblookup( phead,
-                                           local_addr,
-                                           local_port,
-                                           remote_addr,
-                                           remote_port,
-                                           INPCB_NO_WILDCARD ); 
+    inp = (struct inpcb *) in_pcblookup(phead,  
+                                        local_addr,
+                                        local_port,
+                                        remote_addr,
+                                        remote_port,
+                                        INPCB_NO_WILDCARD); 
 
-    if( inp != phead ) {
+    if (inp != phead) {
         /* connection already exists */
-        result = -1;
-    }else {
+        result = -1; 
+    } else { 
+                                          
         /* create inpcb and tcpcb for this connection */ 
-        inp = tcp_attach( phead,
+        inp  = tcp_attach(phead,
                           app_type,
-                          local_addr,
+                          local_addr,  
                           local_port,
                           remote_addr,
                           remote_port,
                           unique_id,
-                          priority );
+                          priority);
 
-        if( inp == NULL ) {
-            /* can't create inpcb and tcpcb */
-            result = -1;
-        }else {
-            tp = intotcpcb( inp );
+         if (inp == NULL) {
+             /* can't create inpcb and tcpcb */
+             result = -1;  
+         } else {
+             tp = intotcpcb(inp);
 
-            tp->t_template = ( struct tcpiphdr * ) tcp_template( tp );
-            if( tp->t_template == 0 ) {
-                /* can't allocate template */
-                pc_free( tp );
-                inp->inp_ppcb = 0;
-                in_pcbdetach( inp );
-                result = -1;
-            }
-        }
+             tp->t_template = (struct tcpiphdr *) tcp_template(tp);
+             if (tp->t_template == 0) {
+                 /* can't allocate template */
+                 pc_free(tp);
+                 inp->inp_ppcb = 0;
+                 in_pcbdetach(inp);
+                 result = -1;
+             }
+         }
     }
 
-    if( result == -1 ) {
+    if (result == -1) {
         /*
          * report failure to application and stop processing
          * this message 
          */
-        msg = GLOMO_MsgAlloc( node, GLOMO_APP_LAYER, app_type, MSG_APP_FromTransOpenResult );
-        GLOMO_MsgInfoAlloc( node, msg, sizeof( TransportToAppOpenResult ) );
-        tcpOpenResult = ( TransportToAppOpenResult * ) msg->info;
+        msg = GLOMO_MsgAlloc(node, GLOMO_APP_LAYER,
+                             app_type, MSG_APP_FromTransOpenResult);
+        GLOMO_MsgInfoAlloc(node, msg, sizeof(TransportToAppOpenResult));
+        tcpOpenResult = (TransportToAppOpenResult *) msg->info;
         tcpOpenResult->type = TCP_CONN_ACTIVE_OPEN;
         tcpOpenResult->localAddr = inp->inp_local_addr;
         tcpOpenResult->localPort = inp->inp_local_port;
@@ -263,7 +272,7 @@ void tcp_connect( GlomoNode* node,
 
         tcpOpenResult->uniqueId = inp->unique_id;
 
-        GLOMO_MsgSend( node, msg, TRANSPORT_DELAY );
+        GLOMO_MsgSend(node, msg, TRANSPORT_DELAY);
 
         return;
     }
@@ -274,25 +283,23 @@ void tcp_connect( GlomoNode* node,
      * Start keepalive timer and seed output sequence space.
      * Send initial segment on connection.
      */
-    while( ( tp->request_r_scale < TCP_MAX_WINSHIFT ) &&
-           ( ( TCP_MAXWIN << tp->request_r_scale ) < inp->inp_rcv_hiwat ) ) {
-        tp->request_r_scale++;
-    }
+    while ((tp->request_r_scale < TCP_MAX_WINSHIFT) && 
+        ((TCP_MAXWIN << tp->request_r_scale) < inp->inp_rcv_hiwat))
+            tp->request_r_scale++;
 
     tp->t_state = TCPS_SYN_SENT;
     tp->t_timer[TCPT_KEEP] = TCPTV_KEEP_INIT;
 
-    if( tcp_stat ) {
+    if (tcp_stat)
         tcp_stat->tcps_connattempt++;
-    }
 
     tp->iss = *tcp_iss;
-    *tcp_iss += TCP_ISSINCR / 2;
-    tcp_sendseqinit( tp );
+    *tcp_iss += TCP_ISSINCR/2;
+    tcp_sendseqinit(tp);
 
-    tcp_output( node, tp, tcp_now, tcp_stat );
+    tcp_output(node, tp, tcp_now, tcp_stat);
 
-    inp->usrreq = INPCB_USRREQ_OPEN;
+    inp->usrreq = INPCB_USRREQ_OPEN; 
 }
 
 /*
@@ -300,52 +307,47 @@ void tcp_connect( GlomoNode* node,
  * internet protocol control block, tcp control block,
  * buffer space, initialize connection state to CLOSED. 
  */
-struct inpcb* tcp_attach( struct inpcb* head,
-                          APP_TYPE app_type,
-                          NODE_ADDR local_addr,
-                          short local_port,
-                          NODE_ADDR remote_addr,
-                          short remote_port,
-                          long unique_id,
-                          int priority )
+struct inpcb *tcp_attach (struct inpcb *head, APP_TYPE app_type,
+                          NODE_ADDR local_addr, short local_port,
+                          NODE_ADDR remote_addr, short remote_port,
+                          long unique_id, int priority)
 {
-    struct inpcb*   inp;
-    struct tcpcb*   tp;
+    struct inpcb *inp;
+    struct tcpcb *tp;
 
     /*
      * Create inpcb and fill in connection information
      */
-    if( ( remote_addr == -1 ) && ( remote_port == -1 ) ) {
+    if ((remote_addr == -1) && (remote_port == -1)) { 
         /* pcb for listening port */
-        inp = in_pcballoc( head, 0, 0 );
-    }else {
+        inp = in_pcballoc(head, 0, 0); 
+    } else {
         /* pcb for connections */ 
-        inp = in_pcballoc( head, TCP_SENDSPACE, TCP_RECVSPACE );;
+        inp = in_pcballoc(head, TCP_SENDSPACE, TCP_RECVSPACE);;
     }
 
-    if( inp == NULL ) {
-        return ( inp );
-    }
+    if (inp == NULL)
+        return (inp);
 
     inp->app_proto_type = app_type;
     inp->inp_local_addr = local_addr;
     inp->inp_local_port = local_port;
     inp->inp_remote_addr = remote_addr;
     inp->inp_remote_port = remote_port;
-    inp->con_id = get_conid( head );
+    inp->con_id = get_conid(head);
 
     inp->unique_id = unique_id;
     inp->priority = priority;
 
     /* create a tcpcb */
-    tp = tcp_newtcpcb( inp );
+    tp = tcp_newtcpcb(inp);
 
-    if( tp == 0 ) {
-        in_pcbdetach( inp );
-        return ( NULL );
+    if (tp == 0){
+        in_pcbdetach(inp);
+        return (NULL);
     }
     tp->t_state = TCPS_CLOSED;
-    return ( inp );
+    return (inp);
 }
 
 /*
@@ -354,35 +356,37 @@ struct inpcb* tcp_attach( struct inpcb* head,
  * Otherwise, switch states based on user close, and
  * send segment to peer (with FIN).
  */
-void tcp_disconnect( node, phead, conn_id, tcp_now, tcp_stat )
-GlomoNode*      node;
-struct inpcb*   phead;
-int             conn_id;
-unsigned long   tcp_now;
-struct tcpstat* tcp_stat;
+void
+tcp_disconnect(node, phead, conn_id, tcp_now, tcp_stat)
+    GlomoNode *node;
+    struct inpcb *phead;
+    int conn_id;
+    unsigned long tcp_now;
+    struct tcpstat *tcp_stat;
 {
-    struct inpcb*   inp;
-    struct tcpcb*   tp;
+    struct inpcb *inp;
+    struct tcpcb *tp;
 
-    inp = in_pcbsearch( phead, conn_id );
-    if( inp == phead ) {
+    inp  = in_pcbsearch(phead, conn_id);
+    if (inp == phead) {
         /*
          * can't find the in_pcb of the connection
          */
-        fprintf( stderr, "TCP: can't find (id=%ld,conn=%d)\n", node->nodeAddr, conn_id );
-        assert( FALSE );
+        fprintf(stderr, "TCP: can't find (id=%ld,conn=%d)\n", node->nodeAddr,
+                conn_id);
+        assert(FALSE);
     }
 
     inp->usrreq = INPCB_USRREQ_CLOSE;
 
-    tp = intotcpcb( inp );   
-    if( tp->t_state < TCPS_ESTABLISHED ) {
-        tp = tcp_close( node, tp, tcp_stat );
-    }else {
-        tp = tcp_usrclosed( node, tp, tcp_stat );
-        if( tp ) {
-            tcp_output( node, tp, tcp_now, tcp_stat );
-        }
+    tp = intotcpcb(inp);   
+    if (tp->t_state < TCPS_ESTABLISHED)
+        tp = tcp_close(node, tp, tcp_stat);
+    else {
+        tp = tcp_usrclosed(node, tp, tcp_stat);
+        if (tp)
+            tcp_output(node, tp, tcp_now, tcp_stat);
+                       
     }
 }
 
@@ -396,31 +400,38 @@ struct tcpstat* tcp_stat;
  * for peer to send FIN or not respond to keep-alives, etc.
  * We can let the user exit from the close as soon as the FIN is acked.
  */
-static struct tcpcb* tcp_usrclosed( node, tp, tcp_stat )
-GlomoNode*      node;
-struct tcpcb*   tp;
-struct tcpstat* tcp_stat;
+static struct tcpcb *
+tcp_usrclosed(node, tp, tcp_stat)
+    GlomoNode *node;
+    struct tcpcb *tp;
+    struct tcpstat *tcp_stat;
 {
-    switch( tp->t_state ) {
-    case TCPS_CLOSED:case TCPS_LISTEN:tp->t_state = TCPS_CLOSED;
-    tp = tcp_close( node, tp, tcp_stat );
-    break;
+    switch (tp->t_state) {
 
-    case TCPS_SYN_SENT:case TCPS_SYN_RECEIVED:tp->t_flags |= TF_NEEDFIN;
-    break;
+    case TCPS_CLOSED:
+    case TCPS_LISTEN:
+            tp->t_state = TCPS_CLOSED;
+            tp = tcp_close(node, tp, tcp_stat);
+            break;
 
-    case TCPS_ESTABLISHED:tp->t_state = TCPS_FIN_WAIT_1;
-    break;
+    case TCPS_SYN_SENT:
+    case TCPS_SYN_RECEIVED:
+            tp->t_flags |= TF_NEEDFIN;
+            break;
 
-    case TCPS_CLOSE_WAIT:tp->t_state = TCPS_LAST_ACK;
-    break;
+    case TCPS_ESTABLISHED:
+            tp->t_state = TCPS_FIN_WAIT_1;
+            break;
+
+    case TCPS_CLOSE_WAIT:
+            tp->t_state = TCPS_LAST_ACK;
+            break;
     }
-    if( tp && tp->t_state >= TCPS_FIN_WAIT_2 ) {
+    if (tp && tp->t_state >= TCPS_FIN_WAIT_2) {
         /* To prevent the connection hanging in FIN_WAIT_2 forever. */
-        if( tp->t_state == TCPS_FIN_WAIT_2 ) {
+        if (tp->t_state == TCPS_FIN_WAIT_2)
             tp->t_timer[TCPT_2MSL] = TCPTV_MAXIDLE;
-        }
     }
-    return ( tp );
+    return (tp);
 }
 

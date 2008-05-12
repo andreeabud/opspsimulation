@@ -89,33 +89,33 @@
 
 #include "in_pcb.h"
 
-static void insque( struct inpcb*, struct inpcb* );
-static void remque( struct inpcb* );
-static int fill_buf( struct inp_buf*, unsigned char*, int );
+static void insque(struct inpcb *, struct inpcb *);
+static void remque(struct inpcb *);
+static int fill_buf(struct inp_buf *, unsigned char *, int);
 
 
 /*
  * Insert a pcb into the head of a queue.
  */
-static void insque( struct inpcb* inp, struct inpcb* head )
+static void
+insque(struct inpcb *inp, struct inpcb *head)
 {
-    struct inpcb*   next;
+    struct inpcb *next;
 
     next = head->inp_next;
     head->inp_next = inp;
     inp->inp_next = next;
     inp->inp_prev = head; 
-    if( next != head ) {
-        next->inp_prev = inp;
-    }
+    if (next != head) next->inp_prev = inp;
 }
 
 /*
  * Remove a pcb from a queue.
  */
-static void remque( struct inpcb* inp )
+static void
+remque(struct inpcb *inp)
 {
-    struct inpcb*   prev, * next;
+   struct inpcb *prev, *next;
 
     prev = inp->inp_prev;
     next = inp->inp_next;
@@ -126,22 +126,19 @@ static void remque( struct inpcb* inp )
 /*
  * Add length of data pointed to by content to buf.
  */
-static int fill_buf( struct inp_buf* buf, unsigned char* content, int length )
+static int
+fill_buf(struct inp_buf *buf, unsigned char *content, int length)
 {
     int len;
-    unsigned char * cur_pos;
+    unsigned char *cur_pos;
 
-    if( length <= 0 ) {
-        return 0;
-    }
-    len = ( int ) ( buf->hiwat - buf->cc );
-    if( length <= len ) {
-        len = length;
-    }  /* actual length of bytes to add */
-    if( len > 0 ) {
+    if (length <= 0) return 0;
+    len = (int)(buf->hiwat - buf->cc);
+    if (length <= len) len = length;  /* actual length of bytes to add */
+    if (len > 0){
         cur_pos = buf->buffer + buf->cc;
-        memcpy( cur_pos, content, len );   /* add len bytes to buffer */
-        buf->cc += ( unsigned long ) len;
+        memcpy(cur_pos, content, len);   /* add len bytes to buffer */
+        buf->cc += (unsigned long)len;
     }
     return len;
 }  
@@ -149,67 +146,57 @@ static int fill_buf( struct inp_buf* buf, unsigned char* content, int length )
 /*
  * Allocate a pcb and insert it into a queue.
  */
-struct inpcb* in_pcballoc( struct inpcb* head, int snd_bufsize, int rcv_bufsize )
+struct inpcb *
+in_pcballoc(struct inpcb *head, int snd_bufsize, int rcv_bufsize)
 {
-    struct inpcb*   inp;
+    struct inpcb *inp;
+ 
+    inp = (struct inpcb *)pc_malloc(sizeof(struct inpcb));
+    assert(inp != NULL);
 
-    inp = ( struct inpcb * ) pc_malloc( sizeof( struct inpcb ) );
-    assert( inp != NULL );
+    memset((char *)inp, 0, sizeof(struct inpcb));
+    inp->inp_head = (struct inpcb *) head;
 
-    memset( ( char * ) inp, 0, sizeof( struct inpcb ) );
-    inp->inp_head = ( struct inpcb * ) head;
-
-    if( snd_bufsize > 0 ) {
-        inp->inp_snd.buffer = ( unsigned char * ) pc_malloc( snd_bufsize );
-        assert( inp->inp_snd.buffer != NULL );
+    if (snd_bufsize > 0){
+        inp->inp_snd.buffer = (unsigned char *) pc_malloc(snd_bufsize);
+        assert(inp->inp_snd.buffer != NULL);
     }
 
     inp->inp_rcv_hiwat = rcv_bufsize;
     inp->inp_snd.hiwat = snd_bufsize;
-    insque( inp, head );
+    insque(inp, head);
     return inp;
 }
 
 /*
  * Remove a pcb and delete it.
  */
-void in_pcbdetach( struct inpcb* inp )
+void 
+in_pcbdetach(struct inpcb *inp)
 {
-    remque( inp );
-    if( inp->inp_snd.buffer ) {
-        pc_free( inp->inp_snd.buffer );
-    }
-    pc_free( inp );
+    remque(inp);
+    if (inp->inp_snd.buffer) pc_free(inp->inp_snd.buffer);
+    pc_free(inp);
 }
 
 /*
  * Look for a pcb in a queue using 4-tuple.
  */
-struct inpcb* in_pcblookup( struct inpcb* head,
-                            NODE_ADDR local_addr,
-                            short local_port,
-                            NODE_ADDR remote_addr,
-                            short remote_port,
-                            int flag )
+struct inpcb *
+in_pcblookup(struct inpcb *head, NODE_ADDR local_addr, short local_port,
+             NODE_ADDR remote_addr, short remote_port, int flag)
 {
-    struct inpcb*   inp;
 
-    for( inp = head->inp_next;inp != head;inp = inp->inp_next ) {
-        if( inp->inp_local_port != local_port ) {
-            continue;
-        }
-        if( inp->inp_local_addr != local_addr ) {
-            continue;
-        }
-        if( inp->inp_remote_port == -1 && inp->inp_remote_addr == -1 && flag == INPCB_WILDCARD ) {
+    struct inpcb *inp;
+
+    for (inp = head->inp_next; inp != head; inp = inp->inp_next) {
+        if (inp->inp_local_port != local_port) continue;
+        if (inp->inp_local_addr != local_addr) continue;
+        if (inp->inp_remote_port == -1 && inp->inp_remote_addr == -1 
+            && flag == INPCB_WILDCARD)
             return inp;
-        }
-        if( inp->inp_remote_port != remote_port ) {
-            continue;
-        }
-        if( inp->inp_remote_addr != remote_addr ) {
-            continue;
-        }
+        if (inp->inp_remote_port != remote_port) continue;
+        if (inp->inp_remote_addr != remote_addr) continue;
         break;
     }
     return inp;
@@ -218,14 +205,13 @@ struct inpcb* in_pcblookup( struct inpcb* head,
 /*
  * Search a pcb in a queue using connection id.
  */
-struct inpcb* in_pcbsearch( struct inpcb* head, int con_id )
+struct inpcb *
+in_pcbsearch(struct inpcb *head, int con_id)
 {
-    struct inpcb*   inp;
+    struct inpcb *inp;
 
-    for( inp = head->inp_next;inp != head;inp = inp->inp_next ) {
-        if( inp->con_id != con_id ) {
-            continue;
-        }
+    for (inp = head->inp_next; inp != head; inp = inp->inp_next) {
+        if (inp->con_id != con_id) continue;
         break;
     }
     return inp;
@@ -236,58 +222,61 @@ struct inpcb* in_pcbsearch( struct inpcb* head, int con_id )
  * If the buffer is full, record the pointer to the
  * data in pending buffer.
  */  
-int append_buf( GlomoNode* node, struct inpcb* inp, unsigned char* payload, int length )
+int
+append_buf(GlomoNode *node, struct inpcb *inp, unsigned char *payload,
+           int length)
+ 
 {
-    unsigned char * tmp_ptr;
-    int                     len;
-    Message*                msg;
-    TransportToAppDataSent* dataSent;
+    unsigned char *tmp_ptr;
+    int len;
+    Message *msg;
+    TransportToAppDataSent *dataSent;
 
-    if( payload != NULL ) {
+    if (payload != NULL){
         /* new data from the application */
-        if( inp->blocked_pkt.buffer != NULL ) {
+        if (inp->blocked_pkt.buffer != NULL){
             /* there's a pending packet, can't send this one */ 
-            msg = GLOMO_MsgAlloc( node,
-                                  GLOMO_APP_LAYER,
-                                  inp->app_proto_type,
-                                  MSG_APP_FromTransDataSent );
-            GLOMO_MsgInfoAlloc( node, msg, sizeof( TransportToAppDataSent ) );
-            dataSent = ( TransportToAppDataSent * ) msg->info;
+            msg = GLOMO_MsgAlloc(node, GLOMO_APP_LAYER,
+                                 inp->app_proto_type, 
+                                 MSG_APP_FromTransDataSent);
+            GLOMO_MsgInfoAlloc(node, msg, sizeof(TransportToAppDataSent));
+            dataSent = (TransportToAppDataSent *) msg->info;
             dataSent->connectionId = inp->con_id;
             dataSent->length = 0;
 
-            GLOMO_MsgSend( node, msg, TRANSPORT_DELAY );
+            GLOMO_MsgSend(node, msg, TRANSPORT_DELAY);
             return 0;
         }   
-        inp->blocked_pkt.buffer = ( unsigned char * ) pc_malloc( length );
-        assert( inp->blocked_pkt.buffer != NULL );
+        inp->blocked_pkt.buffer = (unsigned char *)pc_malloc(length);
+        assert(inp->blocked_pkt.buffer != NULL);
 
-        memcpy( inp->blocked_pkt.buffer, payload, length );
+        memcpy(inp->blocked_pkt.buffer, payload, length);
         inp->blocked_pkt.hiwat = length;
         inp->blocked_pkt.cc = 0;
     }
 
-    if( inp->blocked_pkt.buffer == NULL ) {
+    if (inp->blocked_pkt.buffer == NULL) {
         return 0;
     }
 
     /* move data from the blocked packet buffer to the send buffer */
     tmp_ptr = inp->blocked_pkt.buffer + inp->blocked_pkt.cc;    
     length = inp->blocked_pkt.hiwat - inp->blocked_pkt.cc;
-    len = fill_buf( &( inp->inp_snd ), tmp_ptr, length );
+    len = fill_buf(&(inp->inp_snd), tmp_ptr, length);
     inp->blocked_pkt.cc += len;
-    if( len == length ) {
+    if (len == length){
         /* 
          * The pending packet has been moved to the send buffer.
          * notify the sender 
          */
-        msg = GLOMO_MsgAlloc( node, GLOMO_APP_LAYER, inp->app_proto_type, MSG_APP_FromTransDataSent );
-        GLOMO_MsgInfoAlloc( node, msg, sizeof( TransportToAppDataSent ) );
-        dataSent = ( TransportToAppDataSent * ) msg->info;
+        msg = GLOMO_MsgAlloc(node, GLOMO_APP_LAYER,
+                             inp->app_proto_type, MSG_APP_FromTransDataSent);
+        GLOMO_MsgInfoAlloc(node, msg, sizeof(TransportToAppDataSent));
+        dataSent = (TransportToAppDataSent *) msg->info;
         dataSent->connectionId = inp->con_id;
         dataSent->length = inp->blocked_pkt.hiwat;
-        GLOMO_MsgSend( node, msg, TRANSPORT_DELAY );
-        pc_free( inp->blocked_pkt.buffer );
+        GLOMO_MsgSend(node, msg, TRANSPORT_DELAY);
+        pc_free(inp->blocked_pkt.buffer);
         inp->blocked_pkt.buffer = NULL;
         inp->blocked_pkt.cc = 0;
         inp->blocked_pkt.hiwat = 0;
@@ -298,21 +287,20 @@ int append_buf( GlomoNode* node, struct inpcb* inp, unsigned char* payload, int 
 /*
  * Delete length bytes of data from a buffer.
  */
-void del_buf( GlomoNode* node, struct inpcb* inp, int length )
+void
+del_buf(GlomoNode *node, struct inpcb *inp, int length)
 {
-    unsigned char * cur_pos;
+    unsigned char *cur_pos;
 
-    if( length == 0 ) {
-        return;
-    }
-    assert( length <= inp->inp_snd.cc );
+    if (length == 0) return;
+    assert(length <= inp->inp_snd.cc);
 
     /* delete length bytes from buffer */
-    inp->inp_snd.cc -= ( unsigned long ) length;
-    if( inp->inp_snd.cc ) {
+    inp->inp_snd.cc -= (unsigned long)length;
+    if (inp->inp_snd.cc) {
         cur_pos = inp->inp_snd.buffer + length;
-        memcpy( inp->inp_snd.buffer, cur_pos, inp->inp_snd.cc );
+        memcpy(inp->inp_snd.buffer, cur_pos, inp->inp_snd.cc);
     }
-    ( void ) append_buf( node, inp, NULL, 0 );
+    (void)append_buf(node, inp, NULL, 0);
 }
 

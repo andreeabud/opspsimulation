@@ -1,6 +1,33 @@
-# Some Make Flags 
-# WARMUP - to start counting the stats after the WARM_UP_TIME
-# AOMDV - for the files like nwip.pc etc to get more info in the route functions 
+# Glomosim is COPYRIGHTED software.  It is freely available without fee for
+# education, or research, or to non-profit agencies. No cost evaluation
+# licenses are available for commercial users. By obtaining copies of this
+# and other files that comprise GloMoSim, you, the Licensee, agree to abide
+# by the following conditions and understandings with respect to the
+# copyrighted software:
+#
+# 1.Permission to use, copy, and modify this software and its documentation
+#   for education, research, and non-profit purposes is hereby granted to
+#   Licensee, provided that the copyright notice, the original author's names
+#   and unit identification, and this permission notice appear on all such
+#   copies, and that no charge be made for such copies. Any entity desiring
+#   permission to incorporate this software into commercial products or to use
+#   it for commercial purposes should contact: 
+#
+#   Professor Rajive Bagrodia 
+#   University of California, Los Angeles 
+#   Department of Computer Science 
+#   Box 951596 
+#   3532 Boelter Hall 
+#   Los Angeles, CA 90095-1596 
+#   rajive@cs.ucla.edu
+#
+# 2.NO REPRESENTATIONS ARE MADE ABOUT THE SUITABILITY OF THE SOFTWARE FOR ANY
+#   PURPOSE. IT IS PROVIDED "AS IS" WITHOUT EXPRESS OR IMPLIED WARRANTY.
+#
+# 3.Neither the software developers, the Parallel Computing Lab, UCLA, or any
+#   affiliate of the UC system shall be liable for any damages suffered by
+#   Licensee from the use of this software.
+#
 # $Id: makefile,v 1.86 2001/02/16 04:19:05 jmartin Exp $
 #
 # Makefile used for compiling GloMoSim
@@ -29,8 +56,8 @@ SIM_HDRS =  ../main/glomo.h ../main/driver.h \
             ../mac/tsma.h ../mac/wiredlink.h \
             ../network/ipqueue.h ../network/fifoqueue.h \
             ../network/nwip.h ../network/nwlar1.h ../network/odmrp.h \
-            ../network/aomdv.h ../network/dsr.h \
-	    ../network/zrp.h ../transport/udp.h  ../transport/in_pcb.h \
+            ../network/aodv.h ../network/dsr.h ../network/zrp.h \
+            ../transport/udp.h  ../transport/in_pcb.h \
             ../transport/tcp/tcp_config.h ../transport/tcp/tcp_var.h \
             ../transport/tcp/tcp_fsm.h ../transport/tcp/tcp_proto.h \
             ../transport/tcp/tcp_timer.h ../transport/tcp/tcpip.h \
@@ -102,8 +129,7 @@ PAR_FILES = ../main/glomo.pc ../main/mobility.pc \
             ../mac/mac.pc \
             ../network/network.pc ../network/nwcommon.pc ../network/nwip.pc \
             ../network/user_nwip.pc ../network/fifoqueue.pc \
-            ../network/nwlar1.pc ../network/odmrp.pc \
-	    ../network/aomdv.pc \
+            ../network/nwlar1.pc ../network/odmrp.pc ../network/aodv.pc \
             ../network/dsr.pc ../network/zrp.pc \
             ../transport/transport.pc ../transport/in_pcb.pc \
             ../transport/udp.pc \
@@ -118,7 +144,7 @@ PAR_FILES = ../main/glomo.pc ../main/mobility.pc \
             ../application/ftp_client.pc ../application/ftp_server.pc \
             ../application/http_client.pc ../application/http_server.pc \
             ../application/gen_ftp_client.pc ../application/gen_ftp_server.pc \
-            ../application/cbr_client_12a.pc ../application/cbr_server.pc \
+            ../application/cbr_client.pc ../application/cbr_server.pc \
             ../mac/wiredlink.pc
 
 ALLFILES = $(HDRS) $(C_SRCS) $(C++_SRCS) $(PAR_FILES) Makefile
@@ -136,11 +162,7 @@ TSMA_PARAM = tsma_param_gen
 
 #
 #
-COMFLAG = -g -O3 -I../include/ -I../transport -I../transport/tcp \
--I../application -I../mac -I../main -I../network -I../radio \
--DAOMDV
-#-DDISABLE_EXPANDING
-#-DWARMUP
+COMFLAG = -g -O3 -I../include/ -I../transport -I../transport/tcp -I../application -I../mac -I../main -I../network -I../radio
 
 #
 # C Compiler
@@ -195,6 +217,3 @@ clean:
 	rm -f $(OBJECTS) $(SIM_EXEC) $(TSMA_CODE) $(TSMA_PARAM) $(RADIO_RANGE) core ../*/*~ ../*/*/*~ ../*/*.pi ../*/*/*.pi
 wc:
 	wc $(ALLFILES)
-
-lint:
-	splint $(PAR_FILE) $(DRIVER_FILE)
