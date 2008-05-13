@@ -5398,4 +5398,15 @@ if(etxMetric > MAX_ETX){
 }
     return etxMetric;
 }
+
+BOOL OpspLookupForwarder( GlomoNode* node, OPSP_FL* ForwarderList,  NODE_ADDR destAddr )
+{
+	/*
+	1. find etx to the destination from route list
+	2. lookup neighbor table for lest etx from the neighbors to the destination
+	3. save the lest 3 neighbors and their etx to forwarder list
+	4. return forwarderlist
+	*/
+}
+
 //<-------------tianke on 2008-5-6 21:22 0.01------------

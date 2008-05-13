@@ -151,6 +151,10 @@
 
 #define ETX_CONEFFICENT 0.01
 
+#define OPSP_THRESHOLD 5 
+
+#define CANDIDATE_THRESHOLD 5 
+
 typedef double  ETXValue;
 //^--------------------------- tianke on 2008-4-14 13:46 0.01--------------------------^
 
@@ -255,6 +259,13 @@ typedef struct msg_dest_nbr_addr
     NODE_ADDR   destAddr;
     //NODE_ADDR   nbrAddr;
 } MsgOpspDestNbrAddr;
+
+typedef struct forwarder_list
+{
+	NODE_ADDR forwarder;
+	ETXValue nbrToDest;
+}OPSP_FL;
+
 //<-------------tianke on 2008-5-6 21:36 0.01------------
 
 typedef struct
@@ -753,6 +764,8 @@ void OpspUpdateNbrETX( GlomoCoordinates nbrPosition, GlomoNode* node, NODE_ADDR 
 ETXValue OpspGetEtxToDest( NODE_ADDR destAddr, AODV_RT* routeTable );
 
 ETXValue ETXCalculate( GlomoCoordinates txNodePosition, GlomoCoordinates rxNodePosition );
+
+BOOL OpspLookupForwarder( GlomoNode* node, OPSP_FL* ForwarderList,  NODE_ADDR destAddr );
 
 //<-------------tianke on 2008-5-6 21:25 0.01------------
 
