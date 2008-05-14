@@ -5413,11 +5413,19 @@ BOOL OpspLookupForwarder( GlomoNode* node, OPSP_FL* ForwarderList,  NODE_ADDR de
 	AODV_RT_Node* RTCurrent;
 	OPSP_NFRT nbrFowardRateTable = aodv->nbrFowardRateTable;
 	OPSP_NFRT_Node* NFRTCurrent;
-    AODV_NT             nbrTable    = aodv->nbrTable;
+    AODV_NT             nbrTable = aodv->nbrTable;
     AODV_NT_Node*       ntCurrent;
 	ETXValue etxFromNextHopToDest;
 	
-    for( current = nbrTable.head;
+	for( RTCurrent = routeTable.head;
+         ( RTCurrent != NULL ) && ( RTCurrent->destAddr <= destAddr );
+         RTCurrent = RTCurrent->next ) {
+        if( RTCurrent->destAddr == destAddr ) {
+
+        }
+    }
+		 
+	for( current = nbrTable.head;
          ( current != NULL ) && ( current->nbrAddr <= nbrAddr );
          current = current->next ) {
         if( current->nbrAddr == nbrAddr ) {

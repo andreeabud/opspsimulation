@@ -260,13 +260,17 @@ typedef struct msg_dest_nbr_addr
     //NODE_ADDR   nbrAddr;
 } MsgOpspDestNbrAddr;
 
-typedef struct forwarder_list
+typedef struct FLE // forwarder list entry
 {
 	NODE_ADDR forwarder;
 	ETXValue nbrToDest;
 }OPSP_FL_Node;
 
-
+typedef struct
+{
+	OPSP_FL_Node* head;
+	int size;
+}OPSP_FL;
 
 //<-------------tianke on 2008-5-6 21:36 0.01------------
 
