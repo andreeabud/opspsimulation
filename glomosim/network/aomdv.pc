@@ -5399,14 +5399,31 @@ if(etxMetric > MAX_ETX){
     return etxMetric;
 }
 
-BOOL OpspLookupForwarder( GlomoNode* node, OPSP_FL* ForwarderList,  NODE_ADDR destAddr )
+/*
+1. find etx to the destination from route list
+2. lookup neighbor table for lest etx from the neighbors to the destination
+3. save the lest 3 neighbors and their etx to forwarder list
+4. return forwarderlist
+*/
+BOOL OpspLookupForwarder( GlomoNode* node, OPSP_FL* ForwarderList,  NODE_ADDR destAddr, NODE_ADDR nextHop)
 {
-	/*
-	1. find etx to the destination from route list
-	2. lookup neighbor table for lest etx from the neighbors to the destination
-	3. save the lest 3 neighbors and their etx to forwarder list
-	4. return forwarderlist
-	*/
+	GlomoNetworkIp*     ipLayer     = ( GlomoNetworkIp* ) node->networkData.networkVar;
+    GlomoRoutingAodv*   aodv        = ( GlomoRoutingAodv* ) ipLayer->routingProtocol;
+	AODV_RT routeTable = aodv->routeTable;
+	AODV_RT_Node* RTCurrent;
+	OPSP_NFRT nbrFowardRateTable = aodv->nbrFowardRateTable;
+	OPSP_NFRT_Node* NFRTCurrent;
+    AODV_NT             nbrTable    = aodv->nbrTable;
+    AODV_NT_Node*       ntCurrent;
+	ETXValue etxFromNextHopToDest;
+	
+    for( current = nbrTable.head;
+         ( current != NULL ) && ( current->nbrAddr <= nbrAddr );
+         current = current->next ) {
+        if( current->nbrAddr == nbrAddr ) {
+
+        }
+    }
 }
 
 //<-------------tianke on 2008-5-6 21:22 0.01------------

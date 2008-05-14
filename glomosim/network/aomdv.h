@@ -264,7 +264,9 @@ typedef struct forwarder_list
 {
 	NODE_ADDR forwarder;
 	ETXValue nbrToDest;
-}OPSP_FL;
+}OPSP_FL_Node;
+
+
 
 //<-------------tianke on 2008-5-6 21:36 0.01------------
 
