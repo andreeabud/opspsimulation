@@ -263,7 +263,7 @@ typedef struct msg_dest_nbr_addr
 typedef struct FLE // forwarder list entry
 {
 	NODE_ADDR forwarder;
-	ETXValue nbrToDest;
+	ETXValue etxNbrToDest;
 }OPSP_FL_Node;
 
 typedef struct
@@ -767,7 +767,7 @@ void OpspUpdateNfrTableEtxToDest( GlomoNode* node,
 
 void OpspUpdateNbrETX( GlomoCoordinates nbrPosition, GlomoNode* node, NODE_ADDR nbrAddr );
 
-ETXValue OpspGetEtxToDest( NODE_ADDR destAddr, AODV_RT* routeTable );
+ETXValue OpspGetEtxToDestFromRT( NODE_ADDR destAddr, AODV_RT* routeTable );
 
 ETXValue ETXCalculate( GlomoCoordinates txNodePosition, GlomoCoordinates rxNodePosition );
 

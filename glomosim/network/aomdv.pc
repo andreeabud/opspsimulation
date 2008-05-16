@@ -4637,7 +4637,7 @@ void RoutingAodvInitiateRREPbyIN( GlomoNode* node, Message* msg )
 
     //-------------tianke on 2008-3-18 16:31 0.01------>
     rrepPkt->Positon = node->position;
-    rrepPkt->etxToDest = OpspGetEtxToDest( rreqPkt->destAddr, &aodv->routeTable );
+    rrepPkt->etxToDest = OpspGetEtxToDestFromRT( rreqPkt->destAddr, &aodv->routeTable );
     //<----------- tianke on 2008-3-18 16:31 0.01--------
 
     nextHop = RoutingAodvGetNextHopNotUsedToReply( rreqPkt->destAddr, &aodv->routeTable );
@@ -5048,7 +5048,7 @@ void OpspPeekFunction( GlomoNode* node, const Message* msg )
             //delete NFRT entry belong to the RERR!!!
             rerrPkt = ( AODV_RERR_Packet * ) GLOMO_MsgReturnPacket( newMsg );
             if( !RoutingAodvCheckNbrExist( node, sourceAddress ) ) {
-				printf( "no the neighbor in NBRT\n" );
+                printf( "no the neighbor in NBRT\n" );
                 break;
             }else {
                 //find the neighbor in Neighbor Table
@@ -5059,15 +5059,15 @@ void OpspPeekFunction( GlomoNode* node, const Message* msg )
                         break;
                     }
                 }
-				
+
                 if( !OpspCheckNfrExist( &current->nfrt, destinationAddress ) ) {
-					printf( "no the destinationAddress in NFRT\n" );
+                    printf( "no the destinationAddress in NFRT\n" );
                     break;
                 }else {
                     OpspDeleteNfrTable( &current->nfrt, destinationAddress );
                 }
             }
-			
+
             //#ifdef OPSP_DEBUG
             OpspDisplayNfrTable( current->nbrAddr, &current->nfrt );
             //#endif
@@ -5335,7 +5335,7 @@ void OpspUpdateNbrETX( GlomoCoordinates nbrPosition, GlomoNode* node, NODE_ADDR 
 
 
 //在routeListTable中找到etxToDest的最小值
-ETXValue OpspGetEtxToDest( NODE_ADDR destAddr, AODV_RT* routeTable )
+ETXValue OpspGetEtxToDestFromRT( NODE_ADDR destAddr, AODV_RT* routeTable )
 {
     AODV_RT_Node*   current;
     AODV_RTL_Node*  currentEntry;
@@ -5382,7 +5382,7 @@ ETXValue ETXCalculate( GlomoCoordinates txNodePosition, GlomoCoordinates rxNodeP
 {
     double      distance;
     ETXValue    etxMetric;
-	
+
 #ifdef OPSP_DEBUG
     printf( "in ETXCalculate \n" );
 #endif
@@ -5390,48 +5390,85 @@ ETXValue ETXCalculate( GlomoCoordinates txNodePosition, GlomoCoordinates rxNodeP
     distance = sqrt( SQUARE( txNodePosition.x - rxNodePosition.x ) +
                      SQUARE( txNodePosition.y - rxNodePosition.y ) );
     etxMetric = distance * ETX_CONEFFICENT;
-if(etxMetric > MAX_ETX){
-	printf("etxMetric > MAX_ETX: %f\n", etxMetric);
-	printf("txNodePosition:(%f, %f)\t rxNodePosition:(%f, %f)\t\n", 
-		txNodePosition.x, txNodePosition.y, rxNodePosition.x, rxNodePosition.y);
-	assert(FALSE);
-}
+    if( etxMetric > MAX_ETX ) {
+        printf( "etxMetric > MAX_ETX: %f\n", etxMetric );
+        printf( "txNodePosition:(%f, %f)\t rxNodePosition:(%f, %f)\t\n",
+                txNodePosition.x,
+                txNodePosition.y,
+                rxNodePosition.x,
+                rxNodePosition.y );
+        assert( FALSE );
+    }
     return etxMetric;
 }
 
 /*
 1. find etx to the destination from route list
-2. lookup neighbor table for lest etx from the neighbors to the destination
+2. lookup neighbor table for lest 3 neighbors and their etx from the neighbors to the destination
 3. save the lest 3 neighbors and their etx to forwarder list
 4. return forwarderlist
 */
-BOOL OpspLookupForwarder( GlomoNode* node, OPSP_FL* ForwarderList,  NODE_ADDR destAddr, NODE_ADDR nextHop)
+BOOL OpspLookupForwarder( GlomoNode* node,
+                          OPSP_FL* ForwarderList,
+                          NODE_ADDR destAddr,
+                          NODE_ADDR nextHop )
 {
-	GlomoNetworkIp*     ipLayer     = ( GlomoNetworkIp* ) node->networkData.networkVar;
-    GlomoRoutingAodv*   aodv        = ( GlomoRoutingAodv* ) ipLayer->routingProtocol;
-	AODV_RT routeTable = aodv->routeTable;
-	AODV_RT_Node* RTCurrent;
-	OPSP_NFRT nbrFowardRateTable = aodv->nbrFowardRateTable;
-	OPSP_NFRT_Node* NFRTCurrent;
-    AODV_NT             nbrTable = aodv->nbrTable;
+    GlomoNetworkIp*     ipLayer             = ( GlomoNetworkIp* ) node->networkData.networkVar;
+    GlomoRoutingAodv*   aodv                = ( GlomoRoutingAodv* ) ipLayer->routingProtocol;
+    AODV_RT             routeTable          = aodv->routeTable;
+    AODV_RT_Node*       RTCurrent;
+    AODV_NT             nbrTable            = aodv->nbrTable;
     AODV_NT_Node*       ntCurrent;
-	ETXValue etxFromNextHopToDest;
-	
-	for( RTCurrent = routeTable.head;
-         ( RTCurrent != NULL ) && ( RTCurrent->destAddr <= destAddr );
-         RTCurrent = RTCurrent->next ) {
-        if( RTCurrent->destAddr == destAddr ) {
+    OPSP_NFRT           nbrFowardRateTable  = aodv->nbrFowardRateTable;
+    OPSP_NFRT_Node*     NFRTCurrent;
 
-        }
-    }
-		 
-	for( current = nbrTable.head;
-         ( current != NULL ) && ( current->nbrAddr <= nbrAddr );
-         current = current->next ) {
-        if( current->nbrAddr == nbrAddr ) {
+    ETXValue            etxFromLocalToDestInRT;
+    ETXValue            etxFromNextHopToDest;
 
+    OPSP_FL_Node*            newNode             = ( OPSP_FL_Node* )
+                                              checked_pc_malloc( sizeof( OPSP_FL_Node ) );
+	OPSP_FL_Node* OpspFlPrevious, OpspFlCurrent;
+
+    etxFromLocalToDestInRT = OpspGetEtxToDestFromRT( NODE_ADDR destAddr, AODV_RT * routeTable );
+
+    for( ntCurrent = nbrTable.head;ntCurrent != NULL ;ntCurrent = ntCurrent->next ) {
+        for( NFRTCurrent = ntCurrent->nfrt.head;
+             NFRTCurrent != NULL ;
+             NFRTCurrent = NFRTCurrent->next ) {
+            if( NFRTCurrent->destAddr == destAddr ) {
+				newNode->forwarder = ntCurrent->nbrAddr;
+    			newNode->etxNbrToDest = NFRTCurrent->etxToDest;
+			    newNode->next = NULL;
+
+    			++( ntCurrent->nfrt->size );
+
+    // Find Insertion point.  Insert after all address matches.
+
+    			OpspFlPrevious = NULL;
+    			OpspFlCurrent = ForwarderList->head;
+    			while( ( OpspFlCurrent != NULL ) && ( OpspFlCurrent->etxNbrToDest >= NFRTCurrent->etxToDest ) ) {
+        			OpspFlPrevious = OpspFlCurrent;
+        			OpspFlCurrent = OpspFlCurrent->next;
+    			}
+
+    // Insert newNode
+
+    			if( OpspFlPrevious == NULL ) {
+        			newNode->next = ForwarderList->head;
+        			ForwarderList->head = newNode;
+    			}else {
+        			newNode->next = OpspFlPrevious->next;
+        			OpspFlPrevious->next = newNode;
+    			}
+
+            }
+			if (ntCurrent->nfrt->size >= 4){
+				return TRUE;
+			}
         }
     }
 }
+
+
 
 //<-------------tianke on 2008-5-6 21:22 0.01------------
