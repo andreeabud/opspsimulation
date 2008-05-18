@@ -264,6 +264,7 @@ typedef struct FLE // forwarder list entry
 {
 	NODE_ADDR forwarder;
 	ETXValue etxNbrToDest;
+	struct FLE* next;
 }OPSP_FL_Node;
 
 typedef struct
@@ -771,8 +772,12 @@ ETXValue OpspGetEtxToDestFromRT( NODE_ADDR destAddr, AODV_RT* routeTable );
 
 ETXValue ETXCalculate( GlomoCoordinates txNodePosition, GlomoCoordinates rxNodePosition );
 
-BOOL OpspLookupForwarder( GlomoNode* node, OPSP_FL* ForwarderList,  NODE_ADDR destAddr );
+BOOL OpspLookupForwarder( GlomoNode* node,
+                          OPSP_FL* ForwarderList,
+                          NODE_ADDR destAddr,
+                          NODE_ADDR nextHop );
 
+void OpspDisplayForwarderTable( OPSP_FL* ForwarderList );
 //<-------------tianke on 2008-5-6 21:25 0.01------------
 
 
