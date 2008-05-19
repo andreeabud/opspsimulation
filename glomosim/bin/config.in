@@ -48,7 +48,7 @@
 #        100D    - 100 days
 #
 
-SIMULATION-TIME     500S
+SIMULATION-TIME     5000S
 
 #
 # The following is a random number seed used to initialize  part of the seed of
@@ -116,9 +116,9 @@ NUMBER-OF-NODES     49
 # Random Waypoint and its required parameters.
 
 MOBILITY RANDOM-WAYPOINT
-MOBILITY-WP-PAUSE       0
-MOBILITY-WP-MIN-SPEED   1
-MOBILITY-WP-MAX-SPEED   10
+MOBILITY-WP-PAUSE       10
+MOBILITY-WP-MIN-SPEED   0
+MOBILITY-WP-MAX-SPEED   50
 
 #MOBILITY TRACE
 #MOBILITY-TRACE-FILE ./mobility.in

@@ -4426,6 +4426,8 @@ void RoutingAodvTransmitData( GlomoNode* node, Message* msg, NODE_ADDR destAddr 
     NODE_ADDR           nextHop;
     //--------------tianke on 2008-5-18 22:30 0.01------------>
     OPSP_FL             ForwarderList;
+	ForwarderList.head = NULL;
+	ForwarderList.size = 0;
     //<-------------tianke on 2008-5-18 22:30 0.01------------
 
     GLOMO_MsgSetLayer( msg, GLOMO_MAC_LAYER, 0 );
@@ -4445,7 +4447,7 @@ void RoutingAodvTransmitData( GlomoNode* node, Message* msg, NODE_ADDR destAddr 
     OpspLookupForwarder( node, &ForwarderList, destAddr, nextHop );
 
 	if (ForwarderList.size >= 1){
-		//OpspDisplayForwarderTable( &ForwarderList );
+		OpspDisplayForwarderTable( &ForwarderList );
 	}
     //<-------------tianke on 2008-5-18 22:30 0.01------------
 
@@ -5440,25 +5442,28 @@ BOOL OpspLookupForwarder( GlomoNode* node,
                                               checked_pc_malloc( sizeof( OPSP_FL_Node ) );
     OPSP_FL_Node*       OpspFlPrevious;
     OPSP_FL_Node*       OpspFlCurrent;
+	
+printf("in OpspLookupForwarder\n");
 
     etxFromLocalToDestInRT = OpspGetEtxToDestFromRT( destAddr, &routeTable );
 
-    for( ntCurrent = nbrTable.head;ntCurrent != NULL;ntCurrent = ntCurrent->next ) {
+    for( ntCurrent = nbrTable.head; ntCurrent != NULL; ntCurrent = ntCurrent->next ) {
         for( NFRTCurrent = ntCurrent->nfrt.head;
              NFRTCurrent != NULL;
              NFRTCurrent = NFRTCurrent->next ) {
             //find specific destination and less ETX in neighber forwarder rate table
-            printf( "find specific destination and less ETX in neighber forwarder rate table" );
-            if( ( NFRTCurrent->destAddr == destAddr ) &&
-                ( NFRTCurrent->etxToDest <= etxFromLocalToDestInRT ) ) {
+            printf( "\nfind specific destination and less ETX in neighber forwarder rate table\n" );
+            //if( ( NFRTCurrent->destAddr == destAddr ) && ( NFRTCurrent->etxToDest <= etxFromLocalToDestInRT ) ) {
+            if( NFRTCurrent->destAddr == destAddr ) {
+
                 newNode->forwarder = ntCurrent->nbrAddr;
                 newNode->etxNbrToDest = NFRTCurrent->etxToDest;
                 newNode->next = NULL;
-
+printf("newNode->forwarder: %d, newNode->etxNbrToDest:%f\n", newNode->forwarder, newNode->etxNbrToDest);
                 ++( ntCurrent->nfrt.size );
 
                 // Find Insertion point in OPSP forwarder list
-                printf( " Find Insertion point in OPSP forwarder list" );
+                printf( "\nFind Insertion point in OPSP forwarder list\n" );
                 OpspFlPrevious = NULL;
                 OpspFlCurrent = ForwarderList->head;
                 while( ( OpspFlCurrent != NULL ) &&
@@ -5468,7 +5473,7 @@ BOOL OpspLookupForwarder( GlomoNode* node,
                 }
 
                 // Insert newNode into OPSP forwarder list
-                printf( "Insert newNode into OPSP forwarder list" );
+                printf( "\nInsert newNode into OPSP forwarder list\n" );
                 if( OpspFlPrevious == NULL ) {
                     newNode->next = ForwarderList->head;
                     ForwarderList->head = newNode;

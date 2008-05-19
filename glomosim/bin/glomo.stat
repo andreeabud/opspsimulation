@@ -12,7 +12,7 @@ Node:      0, Layer:     RoutingAodv, Number of Route Errors (RERR) sent with N 
 Node:      0, Layer:     RoutingAodv, Maintainence Overhead = 0
 Node:      0, Layer:     RoutingAodv, Number of CTRL Packets Txed = 1
 Node:      0, Layer:     RoutingAodv, Discovery Overhead = 1
-Node:      0, Layer:     RoutingAodv, Number of Routes Selected = 363
+Node:      0, Layer:     RoutingAodv, Number of Routes Selected = 362
 Node:      0, Layer:     RoutingAodv, Number of Hop Counts = 0
 Node:      0, Layer:     RoutingAodv, Number of Data Txed = 1000
 Node:      0, Layer:     RoutingAodv, Number of Data Packets Originated = 1000
@@ -48,7 +48,7 @@ Node:      1, Layer:     RoutingAodv, Number of Route Errors (RERR) sent with N 
 Node:      1, Layer:     RoutingAodv, Maintainence Overhead = 0
 Node:      1, Layer:     RoutingAodv, Number of CTRL Packets Txed = 1
 Node:      1, Layer:     RoutingAodv, Discovery Overhead = 1
-Node:      1, Layer:     RoutingAodv, Number of Routes Selected = 738
+Node:      1, Layer:     RoutingAodv, Number of Routes Selected = 688
 Node:      1, Layer:     RoutingAodv, Number of Hop Counts = 0
 Node:      1, Layer:     RoutingAodv, Number of Data Txed = 0
 Node:      1, Layer:     RoutingAodv, Number of Data Packets Originated = 0
@@ -77,7 +77,7 @@ Node:      2, Layer:     RoutingAodv, Number of Route Errors (RERR) sent with N 
 Node:      2, Layer:     RoutingAodv, Maintainence Overhead = 0
 Node:      2, Layer:     RoutingAodv, Number of CTRL Packets Txed = 1
 Node:      2, Layer:     RoutingAodv, Discovery Overhead = 1
-Node:      2, Layer:     RoutingAodv, Number of Routes Selected = 444
+Node:      2, Layer:     RoutingAodv, Number of Routes Selected = 696
 Node:      2, Layer:     RoutingAodv, Number of Hop Counts = 0
 Node:      2, Layer:     RoutingAodv, Number of Data Txed = 0
 Node:      2, Layer:     RoutingAodv, Number of Data Packets Originated = 0
@@ -106,7 +106,7 @@ Node:      3, Layer:     RoutingAodv, Number of Route Errors (RERR) sent with N 
 Node:      3, Layer:     RoutingAodv, Maintainence Overhead = 0
 Node:      3, Layer:     RoutingAodv, Number of CTRL Packets Txed = 1
 Node:      3, Layer:     RoutingAodv, Discovery Overhead = 1
-Node:      3, Layer:     RoutingAodv, Number of Routes Selected = 826
+Node:      3, Layer:     RoutingAodv, Number of Routes Selected = 701
 Node:      3, Layer:     RoutingAodv, Number of Hop Counts = 0
 Node:      3, Layer:     RoutingAodv, Number of Data Txed = 0
 Node:      3, Layer:     RoutingAodv, Number of Data Packets Originated = 0
@@ -135,7 +135,7 @@ Node:      4, Layer:     RoutingAodv, Number of Route Errors (RERR) sent with N 
 Node:      4, Layer:     RoutingAodv, Maintainence Overhead = 0
 Node:      4, Layer:     RoutingAodv, Number of CTRL Packets Txed = 0
 Node:      4, Layer:     RoutingAodv, Discovery Overhead = 0
-Node:      4, Layer:     RoutingAodv, Number of Routes Selected = 744
+Node:      4, Layer:     RoutingAodv, Number of Routes Selected = 377
 Node:      4, Layer:     RoutingAodv, Number of Hop Counts = 0
 Node:      4, Layer:     RoutingAodv, Number of Data Txed = 0
 Node:      4, Layer:     RoutingAodv, Number of Data Packets Originated = 0
@@ -164,7 +164,7 @@ Node:      5, Layer:     RoutingAodv, Number of Route Errors (RERR) sent with N 
 Node:      5, Layer:     RoutingAodv, Maintainence Overhead = 0
 Node:      5, Layer:     RoutingAodv, Number of CTRL Packets Txed = 0
 Node:      5, Layer:     RoutingAodv, Discovery Overhead = 0
-Node:      5, Layer:     RoutingAodv, Number of Routes Selected = 467
+Node:      5, Layer:     RoutingAodv, Number of Routes Selected = 35
 Node:      5, Layer:     RoutingAodv, Number of Hop Counts = 0
 Node:      5, Layer:     RoutingAodv, Number of Data Txed = 0
 Node:      5, Layer:     RoutingAodv, Number of Data Packets Originated = 0
@@ -193,7 +193,7 @@ Node:      6, Layer:     RoutingAodv, Number of Route Errors (RERR) sent with N 
 Node:      6, Layer:     RoutingAodv, Maintainence Overhead = 0
 Node:      6, Layer:     RoutingAodv, Number of CTRL Packets Txed = 0
 Node:      6, Layer:     RoutingAodv, Discovery Overhead = 0
-Node:      6, Layer:     RoutingAodv, Number of Routes Selected = 255
+Node:      6, Layer:     RoutingAodv, Number of Routes Selected = 28
 Node:      6, Layer:     RoutingAodv, Number of Hop Counts = 0
 Node:      6, Layer:     RoutingAodv, Number of Data Txed = 0
 Node:      6, Layer:     RoutingAodv, Number of Data Packets Originated = 0
@@ -222,7 +222,7 @@ Node:      7, Layer:     RoutingAodv, Number of Route Errors (RERR) sent with N 
 Node:      7, Layer:     RoutingAodv, Maintainence Overhead = 0
 Node:      7, Layer:     RoutingAodv, Number of CTRL Packets Txed = 1
 Node:      7, Layer:     RoutingAodv, Discovery Overhead = 1
-Node:      7, Layer:     RoutingAodv, Number of Routes Selected = 833
+Node:      7, Layer:     RoutingAodv, Number of Routes Selected = 1026
 Node:      7, Layer:     RoutingAodv, Number of Hop Counts = 0
 Node:      7, Layer:     RoutingAodv, Number of Data Txed = 0
 Node:      7, Layer:     RoutingAodv, Number of Data Packets Originated = 0
@@ -251,7 +251,7 @@ Node:      8, Layer:     RoutingAodv, Number of Route Errors (RERR) sent with N 
 Node:      8, Layer:     RoutingAodv, Maintainence Overhead = 0
 Node:      8, Layer:     RoutingAodv, Number of CTRL Packets Txed = 1
 Node:      8, Layer:     RoutingAodv, Discovery Overhead = 1
-Node:      8, Layer:     RoutingAodv, Number of Routes Selected = 595
+Node:      8, Layer:     RoutingAodv, Number of Routes Selected = 1037
 Node:      8, Layer:     RoutingAodv, Number of Hop Counts = 0
 Node:      8, Layer:     RoutingAodv, Number of Data Txed = 0
 Node:      8, Layer:     RoutingAodv, Number of Data Packets Originated = 0
@@ -280,7 +280,7 @@ Node:      9, Layer:     RoutingAodv, Number of Route Errors (RERR) sent with N 
 Node:      9, Layer:     RoutingAodv, Maintainence Overhead = 0
 Node:      9, Layer:     RoutingAodv, Number of CTRL Packets Txed = 1
 Node:      9, Layer:     RoutingAodv, Discovery Overhead = 1
-Node:      9, Layer:     RoutingAodv, Number of Routes Selected = 663
+Node:      9, Layer:     RoutingAodv, Number of Routes Selected = 1045
 Node:      9, Layer:     RoutingAodv, Number of Hop Counts = 0
 Node:      9, Layer:     RoutingAodv, Number of Data Txed = 0
 Node:      9, Layer:     RoutingAodv, Number of Data Packets Originated = 0
@@ -309,7 +309,7 @@ Node:     10, Layer:     RoutingAodv, Number of Route Errors (RERR) sent with N 
 Node:     10, Layer:     RoutingAodv, Maintainence Overhead = 0
 Node:     10, Layer:     RoutingAodv, Number of CTRL Packets Txed = 2
 Node:     10, Layer:     RoutingAodv, Discovery Overhead = 2
-Node:     10, Layer:     RoutingAodv, Number of Routes Selected = 741
+Node:     10, Layer:     RoutingAodv, Number of Routes Selected = 1054
 Node:     10, Layer:     RoutingAodv, Number of Hop Counts = 0
 Node:     10, Layer:     RoutingAodv, Number of Data Txed = 0
 Node:     10, Layer:     RoutingAodv, Number of Data Packets Originated = 0
@@ -338,7 +338,7 @@ Node:     11, Layer:     RoutingAodv, Number of Route Errors (RERR) sent with N 
 Node:     11, Layer:     RoutingAodv, Maintainence Overhead = 0
 Node:     11, Layer:     RoutingAodv, Number of CTRL Packets Txed = 0
 Node:     11, Layer:     RoutingAodv, Discovery Overhead = 0
-Node:     11, Layer:     RoutingAodv, Number of Routes Selected = 747
+Node:     11, Layer:     RoutingAodv, Number of Routes Selected = 728
 Node:     11, Layer:     RoutingAodv, Number of Hop Counts = 0
 Node:     11, Layer:     RoutingAodv, Number of Data Txed = 0
 Node:     11, Layer:     RoutingAodv, Number of Data Packets Originated = 0
@@ -367,7 +367,7 @@ Node:     12, Layer:     RoutingAodv, Number of Route Errors (RERR) sent with N 
 Node:     12, Layer:     RoutingAodv, Maintainence Overhead = 0
 Node:     12, Layer:     RoutingAodv, Number of CTRL Packets Txed = 0
 Node:     12, Layer:     RoutingAodv, Discovery Overhead = 0
-Node:     12, Layer:     RoutingAodv, Number of Routes Selected = 526
+Node:     12, Layer:     RoutingAodv, Number of Routes Selected = 47
 Node:     12, Layer:     RoutingAodv, Number of Hop Counts = 0
 Node:     12, Layer:     RoutingAodv, Number of Data Txed = 0
 Node:     12, Layer:     RoutingAodv, Number of Data Packets Originated = 0
@@ -396,7 +396,7 @@ Node:     13, Layer:     RoutingAodv, Number of Route Errors (RERR) sent with N 
 Node:     13, Layer:     RoutingAodv, Maintainence Overhead = 0
 Node:     13, Layer:     RoutingAodv, Number of CTRL Packets Txed = 0
 Node:     13, Layer:     RoutingAodv, Discovery Overhead = 0
-Node:     13, Layer:     RoutingAodv, Number of Routes Selected = 455
+Node:     13, Layer:     RoutingAodv, Number of Routes Selected = 36
 Node:     13, Layer:     RoutingAodv, Number of Hop Counts = 0
 Node:     13, Layer:     RoutingAodv, Number of Data Txed = 0
 Node:     13, Layer:     RoutingAodv, Number of Data Packets Originated = 0
@@ -425,7 +425,7 @@ Node:     14, Layer:     RoutingAodv, Number of Route Errors (RERR) sent with N 
 Node:     14, Layer:     RoutingAodv, Maintainence Overhead = 0
 Node:     14, Layer:     RoutingAodv, Number of CTRL Packets Txed = 1
 Node:     14, Layer:     RoutingAodv, Discovery Overhead = 1
-Node:     14, Layer:     RoutingAodv, Number of Routes Selected = 510
+Node:     14, Layer:     RoutingAodv, Number of Routes Selected = 1034
 Node:     14, Layer:     RoutingAodv, Number of Hop Counts = 0
 Node:     14, Layer:     RoutingAodv, Number of Data Txed = 0
 Node:     14, Layer:     RoutingAodv, Number of Data Packets Originated = 0
@@ -454,17 +454,17 @@ Node:     15, Layer:     RoutingAodv, Number of Route Errors (RERR) sent with N 
 Node:     15, Layer:     RoutingAodv, Maintainence Overhead = 0
 Node:     15, Layer:     RoutingAodv, Number of CTRL Packets Txed = 2
 Node:     15, Layer:     RoutingAodv, Discovery Overhead = 2
-Node:     15, Layer:     RoutingAodv, Number of Routes Selected = 476
+Node:     15, Layer:     RoutingAodv, Number of Routes Selected = 712
 Node:     15, Layer:     RoutingAodv, Number of Hop Counts = 0
-Node:     15, Layer:     RoutingAodv, Number of Data Txed = 436
+Node:     15, Layer:     RoutingAodv, Number of Data Txed = 1000
 Node:     15, Layer:     RoutingAodv, Number of Data Packets Originated = 0
 Node:     15, Layer:     RoutingAodv, Number of Data Packets Received = 0
-Node:     15, Layer:     RoutingAodv, Number of Hello packets sent = 148
+Node:     15, Layer:     RoutingAodv, Number of Hello packets sent = 336
 Node:     15, Layer:     RoutingAodv, Number of Packets Dropped or Left waiting for Route = 0
 Node:     15, Layer:     RoutingAodv, Number of Broken Links = 0
 Node:     15, Layer:     RoutingAodv, Number of Destination Unreachable Messages sent to application = 0
-Node:     15, Layer:       NetworkIp, Number of Packet Attepted to be Sent to MAC: 586
-Node:     15, Layer:       NetworkIp, Number of Packets Routed For Another Node: 436
+Node:     15, Layer:       NetworkIp, Number of Packet Attepted to be Sent to MAC: 1338
+Node:     15, Layer:       NetworkIp, Number of Packets Routed For Another Node: 1000
 Node:     15, Layer:       NetworkIp, Number of Packets Delivered To this Node: 0
 Node:     15, Layer:       NetworkIp, Total of the TTL's of Delivered Packets: 0
 Node:     15, Layer:       NetworkIp, Number Fragments dropped because Node was Unreachable: 0
@@ -483,7 +483,7 @@ Node:     16, Layer:     RoutingAodv, Number of Route Errors (RERR) sent with N 
 Node:     16, Layer:     RoutingAodv, Maintainence Overhead = 0
 Node:     16, Layer:     RoutingAodv, Number of CTRL Packets Txed = 1
 Node:     16, Layer:     RoutingAodv, Discovery Overhead = 1
-Node:     16, Layer:     RoutingAodv, Number of Routes Selected = 705
+Node:     16, Layer:     RoutingAodv, Number of Routes Selected = 1055
 Node:     16, Layer:     RoutingAodv, Number of Hop Counts = 0
 Node:     16, Layer:     RoutingAodv, Number of Data Txed = 0
 Node:     16, Layer:     RoutingAodv, Number of Data Packets Originated = 0
@@ -512,7 +512,7 @@ Node:     17, Layer:     RoutingAodv, Number of Route Errors (RERR) sent with N 
 Node:     17, Layer:     RoutingAodv, Maintainence Overhead = 0
 Node:     17, Layer:     RoutingAodv, Number of CTRL Packets Txed = 1
 Node:     17, Layer:     RoutingAodv, Discovery Overhead = 1
-Node:     17, Layer:     RoutingAodv, Number of Routes Selected = 755
+Node:     17, Layer:     RoutingAodv, Number of Routes Selected = 1064
 Node:     17, Layer:     RoutingAodv, Number of Hop Counts = 0
 Node:     17, Layer:     RoutingAodv, Number of Data Txed = 0
 Node:     17, Layer:     RoutingAodv, Number of Data Packets Originated = 0
@@ -541,7 +541,7 @@ Node:     18, Layer:     RoutingAodv, Number of Route Errors (RERR) sent with N 
 Node:     18, Layer:     RoutingAodv, Maintainence Overhead = 0
 Node:     18, Layer:     RoutingAodv, Number of CTRL Packets Txed = 0
 Node:     18, Layer:     RoutingAodv, Discovery Overhead = 0
-Node:     18, Layer:     RoutingAodv, Number of Routes Selected = 539
+Node:     18, Layer:     RoutingAodv, Number of Routes Selected = 735
 Node:     18, Layer:     RoutingAodv, Number of Hop Counts = 0
 Node:     18, Layer:     RoutingAodv, Number of Data Txed = 0
 Node:     18, Layer:     RoutingAodv, Number of Data Packets Originated = 0
@@ -570,7 +570,7 @@ Node:     19, Layer:     RoutingAodv, Number of Route Errors (RERR) sent with N 
 Node:     19, Layer:     RoutingAodv, Maintainence Overhead = 0
 Node:     19, Layer:     RoutingAodv, Number of CTRL Packets Txed = 0
 Node:     19, Layer:     RoutingAodv, Discovery Overhead = 0
-Node:     19, Layer:     RoutingAodv, Number of Routes Selected = 461
+Node:     19, Layer:     RoutingAodv, Number of Routes Selected = 391
 Node:     19, Layer:     RoutingAodv, Number of Hop Counts = 0
 Node:     19, Layer:     RoutingAodv, Number of Data Txed = 0
 Node:     19, Layer:     RoutingAodv, Number of Data Packets Originated = 0
@@ -599,7 +599,7 @@ Node:     20, Layer:     RoutingAodv, Number of Route Errors (RERR) sent with N 
 Node:     20, Layer:     RoutingAodv, Maintainence Overhead = 0
 Node:     20, Layer:     RoutingAodv, Number of CTRL Packets Txed = 0
 Node:     20, Layer:     RoutingAodv, Discovery Overhead = 0
-Node:     20, Layer:     RoutingAodv, Number of Routes Selected = 492
+Node:     20, Layer:     RoutingAodv, Number of Routes Selected = 42
 Node:     20, Layer:     RoutingAodv, Number of Hop Counts = 0
 Node:     20, Layer:     RoutingAodv, Number of Data Txed = 0
 Node:     20, Layer:     RoutingAodv, Number of Data Packets Originated = 0
@@ -628,7 +628,7 @@ Node:     21, Layer:     RoutingAodv, Number of Route Errors (RERR) sent with N 
 Node:     21, Layer:     RoutingAodv, Maintainence Overhead = 0
 Node:     21, Layer:     RoutingAodv, Number of CTRL Packets Txed = 1
 Node:     21, Layer:     RoutingAodv, Discovery Overhead = 1
-Node:     21, Layer:     RoutingAodv, Number of Routes Selected = 846
+Node:     21, Layer:     RoutingAodv, Number of Routes Selected = 1039
 Node:     21, Layer:     RoutingAodv, Number of Hop Counts = 0
 Node:     21, Layer:     RoutingAodv, Number of Data Txed = 0
 Node:     21, Layer:     RoutingAodv, Number of Data Packets Originated = 0
@@ -657,7 +657,7 @@ Node:     22, Layer:     RoutingAodv, Number of Route Errors (RERR) sent with N 
 Node:     22, Layer:     RoutingAodv, Maintainence Overhead = 0
 Node:     22, Layer:     RoutingAodv, Number of CTRL Packets Txed = 1
 Node:     22, Layer:     RoutingAodv, Discovery Overhead = 1
-Node:     22, Layer:     RoutingAodv, Number of Routes Selected = 843
+Node:     22, Layer:     RoutingAodv, Number of Routes Selected = 1051
 Node:     22, Layer:     RoutingAodv, Number of Hop Counts = 0
 Node:     22, Layer:     RoutingAodv, Number of Data Txed = 0
 Node:     22, Layer:     RoutingAodv, Number of Data Packets Originated = 0
@@ -686,7 +686,7 @@ Node:     23, Layer:     RoutingAodv, Number of Route Errors (RERR) sent with N 
 Node:     23, Layer:     RoutingAodv, Maintainence Overhead = 0
 Node:     23, Layer:     RoutingAodv, Number of CTRL Packets Txed = 2
 Node:     23, Layer:     RoutingAodv, Discovery Overhead = 2
-Node:     23, Layer:     RoutingAodv, Number of Routes Selected = 551
+Node:     23, Layer:     RoutingAodv, Number of Routes Selected = 1063
 Node:     23, Layer:     RoutingAodv, Number of Hop Counts = 0
 Node:     23, Layer:     RoutingAodv, Number of Data Txed = 0
 Node:     23, Layer:     RoutingAodv, Number of Data Packets Originated = 0
@@ -715,7 +715,7 @@ Node:     24, Layer:     RoutingAodv, Number of Route Errors (RERR) sent with N 
 Node:     24, Layer:     RoutingAodv, Maintainence Overhead = 0
 Node:     24, Layer:     RoutingAodv, Number of CTRL Packets Txed = 0
 Node:     24, Layer:     RoutingAodv, Discovery Overhead = 0
-Node:     24, Layer:     RoutingAodv, Number of Routes Selected = 524
+Node:     24, Layer:     RoutingAodv, Number of Routes Selected = 751
 Node:     24, Layer:     RoutingAodv, Number of Hop Counts = 0
 Node:     24, Layer:     RoutingAodv, Number of Data Txed = 0
 Node:     24, Layer:     RoutingAodv, Number of Data Packets Originated = 0
@@ -744,7 +744,7 @@ Node:     25, Layer:     RoutingAodv, Number of Route Errors (RERR) sent with N 
 Node:     25, Layer:     RoutingAodv, Maintainence Overhead = 0
 Node:     25, Layer:     RoutingAodv, Number of CTRL Packets Txed = 0
 Node:     25, Layer:     RoutingAodv, Discovery Overhead = 0
-Node:     25, Layer:     RoutingAodv, Number of Routes Selected = 539
+Node:     25, Layer:     RoutingAodv, Number of Routes Selected = 740
 Node:     25, Layer:     RoutingAodv, Number of Hop Counts = 0
 Node:     25, Layer:     RoutingAodv, Number of Data Txed = 0
 Node:     25, Layer:     RoutingAodv, Number of Data Packets Originated = 0
@@ -773,7 +773,7 @@ Node:     26, Layer:     RoutingAodv, Number of Route Errors (RERR) sent with N 
 Node:     26, Layer:     RoutingAodv, Maintainence Overhead = 0
 Node:     26, Layer:     RoutingAodv, Number of CTRL Packets Txed = 0
 Node:     26, Layer:     RoutingAodv, Discovery Overhead = 0
-Node:     26, Layer:     RoutingAodv, Number of Routes Selected = 390
+Node:     26, Layer:     RoutingAodv, Number of Routes Selected = 395
 Node:     26, Layer:     RoutingAodv, Number of Hop Counts = 0
 Node:     26, Layer:     RoutingAodv, Number of Data Txed = 0
 Node:     26, Layer:     RoutingAodv, Number of Data Packets Originated = 0
@@ -802,7 +802,7 @@ Node:     27, Layer:     RoutingAodv, Number of Route Errors (RERR) sent with N 
 Node:     27, Layer:     RoutingAodv, Maintainence Overhead = 0
 Node:     27, Layer:     RoutingAodv, Number of CTRL Packets Txed = 0
 Node:     27, Layer:     RoutingAodv, Discovery Overhead = 0
-Node:     27, Layer:     RoutingAodv, Number of Routes Selected = 349
+Node:     27, Layer:     RoutingAodv, Number of Routes Selected = 40
 Node:     27, Layer:     RoutingAodv, Number of Hop Counts = 0
 Node:     27, Layer:     RoutingAodv, Number of Data Txed = 0
 Node:     27, Layer:     RoutingAodv, Number of Data Packets Originated = 0
@@ -831,7 +831,7 @@ Node:     28, Layer:     RoutingAodv, Number of Route Errors (RERR) sent with N 
 Node:     28, Layer:     RoutingAodv, Maintainence Overhead = 0
 Node:     28, Layer:     RoutingAodv, Number of CTRL Packets Txed = 0
 Node:     28, Layer:     RoutingAodv, Discovery Overhead = 0
-Node:     28, Layer:     RoutingAodv, Number of Routes Selected = 598
+Node:     28, Layer:     RoutingAodv, Number of Routes Selected = 716
 Node:     28, Layer:     RoutingAodv, Number of Hop Counts = 0
 Node:     28, Layer:     RoutingAodv, Number of Data Txed = 0
 Node:     28, Layer:     RoutingAodv, Number of Data Packets Originated = 0
@@ -860,7 +860,7 @@ Node:     29, Layer:     RoutingAodv, Number of Route Errors (RERR) sent with N 
 Node:     29, Layer:     RoutingAodv, Maintainence Overhead = 0
 Node:     29, Layer:     RoutingAodv, Number of CTRL Packets Txed = 0
 Node:     29, Layer:     RoutingAodv, Discovery Overhead = 0
-Node:     29, Layer:     RoutingAodv, Number of Routes Selected = 736
+Node:     29, Layer:     RoutingAodv, Number of Routes Selected = 726
 Node:     29, Layer:     RoutingAodv, Number of Hop Counts = 0
 Node:     29, Layer:     RoutingAodv, Number of Data Txed = 0
 Node:     29, Layer:     RoutingAodv, Number of Data Packets Originated = 0
@@ -889,27 +889,27 @@ Node:     30, Layer:     RoutingAodv, Number of Route Errors (RERR) sent with N 
 Node:     30, Layer:     RoutingAodv, Maintainence Overhead = 0
 Node:     30, Layer:     RoutingAodv, Number of CTRL Packets Txed = 3
 Node:     30, Layer:     RoutingAodv, Discovery Overhead = 3
-Node:     30, Layer:     RoutingAodv, Number of Routes Selected = 389
-Node:     30, Layer:     RoutingAodv, Number of Hop Counts = 1436
+Node:     30, Layer:     RoutingAodv, Number of Routes Selected = 396
+Node:     30, Layer:     RoutingAodv, Number of Hop Counts = 2000
 Node:     30, Layer:     RoutingAodv, Number of Data Txed = 0
 Node:     30, Layer:     RoutingAodv, Number of Data Packets Originated = 0
 Node:     30, Layer:     RoutingAodv, Number of Data Packets Received = 1000
-Node:     30, Layer:     RoutingAodv, Average route length = 1.436000
-Node:     30, Layer:     RoutingAodv, Number of Hello packets sent = 336
+Node:     30, Layer:     RoutingAodv, Average route length = 2.000000
+Node:     30, Layer:     RoutingAodv, Number of Hello packets sent = 341
 Node:     30, Layer:     RoutingAodv, Number of Packets Dropped or Left waiting for Route = 0
 Node:     30, Layer:     RoutingAodv, Number of Broken Links = 0
 Node:     30, Layer:     RoutingAodv, Number of Destination Unreachable Messages sent to application = 0
-Node:     30, Layer:       NetworkIp, Number of Packet Attepted to be Sent to MAC: 339
+Node:     30, Layer:       NetworkIp, Number of Packet Attepted to be Sent to MAC: 344
 Node:     30, Layer:       NetworkIp, Number of Packets Routed For Another Node: 0
 Node:     30, Layer:       NetworkIp, Number of Packets Delivered To this Node: 1000
-Node:     30, Layer:       NetworkIp, Total of the TTL's of Delivered Packets: 62564
-Node:     30, Layer:       NetworkIp, Average Hop Count Assuming 64 Inital TTL 1.000000
+Node:     30, Layer:       NetworkIp, Total of the TTL's of Delivered Packets: 62000
+Node:     30, Layer:       NetworkIp, Average Hop Count Assuming 64 Inital TTL 2.000000
 Node:     30, Layer:       NetworkIp, Number Fragments dropped because Node was Unreachable: 0
 Node:     30, Layer:       NetworkIp, Number Fragments dropped because TTL expired: 0
 Node:     30, Layer:    AppCbrServer, (0) Client address: 0
 Node:     30, Layer:    AppCbrServer, (0) First packet received at [s]: 0.020518031
-Node:     30, Layer:    AppCbrServer, (0) Last packet received at [s]: 499.503059162
-Node:     30, Layer:    AppCbrServer, (0) Average end-to-end delay [s]: 0.004654574
+Node:     30, Layer:    AppCbrServer, (0) Last packet received at [s]: 499.506472470
+Node:     30, Layer:    AppCbrServer, (0) Average end-to-end delay [s]: 0.006694496
 Node:     30, Layer:    AppCbrServer, (0) Session status: Not closed
 Node:     30, Layer:    AppCbrServer, (0) Total number of bytes received: 512000
 Node:     30, Layer:    AppCbrServer, (0) Total number of packets received: 1000
@@ -928,7 +928,7 @@ Node:     31, Layer:     RoutingAodv, Number of Route Errors (RERR) sent with N 
 Node:     31, Layer:     RoutingAodv, Maintainence Overhead = 0
 Node:     31, Layer:     RoutingAodv, Number of CTRL Packets Txed = 0
 Node:     31, Layer:     RoutingAodv, Discovery Overhead = 0
-Node:     31, Layer:     RoutingAodv, Number of Routes Selected = 676
+Node:     31, Layer:     RoutingAodv, Number of Routes Selected = 739
 Node:     31, Layer:     RoutingAodv, Number of Hop Counts = 0
 Node:     31, Layer:     RoutingAodv, Number of Data Txed = 0
 Node:     31, Layer:     RoutingAodv, Number of Data Packets Originated = 0
@@ -957,7 +957,7 @@ Node:     32, Layer:     RoutingAodv, Number of Route Errors (RERR) sent with N 
 Node:     32, Layer:     RoutingAodv, Maintainence Overhead = 0
 Node:     32, Layer:     RoutingAodv, Number of CTRL Packets Txed = 0
 Node:     32, Layer:     RoutingAodv, Discovery Overhead = 0
-Node:     32, Layer:     RoutingAodv, Number of Routes Selected = 641
+Node:     32, Layer:     RoutingAodv, Number of Routes Selected = 732
 Node:     32, Layer:     RoutingAodv, Number of Hop Counts = 0
 Node:     32, Layer:     RoutingAodv, Number of Data Txed = 0
 Node:     32, Layer:     RoutingAodv, Number of Data Packets Originated = 0
@@ -986,7 +986,7 @@ Node:     33, Layer:     RoutingAodv, Number of Route Errors (RERR) sent with N 
 Node:     33, Layer:     RoutingAodv, Maintainence Overhead = 0
 Node:     33, Layer:     RoutingAodv, Number of CTRL Packets Txed = 0
 Node:     33, Layer:     RoutingAodv, Discovery Overhead = 0
-Node:     33, Layer:     RoutingAodv, Number of Routes Selected = 330
+Node:     33, Layer:     RoutingAodv, Number of Routes Selected = 387
 Node:     33, Layer:     RoutingAodv, Number of Hop Counts = 0
 Node:     33, Layer:     RoutingAodv, Number of Data Txed = 0
 Node:     33, Layer:     RoutingAodv, Number of Data Packets Originated = 0
@@ -1015,7 +1015,7 @@ Node:     34, Layer:     RoutingAodv, Number of Route Errors (RERR) sent with N 
 Node:     34, Layer:     RoutingAodv, Maintainence Overhead = 0
 Node:     34, Layer:     RoutingAodv, Number of CTRL Packets Txed = 0
 Node:     34, Layer:     RoutingAodv, Discovery Overhead = 0
-Node:     34, Layer:     RoutingAodv, Number of Routes Selected = 290
+Node:     34, Layer:     RoutingAodv, Number of Routes Selected = 34
 Node:     34, Layer:     RoutingAodv, Number of Hop Counts = 0
 Node:     34, Layer:     RoutingAodv, Number of Data Txed = 0
 Node:     34, Layer:     RoutingAodv, Number of Data Packets Originated = 0
@@ -1044,7 +1044,7 @@ Node:     35, Layer:     RoutingAodv, Number of Route Errors (RERR) sent with N 
 Node:     35, Layer:     RoutingAodv, Maintainence Overhead = 0
 Node:     35, Layer:     RoutingAodv, Number of CTRL Packets Txed = 0
 Node:     35, Layer:     RoutingAodv, Discovery Overhead = 0
-Node:     35, Layer:     RoutingAodv, Number of Routes Selected = 264
+Node:     35, Layer:     RoutingAodv, Number of Routes Selected = 709
 Node:     35, Layer:     RoutingAodv, Number of Hop Counts = 0
 Node:     35, Layer:     RoutingAodv, Number of Data Txed = 0
 Node:     35, Layer:     RoutingAodv, Number of Data Packets Originated = 0
@@ -1073,7 +1073,7 @@ Node:     36, Layer:     RoutingAodv, Number of Route Errors (RERR) sent with N 
 Node:     36, Layer:     RoutingAodv, Maintainence Overhead = 0
 Node:     36, Layer:     RoutingAodv, Number of CTRL Packets Txed = 0
 Node:     36, Layer:     RoutingAodv, Discovery Overhead = 0
-Node:     36, Layer:     RoutingAodv, Number of Routes Selected = 310
+Node:     36, Layer:     RoutingAodv, Number of Routes Selected = 717
 Node:     36, Layer:     RoutingAodv, Number of Hop Counts = 0
 Node:     36, Layer:     RoutingAodv, Number of Data Txed = 0
 Node:     36, Layer:     RoutingAodv, Number of Data Packets Originated = 0
@@ -1102,7 +1102,7 @@ Node:     37, Layer:     RoutingAodv, Number of Route Errors (RERR) sent with N 
 Node:     37, Layer:     RoutingAodv, Maintainence Overhead = 0
 Node:     37, Layer:     RoutingAodv, Number of CTRL Packets Txed = 0
 Node:     37, Layer:     RoutingAodv, Discovery Overhead = 0
-Node:     37, Layer:     RoutingAodv, Number of Routes Selected = 346
+Node:     37, Layer:     RoutingAodv, Number of Routes Selected = 725
 Node:     37, Layer:     RoutingAodv, Number of Hop Counts = 0
 Node:     37, Layer:     RoutingAodv, Number of Data Txed = 0
 Node:     37, Layer:     RoutingAodv, Number of Data Packets Originated = 0
@@ -1131,7 +1131,7 @@ Node:     38, Layer:     RoutingAodv, Number of Route Errors (RERR) sent with N 
 Node:     38, Layer:     RoutingAodv, Maintainence Overhead = 0
 Node:     38, Layer:     RoutingAodv, Number of CTRL Packets Txed = 0
 Node:     38, Layer:     RoutingAodv, Discovery Overhead = 0
-Node:     38, Layer:     RoutingAodv, Number of Routes Selected = 368
+Node:     38, Layer:     RoutingAodv, Number of Routes Selected = 730
 Node:     38, Layer:     RoutingAodv, Number of Hop Counts = 0
 Node:     38, Layer:     RoutingAodv, Number of Data Txed = 0
 Node:     38, Layer:     RoutingAodv, Number of Data Packets Originated = 0
@@ -1160,7 +1160,7 @@ Node:     39, Layer:     RoutingAodv, Number of Route Errors (RERR) sent with N 
 Node:     39, Layer:     RoutingAodv, Maintainence Overhead = 0
 Node:     39, Layer:     RoutingAodv, Number of CTRL Packets Txed = 0
 Node:     39, Layer:     RoutingAodv, Discovery Overhead = 0
-Node:     39, Layer:     RoutingAodv, Number of Routes Selected = 607
+Node:     39, Layer:     RoutingAodv, Number of Routes Selected = 389
 Node:     39, Layer:     RoutingAodv, Number of Hop Counts = 0
 Node:     39, Layer:     RoutingAodv, Number of Data Txed = 0
 Node:     39, Layer:     RoutingAodv, Number of Data Packets Originated = 0
@@ -1189,7 +1189,7 @@ Node:     40, Layer:     RoutingAodv, Number of Route Errors (RERR) sent with N 
 Node:     40, Layer:     RoutingAodv, Maintainence Overhead = 0
 Node:     40, Layer:     RoutingAodv, Number of CTRL Packets Txed = 0
 Node:     40, Layer:     RoutingAodv, Discovery Overhead = 0
-Node:     40, Layer:     RoutingAodv, Number of Routes Selected = 433
+Node:     40, Layer:     RoutingAodv, Number of Routes Selected = 378
 Node:     40, Layer:     RoutingAodv, Number of Hop Counts = 0
 Node:     40, Layer:     RoutingAodv, Number of Data Txed = 0
 Node:     40, Layer:     RoutingAodv, Number of Data Packets Originated = 0
@@ -1218,7 +1218,7 @@ Node:     41, Layer:     RoutingAodv, Number of Route Errors (RERR) sent with N 
 Node:     41, Layer:     RoutingAodv, Maintainence Overhead = 0
 Node:     41, Layer:     RoutingAodv, Number of CTRL Packets Txed = 0
 Node:     41, Layer:     RoutingAodv, Discovery Overhead = 0
-Node:     41, Layer:     RoutingAodv, Number of Routes Selected = 584
+Node:     41, Layer:     RoutingAodv, Number of Routes Selected = 28
 Node:     41, Layer:     RoutingAodv, Number of Hop Counts = 0
 Node:     41, Layer:     RoutingAodv, Number of Data Txed = 0
 Node:     41, Layer:     RoutingAodv, Number of Data Packets Originated = 0
@@ -1247,7 +1247,7 @@ Node:     42, Layer:     RoutingAodv, Number of Route Errors (RERR) sent with N 
 Node:     42, Layer:     RoutingAodv, Maintainence Overhead = 0
 Node:     42, Layer:     RoutingAodv, Number of CTRL Packets Txed = 0
 Node:     42, Layer:     RoutingAodv, Discovery Overhead = 0
-Node:     42, Layer:     RoutingAodv, Number of Routes Selected = 631
+Node:     42, Layer:     RoutingAodv, Number of Routes Selected = 368
 Node:     42, Layer:     RoutingAodv, Number of Hop Counts = 0
 Node:     42, Layer:     RoutingAodv, Number of Data Txed = 0
 Node:     42, Layer:     RoutingAodv, Number of Data Packets Originated = 0
@@ -1276,7 +1276,7 @@ Node:     43, Layer:     RoutingAodv, Number of Route Errors (RERR) sent with N 
 Node:     43, Layer:     RoutingAodv, Maintainence Overhead = 0
 Node:     43, Layer:     RoutingAodv, Number of CTRL Packets Txed = 0
 Node:     43, Layer:     RoutingAodv, Discovery Overhead = 0
-Node:     43, Layer:     RoutingAodv, Number of Routes Selected = 121
+Node:     43, Layer:     RoutingAodv, Number of Routes Selected = 373
 Node:     43, Layer:     RoutingAodv, Number of Hop Counts = 0
 Node:     43, Layer:     RoutingAodv, Number of Data Txed = 0
 Node:     43, Layer:     RoutingAodv, Number of Data Packets Originated = 0
@@ -1305,7 +1305,7 @@ Node:     44, Layer:     RoutingAodv, Number of Route Errors (RERR) sent with N 
 Node:     44, Layer:     RoutingAodv, Maintainence Overhead = 0
 Node:     44, Layer:     RoutingAodv, Number of CTRL Packets Txed = 0
 Node:     44, Layer:     RoutingAodv, Discovery Overhead = 0
-Node:     44, Layer:     RoutingAodv, Number of Routes Selected = 153
+Node:     44, Layer:     RoutingAodv, Number of Routes Selected = 379
 Node:     44, Layer:     RoutingAodv, Number of Hop Counts = 0
 Node:     44, Layer:     RoutingAodv, Number of Data Txed = 0
 Node:     44, Layer:     RoutingAodv, Number of Data Packets Originated = 0
@@ -1334,7 +1334,7 @@ Node:     45, Layer:     RoutingAodv, Number of Route Errors (RERR) sent with N 
 Node:     45, Layer:     RoutingAodv, Maintainence Overhead = 0
 Node:     45, Layer:     RoutingAodv, Number of CTRL Packets Txed = 0
 Node:     45, Layer:     RoutingAodv, Discovery Overhead = 0
-Node:     45, Layer:     RoutingAodv, Number of Routes Selected = 169
+Node:     45, Layer:     RoutingAodv, Number of Routes Selected = 381
 Node:     45, Layer:     RoutingAodv, Number of Hop Counts = 0
 Node:     45, Layer:     RoutingAodv, Number of Data Txed = 0
 Node:     45, Layer:     RoutingAodv, Number of Data Packets Originated = 0
@@ -1363,7 +1363,7 @@ Node:     46, Layer:     RoutingAodv, Number of Route Errors (RERR) sent with N 
 Node:     46, Layer:     RoutingAodv, Maintainence Overhead = 0
 Node:     46, Layer:     RoutingAodv, Number of CTRL Packets Txed = 0
 Node:     46, Layer:     RoutingAodv, Discovery Overhead = 0
-Node:     46, Layer:     RoutingAodv, Number of Routes Selected = 160
+Node:     46, Layer:     RoutingAodv, Number of Routes Selected = 376
 Node:     46, Layer:     RoutingAodv, Number of Hop Counts = 0
 Node:     46, Layer:     RoutingAodv, Number of Data Txed = 0
 Node:     46, Layer:     RoutingAodv, Number of Data Packets Originated = 0
@@ -1392,7 +1392,7 @@ Node:     47, Layer:     RoutingAodv, Number of Route Errors (RERR) sent with N 
 Node:     47, Layer:     RoutingAodv, Maintainence Overhead = 0
 Node:     47, Layer:     RoutingAodv, Number of CTRL Packets Txed = 0
 Node:     47, Layer:     RoutingAodv, Discovery Overhead = 0
-Node:     47, Layer:     RoutingAodv, Number of Routes Selected = 109
+Node:     47, Layer:     RoutingAodv, Number of Routes Selected = 368
 Node:     47, Layer:     RoutingAodv, Number of Hop Counts = 0
 Node:     47, Layer:     RoutingAodv, Number of Data Txed = 0
 Node:     47, Layer:     RoutingAodv, Number of Data Packets Originated = 0
