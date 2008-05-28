@@ -56,7 +56,7 @@ SIM_HDRS =  ../main/glomo.h ../main/driver.h \
             ../mac/tsma.h ../mac/wiredlink.h \
             ../network/ipqueue.h ../network/fifoqueue.h \
             ../network/nwip.h ../network/nwlar1.h ../network/odmrp.h \
-            ../network/aodv.h ../network/dsr.h ../network/zrp.h \
+            ../network/aomdv.h ../network/dsr.h ../network/zrp.h \
             ../transport/udp.h  ../transport/in_pcb.h \
             ../transport/tcp/tcp_config.h ../transport/tcp/tcp_var.h \
             ../transport/tcp/tcp_fsm.h ../transport/tcp/tcp_proto.h \
@@ -129,7 +129,7 @@ PAR_FILES = ../main/glomo.pc ../main/mobility.pc \
             ../mac/mac.pc \
             ../network/network.pc ../network/nwcommon.pc ../network/nwip.pc \
             ../network/user_nwip.pc ../network/fifoqueue.pc \
-            ../network/nwlar1.pc ../network/odmrp.pc ../network/aodv.pc \
+            ../network/nwlar1.pc ../network/odmrp.pc ../network/aomdv.pc \
             ../network/dsr.pc ../network/zrp.pc \
             ../transport/transport.pc ../transport/in_pcb.pc \
             ../transport/udp.pc \

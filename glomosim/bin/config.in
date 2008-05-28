@@ -57,7 +57,7 @@ SIMULATION-TIME     5000S
 # simulation.
 #
 
-SEED                1
+SEED                2
 
 #
 # The following two parameters stand for the physical terrain in which the nodes
@@ -73,7 +73,7 @@ TERRAIN-DIMENSIONS  (2000, 1000)
 # The following parameter represents the number of nodes being simulated.
 #
 
-NUMBER-OF-NODES     49
+NUMBER-OF-NODES     100
 
 #
 #
@@ -91,9 +91,9 @@ NUMBER-OF-NODES     49
 
 # NODE-PLACEMENT      FILE
 # NODE-PLACEMENT-FILE ./nodes.input
- NODE-PLACEMENT      GRID
- GRID-UNIT           100  
-#NODE-PLACEMENT      RANDOM
+# NODE-PLACEMENT      GRID
+# GRID-UNIT           100  
+NODE-PLACEMENT      RANDOM
 #NODE-PLACEMENT      UNIFORM
 
 #

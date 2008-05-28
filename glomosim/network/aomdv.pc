@@ -2440,7 +2440,10 @@ void RoutingAodvHandleHello( GlomoNode* node, Message* msg, NODE_ADDR nbrAddr )
     }
 
     //--------------tianke on 2008-3-17 21:51 0.01------------>
-    OpspUpdateNbrETX( helloPkt->Positon, node, nbrAddr );
+    #if 0
+    printf("2443:helloPkt->Position:(%f, %f)", helloPkt->Position.x, helloPkt->Position.y);
+    #endif
+    OpspUpdateNbrETX( helloPkt->Position, node, nbrAddr );
     //<-------------tianke on 2008-3-17 21:51 0.01------------
 
     GLOMO_MsgFree( node, msg );
@@ -4588,7 +4591,11 @@ void RoutingAodvInitiateRREP( GlomoNode* node, Message* msg )
     rrepPkt->ackReqd = FALSE;
 #endif
     //-------------tianke on 2008-3-18 16:31 0.01------>
-    rrepPkt->Positon = node->position;
+    #if 0
+    printf("4593 rrepPkt->Position:(%f, %f)", rrepPkt->Position.x, rrepPkt->Position.y);
+    #endif
+    rrepPkt->Position.x = node->position.x;
+    rrepPkt->Position.y = node->position.y;
     rrepPkt->etxToDest = 0;
     //<----------- tianke on 2008-3-18 16:31 0.01--------
 
@@ -4649,7 +4656,11 @@ void RoutingAodvInitiateRREPbyIN( GlomoNode* node, Message* msg )
     rrepPkt->destSeq = RoutingAodvGetSeq( rreqPkt->destAddr, &aodv->routeTable );
 
     //-------------tianke on 2008-3-18 16:31 0.01------>
-    rrepPkt->Positon = node->position;
+    #if 0
+    printf("4655 rrepPkt->Position:(%f, %f)", rrepPkt->Position.x, rrepPkt->Position.y);
+    #endif
+    rrepPkt->Position.x = node->position.x;
+    rrepPkt->Position.y = node->position.y;
     rrepPkt->etxToDest = OpspGetEtxToDestFromRT( rreqPkt->destAddr, &aodv->routeTable );
     //<----------- tianke on 2008-3-18 16:31 0.01--------
 
@@ -4779,8 +4790,7 @@ void RoutingAodvRelayRREP( GlomoNode* node, Message* msg, NODE_ADDR srcAddr )
     int                 pktSize = sizeof( AODV_RREP_Packet );
     //--------------tianke on 2008-5-8 17:43 0.01------------>
     ETXValue            etxNbr;
-    //<-------------tianke on 2008-5-8 17:43 0.01------------
-
+    //<-------------tianke on 2008-5-8 17:43 0.01-------------
 
 #ifdef AOMDV_DEBUG_TRACE
     printf( " In Relay RREP\n" );
@@ -4813,8 +4823,14 @@ void RoutingAodvRelayRREP( GlomoNode* node, Message* msg, NODE_ADDR srcAddr )
     newRrep->ackReqd = FALSE;       
 #endif
     newRrep->lifetime = lifetime;
+	newRrep->Position = node->position;
     //--------------tianke on 2008-3-18 23:31 0.01------------>
-    etxNbr = ETXCalculate( oldRrep->Positon, node->position );
+     #if 0
+     printf("4821 oldRrep->Position:(%f, %f)", oldRrep->Position.x, oldRrep->Position.y);
+	 printf("4822 node->position:(%f, %f)", node->position.x, node->position.y);
+     #endif
+
+    etxNbr = ETXCalculate( oldRrep->Position, node->position );
     newRrep->etxToDest = oldRrep->etxToDest + etxNbr;      
 #if 0
 printf( "node %d received rrepPkt new etxToDest: %f \t, old etxToDest: %f \n",
@@ -4938,7 +4954,12 @@ void RoutingAodvInitiateHELLO( GlomoNode* node )
     rrepPkt->lifetime = ALLOWED_HELLO_LOSS * HELLO_INTERVAL;
 
     //-------------tianke on 2008-3-18 16:31 0.01------>
-    rrepPkt->Positon = node->position;
+    #if 0
+    printf("4948 rrepPkt->Position:(%f, %f)", rrepPkt->Position.x, rrepPkt->Position.y);
+    #endif
+
+    rrepPkt->Position.x = node->position.x;
+    rrepPkt->Position.y = node->position.y;	
     //<----------- tianke on 2008-3-18 16:31 0.01--------
 
     if( pc_erand( node->seed ) <= 0.5 ) {
@@ -5004,13 +5025,13 @@ void OpspPeekFunction( GlomoNode* node, const Message* msg )
         switch( *aodvHeader ) {
         case AODV_RREQ:
         {
-            printf( "peek AODV_RREQ\n" );
+            //printf( "peek AODV_RREQ\n" );
             break;
         } /* RREQ */
 
         case AODV_RREP_ACK:
         {
-            printf( "peek AODV_RREP_ACK\n" );
+            //printf( "peek AODV_RREP_ACK\n" );
             break;
         } /* RREP ACK */
 
@@ -5061,7 +5082,7 @@ void OpspPeekFunction( GlomoNode* node, const Message* msg )
             //delete NFRT entry belong to the RERR!!!
             rerrPkt = ( AODV_RERR_Packet * ) GLOMO_MsgReturnPacket( newMsg );
             if( !RoutingAodvCheckNbrExist( node, sourceAddress ) ) {
-                printf( "no the neighbor in NBRT\n" );
+                printf( "the neighbor is not in NBRT\n" );
                 break;
             }else {
                 //find the neighbor in Neighbor Table
@@ -5403,7 +5424,7 @@ ETXValue ETXCalculate( GlomoCoordinates txNodePosition, GlomoCoordinates rxNodeP
     distance = sqrt( SQUARE( txNodePosition.x - rxNodePosition.x ) +
                      SQUARE( txNodePosition.y - rxNodePosition.y ) );
     etxMetric = distance * ETX_CONEFFICENT;
-    if( etxMetric > MAX_ETX ) {
+    if( (etxMetric > MAX_ETX ) || (etxMetric < 0)){
         printf( "etxMetric > MAX_ETX: %f\n", etxMetric );
         printf( "txNodePosition:(%f, %f)\t rxNodePosition:(%f, %f)\t\n",
                 txNodePosition.x,
@@ -5421,6 +5442,7 @@ ETXValue ETXCalculate( GlomoCoordinates txNodePosition, GlomoCoordinates rxNodeP
 3. save the lest 3 neighbors and their etx to forwarder list
 4. return forwarderlist
 */
+
 BOOL OpspLookupForwarder( GlomoNode* node,
                           OPSP_FL* ForwarderList,
                           NODE_ADDR destAddr,
@@ -5443,7 +5465,7 @@ BOOL OpspLookupForwarder( GlomoNode* node,
     OPSP_FL_Node*       OpspFlPrevious;
     OPSP_FL_Node*       OpspFlCurrent;
 	
-printf("in OpspLookupForwarder\n");
+//printf("in OpspLookupForwarder\n");
 
     etxFromLocalToDestInRT = OpspGetEtxToDestFromRT( destAddr, &routeTable );
 
@@ -5452,7 +5474,7 @@ printf("in OpspLookupForwarder\n");
              NFRTCurrent != NULL;
              NFRTCurrent = NFRTCurrent->next ) {
             //find specific destination and less ETX in neighber forwarder rate table
-            printf( "\nfind specific destination and less ETX in neighber forwarder rate table\n" );
+            //printf( "\nfind specific destination and less ETX in neighber forwarder rate table\n" );
             //if( ( NFRTCurrent->destAddr == destAddr ) && ( NFRTCurrent->etxToDest <= etxFromLocalToDestInRT ) ) {
             if( NFRTCurrent->destAddr == destAddr ) {
 
@@ -5463,7 +5485,7 @@ printf("newNode->forwarder: %d, newNode->etxNbrToDest:%f\n", newNode->forwarder,
                 ++( ntCurrent->nfrt.size );
 
                 // Find Insertion point in OPSP forwarder list
-                printf( "\nFind Insertion point in OPSP forwarder list\n" );
+                //printf( "\nFind Insertion point in OPSP forwarder list\n" );
                 OpspFlPrevious = NULL;
                 OpspFlCurrent = ForwarderList->head;
                 while( ( OpspFlCurrent != NULL ) &&
@@ -5473,7 +5495,7 @@ printf("newNode->forwarder: %d, newNode->etxNbrToDest:%f\n", newNode->forwarder,
                 }
 
                 // Insert newNode into OPSP forwarder list
-                printf( "\nInsert newNode into OPSP forwarder list\n" );
+                //printf( "\nInsert newNode into OPSP forwarder list\n" );
                 if( OpspFlPrevious == NULL ) {
                     newNode->next = ForwarderList->head;
                     ForwarderList->head = newNode;
@@ -5500,7 +5522,8 @@ void OpspDisplayForwarderTable( OPSP_FL* ForwarderList )
     for( OpspFlCurrent = ForwarderList->head;
          OpspFlCurrent != NULL;
          OpspFlCurrent = OpspFlCurrent->next ) {
-        printf( "forwarder %d\t etx %f\t\n", OpspFlCurrent->forwarder, OpspFlCurrent->etxNbrToDest );
+        printf( "forwarder %d\t etx %f\t\n", 
+			OpspFlCurrent->forwarder, OpspFlCurrent->etxNbrToDest );
     }
 }
 

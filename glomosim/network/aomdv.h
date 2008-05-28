@@ -204,7 +204,7 @@ typedef struct
     BOOL                ackReqd;
     clocktype           lifetime;
     //-------------tianke on 2008-3-18 16:4 0.01------>
-    GlomoCoordinates    Positon;
+    GlomoCoordinates    Position;
     ETXValue            etxToDest; //from forwarder neighbor to destination
     //<----------- tianke on 2008-3-18 16:4 0.01--------
 } AODV_RREP_Packet;
