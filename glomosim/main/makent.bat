@@ -90,11 +90,11 @@ call pcc %parsecflags% -I..\include\ -I..\network\ -clock longlong -c ..\network
 call pcc %parsecflags% -I..\include\ -I..\network\ -clock longlong -c ..\network\nwip.pc
 call pcc %parsecflags% -I..\include\ -I..\network\ -clock longlong -c ..\network\user_nwip.pc
 call pcc %parsecflags% -I..\include\ -I..\network\ -clock longlong -c ..\network\nwlar1.pc
-call pcc %parsecflags% -I..\include\ -I..\network\ -clock longlong -c ..\network\dsr.pc
+REM call pcc %parsecflags% -I..\include\ -I..\network\ -clock longlong -c ..\network\dsr.pc
 call pcc %parsecflags% -I..\include\ -I..\network\ -clock longlong -c ..\network\aomdv.pc
-call pcc %parsecflags% -I..\include\ -I..\network\ -clock longlong -c ..\network\zrp.pc
-call pcc %parsecflags% -I..\include\ -I..\network\ -clock longlong -c ..\network\fifoqueue.pc
-call pcc %parsecflags% -I..\include\ -I..\network\ -clock longlong -c ..\network\odmrp.pc
+REM call pcc %parsecflags% -I..\include\ -I..\network\ -clock longlong -c ..\network\zrp.pc
+REM call pcc %parsecflags% -I..\include\ -I..\network\ -clock longlong -c ..\network\fifoqueue.pc
+REM call pcc %parsecflags% -I..\include\ -I..\network\ -clock longlong -c ..\network\odmrp.pc
 
 @if N==%1 goto Link
 
