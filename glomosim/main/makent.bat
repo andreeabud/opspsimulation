@@ -24,6 +24,7 @@
 @if R==%1 goto Radio
 echo Bad parmeter.
 goto End
+    
 
 :All
 
@@ -89,11 +90,14 @@ call pcc %parsecflags% -I..\include\ -I..\network\ -clock longlong -c ..\network
 call pcc %parsecflags% -I..\include\ -I..\network\ -clock longlong -c ..\network\nwip.pc
 call pcc %parsecflags% -I..\include\ -I..\network\ -clock longlong -c ..\network\user_nwip.pc
 call pcc %parsecflags% -I..\include\ -I..\network\ -clock longlong -c ..\network\nwlar1.pc
-REM call pcc %parsecflags% -I..\include\ -I..\network\ -clock longlong -c ..\network\dsr.pc
+call pcc %parsecflags% -I..\include\ -I..\network\ -clock longlong -c ..\network\dsr.pc
+
+:: tianke call pcc %parsecflags% -I..\include\ -I..\network\ -clock longlong -c ..\network\aodv.pc
+
 call pcc %parsecflags% -I..\include\ -I..\network\ -clock longlong -c ..\network\aomdv.pc
-REM call pcc %parsecflags% -I..\include\ -I..\network\ -clock longlong -c ..\network\zrp.pc
-REM call pcc %parsecflags% -I..\include\ -I..\network\ -clock longlong -c ..\network\fifoqueue.pc
-REM call pcc %parsecflags% -I..\include\ -I..\network\ -clock longlong -c ..\network\odmrp.pc
+call pcc %parsecflags% -I..\include\ -I..\network\ -clock longlong -c ..\network\zrp.pc
+call pcc %parsecflags% -I..\include\ -I..\network\ -clock longlong -c ..\network\fifoqueue.pc
+call pcc %parsecflags% -I..\include\ -I..\network\ -clock longlong -c ..\network\odmrp.pc
 
 @if N==%1 goto Link
 
@@ -126,10 +130,10 @@ call pcc %parsecflags% -I..\include\ -I..\application\ -I..\transport\ -I..\tran
 call pcc %parsecflags% -I..\include\ -I..\application\ -I..\transport\ -I..\transport\tcp\ -clock longlong -c ..\application\http_client.pc
 call pcc %parsecflags% -I..\include\ -I..\application\ -I..\transport\ -I..\transport\tcp\ -clock longlong -c ..\application\http_server.pc
 
-rem call pcc %parsecflags% -I..\include\ -I..\application\ -clock longlong -c ..\application\bellmanford.pc
-rem call pcc %parsecflags% -I..\include\ -I..\application\ -clock longlong -c ..\application\fisheye.pc
-rem call pcc %parsecflags% -I..\include\ -I..\application\ -clock longlong -c ..\application\wrp.pc
-rem call pcc %parsecflags% -I..\include\ -I..\application\ -clock longlong -c ..\application\static_routing.pc
+call pcc %parsecflags% -I..\include\ -I..\application\ -clock longlong -c ..\application\bellmanford.pc
+call pcc %parsecflags% -I..\include\ -I..\application\ -clock longlong -c ..\application\fisheye.pc
+call pcc %parsecflags% -I..\include\ -I..\application\ -clock longlong -c ..\application\wrp.pc
+call pcc %parsecflags% -I..\include\ -I..\application\ -clock longlong -c ..\application\static_routing.pc
 
 call cl %cppflags% -MT -Zi -Za -nologo -I..\include\ -c ..\application\http_distribution.c /Fo..\application\http_distribution.obj
 
@@ -151,14 +155,14 @@ call lib /nologo /out:temp.lib ..\radio\*.obj ..\tcplib\*.obj ^
 call pcc -user_main -Zi  %parsecflags% %linkflags% -I..\include\ -clock longlong ^
 -o ..\bin\glomosim driver.pc temp.lib
 
-rem call pcc -Zi %parsecflags% %linkflags% -I..\include\ -I..\radio\ -clock longlong ^
-rem -o ..\bin\radio_range ..\radio\radiorange.pc temp.lib
+call pcc -Zi %parsecflags% %linkflags% -I..\include\ -I..\radio\ -clock longlong ^
+-o ..\bin\radio_range ..\radio\radiorange.pc temp.lib
 
 del temp.lib 1>nul 2>nul
 
-::call cl %cppflags% -MT -Zi -Za -nologo ..\mac\tsma_code_gen.c /Fe..\bin\tsma_code_gen.exe
-::call cl %cppflags% -MT -Zi -Za -nologo ..\mac\tsma_param_gen.c /Fe..\bin\tsma_param_gen.exe
-::@del tsma_code_gen.obj tsma_param_gen.obj 1> nul 1> nul
+call cl %cppflags% -MT -Zi -Za -nologo ..\mac\tsma_code_gen.c /Fe..\bin\tsma_code_gen.exe
+call cl %cppflags% -MT -Zi -Za -nologo ..\mac\tsma_param_gen.c /Fe..\bin\tsma_param_gen.exe
+@del tsma_code_gen.obj tsma_param_gen.obj 1> nul 1> nul
 
 
 :End
