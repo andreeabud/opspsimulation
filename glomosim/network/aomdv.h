@@ -155,6 +155,8 @@
 
 #define CANDIDATE_THRESHOLD 5 
 
+#define OPSP_FORWARDER_NUM 3
+
 typedef double  ETXValue;
 //^--------------------------- tianke on 2008-4-14 13:46 0.01--------------------------^
 
@@ -229,6 +231,9 @@ typedef struct
     BOOL                                N; 
     unsigned char                       destinationCount;
     AODV_AddressSequenceNumberPairType  destinationPairArray[AODV_MAX_RERR_DESTINATIONS];
+	#if 0
+	GlomoCoordinates Position;
+	#endif
 } AODV_RERR_Packet;
 
 // Table Types
@@ -255,10 +260,16 @@ typedef struct
 
 typedef struct msg_dest_nbr_addr
 {
-    OPSP_NFRT*  nfrTable;
+    //OPSP_NFRT*  nfrTable;
     NODE_ADDR   destAddr;
-    //NODE_ADDR   nbrAddr;
+    NODE_ADDR   nbrAddr;
 } MsgOpspDestNbrAddr;
+
+typedef struct FLAE // forwarder list entry
+{
+	NODE_ADDR forwarder;
+	ETXValue etxNbrToDest;
+}OPSP_FL_ARRAY_Node;
 
 typedef struct FLE // forwarder list entry
 {
@@ -750,26 +761,34 @@ clocktype RoutingAodvGetMyRouteTimeout( GlomoNode* node );
 
 void OpspPeekFunction( GlomoNode* node, const Message* msg );
 
-BOOL OpspCheckNfrExist( OPSP_NFRT* nfrTable, NODE_ADDR destAddr );
+//BOOL OpspCheckNfrExist( OPSP_NFRT* nfrTable, NODE_ADDR destAddr );
+BOOL OpspCheckNfrExist( GlomoNode* node, NODE_ADDR nbrAddr, NODE_ADDR destAddr );
 
 //void OpspInsertNfrTable( GlomoNode* node,OPSP_NFRT* nfrTable,NODE_ADDR destAddr,ETXValue etxToDest );
-
-void OpspDisplayNfrTable( OPSP_NFRT* nfrTable );
-
 void OpspInsertNfrTable( GlomoNode* node,
-                         //OPSP_NFRT* nfrTable,
                          NODE_ADDR nbrAddr,
                          NODE_ADDR destAddr,
                          ETXValue etxToDest );
 
-void OpspDeleteNfrTable( OPSP_NFRT* nfrTable, NODE_ADDR destAddr );
+void OpspDisplayNfrTable( GlomoNode* node, NODE_ADDR nbrAddr );
 
-void OpspUpdateNfrTableLastTime( GlomoNode* node, OPSP_NFRT* nfrTable, NODE_ADDR destAddr );
+//void OpspDeleteNfrTable( OPSP_NFRT* nfrTable, NODE_ADDR destAddr );
+void OpspDeleteNfrTable( GlomoNode* node, NODE_ADDR nbrAddr, NODE_ADDR destAddr );
 
+//void OpspUpdateNfrTableLastTime( GlomoNode* node, OPSP_NFRT* nfrTable, NODE_ADDR destAddr );
+void OpspUpdateNfrTableLastTime( GlomoNode* node, NODE_ADDR nbrAddr, NODE_ADDR destAddr );
+
+#if 0
 void OpspUpdateNfrTableEtxToDest( GlomoNode* node,
                                   OPSP_NFRT* nfrTable,
                                   NODE_ADDR destAddr,
                                   ETXValue etxToDest );
+#endif
+void OpspUpdateNfrTableEtxToDest( GlomoNode* node,
+                                   NODE_ADDR nbrAddr,
+                                  NODE_ADDR destAddr,
+                                  ETXValue etxToDest );
+
 
 void OpspUpdateNbrETX( GlomoCoordinates nbrPosition, GlomoNode* node, NODE_ADDR nbrAddr );
 
@@ -777,12 +796,19 @@ ETXValue OpspGetEtxToDestFromRT( NODE_ADDR destAddr, AODV_RT* routeTable );
 
 ETXValue ETXCalculate( GlomoCoordinates txNodePosition, GlomoCoordinates rxNodePosition );
 
+void OpspHandleRERR( GlomoNode* node, Message* msg, NODE_ADDR srcAddr );
+
 BOOL OpspLookupForwarder( GlomoNode* node,
                           OPSP_FL* ForwarderList,
                           NODE_ADDR destAddr,
                           NODE_ADDR nextHop );
 
+void OpspInsertForwarderTable(OPSP_FL_ARRAY_Node forwarders[], int fNum, OPSP_FL* ForwarderList );
+
+void OpspFreeForwarder( OPSP_FL* ForwarderList);
+
 void OpspDisplayForwarderTable( OPSP_FL* ForwarderList );
+
 //<-------------tianke on 2008-5-6 21:25 0.01------------
 
 

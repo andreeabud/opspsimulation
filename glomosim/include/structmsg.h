@@ -64,7 +64,7 @@ enum {
     MSG_CHANNEL_FromRadio,
 
     /* Message Types for Radio layer */
-    MSG_RADIO_FromChannelBegin,     
+    MSG_RADIO_FromChannelBegin,     //5
     MSG_RADIO_FromChannelEnd,
     MSG_RADIO_FromMac,
     MSG_RADIO_StartPropagation,
@@ -72,7 +72,7 @@ enum {
     MSG_RADIO_CheckChannelStatus,    
 
     /* Message Types for MAC layer */
-    MSG_MAC_FromRadio,             /* 10 */
+    MSG_MAC_FromRadio,             /* 11 */
     MSG_MAC_FromNetwork,
     MSG_MAC_ReportChannelStatus,
     MSG_MAC_TransmissionFinished,
@@ -81,21 +81,21 @@ enum {
     MSG_MAC_WiredToWired,
 
     /* Message Types for Network layer */
-    MSG_NETWORK_FromApp,           /* 15 */
+    MSG_NETWORK_FromApp,           /* 18 */
     MSG_NETWORK_FromMac,
     MSG_NETWORK_FromTransportOrRoutingProtocol,
     MSG_NETWORK_DelayedSendToMac, 
     MSG_NETWORK_RTBroadcastAlarm,
-    MSG_NETWORK_CheckTimeoutAlarm,   /* 20 */
+    MSG_NETWORK_CheckTimeoutAlarm,   /* 23 */
     MSG_NETWORK_TriggerUpdateAlarm,  
     MSG_NETWORK_InitiateSend,
     MSG_NETWORK_FlushTables,
     MSG_NETWORK_CheckAcked,
-    MSG_NETWORK_CheckReplied,       /* 25 */
+    MSG_NETWORK_CheckReplied,       /* 28 */
 
     MSG_NETWORK_JoinGroup,
     MSG_NETWORK_LeaveGroup,
-    MSG_NETWORK_SendData,                       /* 30 */
+    MSG_NETWORK_SendData,                       /* 31 */
     MSG_NETWORK_SendRequest,
     MSG_NETWORK_SendReply,
     MSG_NETWORK_CheckFg,
@@ -107,12 +107,12 @@ enum {
     MSG_NETWORK_CheckNeighborTimeout,
 
     /* Messages Types special for IP */
-    MSG_NETWORK_BuffTimerExpired,   
+    MSG_NETWORK_BuffTimerExpired,   //39
 
     /* Message Types for Transport layer */
     MSG_TRANSPORT_FromNetwork,
     MSG_TRANSPORT_FromAppListen,
-    MSG_TRANSPORT_FromAppOpen,      /* 30 */
+    MSG_TRANSPORT_FromAppOpen,      /* 42 */
     MSG_TRANSPORT_FromAppSend,      
     MSG_TRANSPORT_FromAppClose,     
     MSG_TRANSPORT_TCP_TIMER_FAST,
@@ -120,7 +120,7 @@ enum {
     MSG_TRANSPORT_Tcp_CheckTcpOutputTimer,
 
     /* Messages Types for Transport layer with NS TCP */
-    MSG_TCP_SetupConnection, 
+    MSG_TCP_SetupConnection,  //48
         
     /* Message Types for Appliation layer */
     MSG_APP_FromTransListenResult,
@@ -131,7 +131,7 @@ enum {
     MSG_APP_TimerExpired,
  
     /* Messages Types for Application layer with UDP */
-    MSG_APP_FromTransport,
+    MSG_APP_FromTransport, //55
 
     /* Messages Types for Application layer with NS TCP */
     MSG_APP_NextPkt,
@@ -145,7 +145,7 @@ enum {
     MSG_ROUTE_FromNetwork,
 
     /* Message Types for Routing - OSPF */
-    MSG_OspfScheduleHello,
+    MSG_OspfScheduleHello, //61
     MSG_OspfInitiateHello,
     MSG_OspfScheduleLSA,
     MSG_OspfOriginateLSA,
@@ -153,7 +153,7 @@ enum {
     MSG_OspfInactivityNeighFired,
 
     /* Message types for rumor */
-    MSG_RUMOR_Timeout,
+    MSG_RUMOR_Timeout, //67
     MSG_RUMOR_ReconInitiate,
     MSG_RUMOR_FileReference,
     MSG_APP_FromRumor,
@@ -161,7 +161,7 @@ enum {
     MSG_APP_FromRumorKillIn,
 
     /* Message types for routing - Bellmanford. */
-    MSG_APP_RTBroadcastAlarm,
+    MSG_APP_RTBroadcastAlarm, //73
     MSG_APP_CheckTimeoutAlarm,
     MSG_APP_TriggerUpdateAlarm,
 
@@ -171,7 +171,7 @@ enum {
     MSG_APP_FisheyeInterUpdate,
 
     /* Message Types for Application Layer CBR */
-    MSG_APP_CBR_NEXT_PKT,
+    MSG_APP_CBR_NEXT_PKT, //79
 
     /* Message Types for Setting Timers */
     MSG_TRANSPORT_TCP_TIMER, 
@@ -179,7 +179,7 @@ enum {
     
     /*Message Types Used in new version of aodv.pc implemented by Vrishali Wagle, Elizabeth Belding-Royer*/
 
-    MSG_AODV_DeleteRouteEntry,
+    MSG_AODV_DeleteRouteEntry, //81
     MSG_AODV_CBR_DestinationUnreachable,
     MSG_AODV_CheckLocalRepairSuccessful,
     MSG_AODV_CheckIfHelloed,
@@ -192,7 +192,7 @@ enum {
      */
      
 	//--------------tianke on 2008-5-7 11:15 0.01------------>
-	MSG_OPSP_CheckifOverhearRrep,
+	MSG_OPSP_CheckifOverhearRrep, //87
 	//<-------------tianke on 2008-5-7 11:15 0.01------------
 
     MSG_DEFAULT
