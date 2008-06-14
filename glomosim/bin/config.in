@@ -211,7 +211,7 @@ RADIO-RX-SNR-THRESHOLD  10.0
 #
 # RADIO-TX-POWER: radio transmition power (in dBm)
 #
-RADIO-TX-POWER        15.0
+RADIO-TX-POWER        1
 
 #
 # RADIO-ANTENNA-GAIN: antenna gain (in dB)

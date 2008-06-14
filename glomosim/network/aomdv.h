@@ -477,7 +477,7 @@ typedef struct glomo_network_aodv_str
     AODV_RT     routeTable;
     AODV_NT     nbrTable;
     //--------------tianke on 2008-5-6 21:43 0.01------------>
-    OPSP_NFRT   nbrFowardRateTable;
+    //OPSP_NFRT   nbrFowardRateTable;
     //<-------------tianke on 2008-5-6 21:43 0.01------------
     AODV_RST    seenTable;
     AODV_RRT    replyTable;

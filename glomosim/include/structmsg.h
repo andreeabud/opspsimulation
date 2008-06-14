@@ -193,6 +193,7 @@ enum {
      
 	//--------------tianke on 2008-5-7 11:15 0.01------------>
 	MSG_OPSP_CheckifOverhearRrep, //87
+	MSG_OPSP_INSERT_TIMEOUT,
 	//<-------------tianke on 2008-5-7 11:15 0.01------------
 
     MSG_DEFAULT
