@@ -59,7 +59,7 @@
 //tianke on 2008-6-8 23:28 修改MsgOpspDestNbrAddr结构体，使得nfrTable的插入、删除、更新函数，都以nbr、dest为参数，更为通用
 //tianke on 2008-6-9 11:50 加入处理RERR的函数，在函数RoutingAodvHandleProtocolPacket中加入OpspHandleRERR。
 //tianke on 2008-6-12 17:30 in OpspLookupForwarder, when the seconde node is inserted into the ForwarderList, the cycle exist.
-//							because no allocate the new memery for newNode.
+//                          because no allocate the new memery for newNode.
 //tianke on 2008-6-13 11:30 OpspLookupForwarder, select the three forwarder with smallest exttodest, free others
 
 #include <stdlib.h>
@@ -1811,89 +1811,96 @@ void RoutingAodvHandleData( GlomoNode* node, Message* msg, NODE_ADDR destAddr, N
     if( destAddr == node->nodeAddr ) {
         aodv->stats.numDataReceived++;
         aodv->stats.numHops += ( 64 - ipHeader->ip_ttl );
+        //}else if( ( destAddr != ANY_DEST ) && ( !ipHeader->ip_or ) ) {
     }else if( destAddr != ANY_DEST ) {
         // The node is an intermediate node of the route.
-        // Relay the packet to the next hop of the route 
+        // Relay the packet to the next hop of the route.
 
         if( RoutingAodvCheckRouteExist( destAddr, &aodv->routeTable ) ) {
-#if 0
-//--------------tianke on 2008-6-11 17:38 0.01------------>
-//Opportunistic Routing forwarding the data packet
-			OpspLookupForwarder(GlomoNode * node, OPSP_FL_ARRAY_Node forwarders [ ], int fNum, NODE_ADDR destAddr, NODE_ADDR nextHop);
-			eventType = OR_FORWARD;
-			fNum = OpspForwarderPriority(node->nodeAddr, forwarderlist);
-			delay = fNum*(SIFS+ACK_TIME);
-			OpspORForwardSetTimer(GlomoNode * node, long eventType, MsgOpspDestNbrAddr destNbrAddr, clocktype delay);
-//<-------------tianke on 2008-6-11 17:38 0.01------------
-#endif
             RoutingAodvTransmitData( node, msg, destAddr );
+			
         }else {
-            AODV_RERR_Packet    newRerrPacket;
-            AODV_PL             precursorList;
+            //--------------tianke on 2008-6-17 19:12 0.01------------>
 
-            //No active route to destination
-            // Broken Route.  Drop Packet, send RERR again to make them stop
-            // sending more.
-            precursorList.size = 0;
-            precursorList.head = NULL;
-            precursorList.tail = NULL;
-            if( RoutingAodvCheckRouteEntryExist( destAddr, &aodv->routeTable ) ) {
-                AODV_RT_Node*   current;
-                AODV_RTL_Node*  currentEntry;
+            OpspORTransmitData( node, msg, destAddr );
+        }
+    }
 
-                current = aodv->routeTable.head;
+}/* RoutingAodvHandleData */ 
+            #if 0
+        AODV_RERR_Packet    newRerrPacket;
+        AODV_PL             precursorList;
 
-                while( current->destAddr != destAddr ) {
-                    current = current->next;
-                }
+        //No active route to destination
+        // Broken Route.  Drop Packet, send RERR again to make them stop
+        // sending more.
+        precursorList.size = 0;
+        precursorList.head = NULL;
+        precursorList.tail = NULL;
+        if( RoutingAodvCheckRouteEntryExist( destAddr, &aodv->routeTable ) ) {
+            AODV_RT_Node*   current;
+            AODV_RTL_Node*  currentEntry;
 
-                if( current->destSeqValid == TRUE ) {
-                    current->destSeq++;
-                }
+            current = aodv->routeTable.head;
 
-                currentEntry = current->routeList.head;
-                while( currentEntry != NULL ) {
-                    /* XXX
-                                 * adding more timers than needed
-                                 */
-                    currentEntry->lifetime = simclock() + RoutingAodvGetDeletePeriod();
-                    currentEntry = currentEntry->next;
-                    RoutingAodvSetTimer( node,
-                                         MSG_AODV_DeleteRouteEntry,
-                                         current->destAddr,
-                                         RoutingAodvGetDeletePeriod() );
-                }
-
-                newRerrPacket.pktType = AODV_RERR;
-                newRerrPacket.N = FALSE;
-                newRerrPacket.destinationCount = 1;
-                newRerrPacket.destinationPairArray[0].destinationAddress = destAddr;
-                newRerrPacket.destinationPairArray[0].destinationSequenceNumber = RoutingAodvGetSeq( destAddr,
-                                                                                                     &aodv->routeTable );
-#if 0
-        //--------------tianke on 2008-6-9 11:44 0.01------------>
-        newRerrPacket.Position = node->position;
-        //<-------------tianke on 2008-6-9 11:44 0.01------------
-        #endif
-                /*
-                         * One unreachable destination. but it may have
-                         * one or more precursors.
-                         */
-                RoutingAodvGetPrecursors( node, destAddr, &precursorList );
-
-                if( precursorList.size > 0 ) {
-                    SendRouteErrorPacket( node, &newRerrPacket, &precursorList );
-                    aodv->stats.numRerrNoNSent++;
-                    aodv->stats.numRerrSent++;
-                }  
-                aodv->stats.numPacketsDropped++; 
-                GLOMO_MsgFree( node, msg );
-            }else {
-                GLOMO_MsgFree( node, msg );
+            while( current->destAddr != destAddr ) {
+                current = current->next;
             }
-        }//if//
+
+            if( current->destSeqValid == TRUE ) {
+                current->destSeq++;
+            }
+
+            currentEntry = current->routeList.head;
+            while( currentEntry != NULL ) {
+                /* XXX
+                             * adding more timers than needed
+                             */
+                currentEntry->lifetime = simclock() + RoutingAodvGetDeletePeriod();
+                currentEntry = currentEntry->next;
+                RoutingAodvSetTimer( node,
+                                     MSG_AODV_DeleteRouteEntry,
+                                     current->destAddr,
+                                     RoutingAodvGetDeletePeriod() );
+            }
+
+            newRerrPacket.pktType = AODV_RERR;
+            newRerrPacket.N = FALSE;
+            newRerrPacket.destinationCount = 1;
+            newRerrPacket.destinationPairArray[0].destinationAddress = destAddr;
+            newRerrPacket.destinationPairArray[0].destinationSequenceNumber = RoutingAodvGetSeq( destAddr,
+                                                                                                 &aodv->routeTable );
+            /*
+                     * One unreachable destination. but it may have
+                     * one or more precursors.
+                     */
+            RoutingAodvGetPrecursors( node, destAddr, &precursorList );
+
+            if( precursorList.size > 0 ) {
+                SendRouteErrorPacket( node, &newRerrPacket, &precursorList );
+                aodv->stats.numRerrNoNSent++;
+                aodv->stats.numRerrSent++;
+            }  
+            aodv->stats.numPacketsDropped++; 
+            GLOMO_MsgFree( node, msg );
+        }else {
+            GLOMO_MsgFree( node, msg );
+        }
     }//if//
-} /* RoutingAodvHandleData */
+
+		
+} 
+		}/* RoutingAodvHandleData */    
+		            #endif
+//<-------------tianke on 2008-6-17 19:12 0.01------------
+#if 0
+}else if ( ipHeader->ip_or ){
+    //the data packet is Opportunistic Routing forwarded. 
+//OpspORForward(node, msg, destAddr);
+}//if//
+#endif
+
+
 
 /*
  * RoutingAodvHandleRequest
@@ -4093,7 +4100,7 @@ void RoutingAodvHandleProtocolEvent( GlomoNode* node, Message* msg )
         MsgOpspDestNbrAddr* destNbrAddr = ( MsgOpspDestNbrAddr* ) GLOMO_MsgReturnInfo( msg );
 
         if( OpspCheckNfrExist( node, destNbrAddr->nbrAddr, destNbrAddr->destAddr ) ) {
-			OpspDeleteNfrTable( node, destNbrAddr->nbrAddr, destNbrAddr->destAddr );
+            OpspDeleteNfrTable( node, destNbrAddr->nbrAddr, destNbrAddr->destAddr );
         }
         GLOMO_MsgFree( node, msg );
         break;
@@ -4102,16 +4109,23 @@ void RoutingAodvHandleProtocolEvent( GlomoNode* node, Message* msg )
     case MSG_OPSP_INSERT_TIMEOUT:
     {
         MsgOpspDestNbrAddr* destNbrAddr = ( MsgOpspDestNbrAddr* ) GLOMO_MsgReturnInfo( msg );
-		//printf("MSG_OPSP_INSERT_TIMEOUT\n");
-		//printf("nodeAddr:%d\t destNbrAddr->nbrAddr:%d \t destNbrAddr->destAddr:%d \t\n",node->nodeAddr, destNbrAddr->nbrAddr,destNbrAddr->destAddr);
-		//RoutingAodvDisplayNbrTable(node);
-		if( OpspCheckNfrExist( node, destNbrAddr->nbrAddr, destNbrAddr->destAddr ) ) {
-			OpspDeleteNfrTable( node, destNbrAddr->nbrAddr, destNbrAddr->destAddr );
+        //printf("MSG_OPSP_INSERT_TIMEOUT\n");
+        //printf("nodeAddr:%d\t destNbrAddr->nbrAddr:%d \t destNbrAddr->destAddr:%d \t\n",node->nodeAddr, destNbrAddr->nbrAddr,destNbrAddr->destAddr);
+        //RoutingAodvDisplayNbrTable(node);
+        if( OpspCheckNfrExist( node, destNbrAddr->nbrAddr, destNbrAddr->destAddr ) ) {
+            OpspDeleteNfrTable( node, destNbrAddr->nbrAddr, destNbrAddr->destAddr );
         }
         GLOMO_MsgFree( node, msg );
         break;
     }
-	//<-------------tianke on 2008-5-7 11:38 0.01------------
+
+    case MSG_OPSP_OR_FORWARD:
+    {
+        NODE_ADDR*  destAddr    = ( NODE_ADDR* ) GLOMO_MsgReturnInfo( msg );
+        GLOMO_MsgFree( node, msg );
+        break;
+    }
+    //<-------------tianke on 2008-5-7 11:38 0.01------------
 
     default:fprintf( stderr, "RoutingAodv: Unknown MSG type %d!\n", msg->eventType );
     abort();
@@ -4127,6 +4141,7 @@ void RoutingAodvHandleProtocolEvent( GlomoNode* node, Message* msg )
  * set the PacketWasRouted variable to TRUE if no further handling of 
  * this packet by IP is necessary 
  */
+//called by nwip.pc:1227
 void RoutingAodvRouterFunction( GlomoNode* node,
                                 Message* msg,
                                 NODE_ADDR destAddr,
@@ -4544,16 +4559,6 @@ void RoutingAodvTransmitData( GlomoNode* node, Message* msg, NODE_ADDR destAddr 
     assert( nextHop != ANY_DEST );
 
     aodv->lastpkt = simclock();
-
-    //--------------tianke on 2008-5-18 22:30 0.01------------>
-    ForwarderList.head = NULL;
-    ForwarderList.size = 0;
-    OpspLookupForwarder( node, &ForwarderList, destAddr, nextHop );
-
-    OpspDisplayForwarderTable( &ForwarderList );
-
-    OpspFreeForwarder( &ForwarderList );
-    //<-------------tianke on 2008-5-18 22:30 0.01------------
 
     NetworkIpSendPacketToMacLayer( node, msg, DEFAULT_INTERFACE, nextHop );
     aodv->stats.numDataTxed++;
@@ -5248,17 +5253,17 @@ BOOL OpspCheckNfrExist( GlomoNode* node, NODE_ADDR nbrAddr, NODE_ADDR destAddr )
 
     //find the neighbor in Neighbor Table
 
-    AODV_NT*            nbrTable    = &(aodv->nbrTable);
+    AODV_NT*            nbrTable    = &( aodv->nbrTable );
     AODV_NT_Node*       ntCurrent;
     OPSP_NFRT*          nfrTable;
-	
-    if( ( nbrTable->head == NULL ) || ( nbrTable->size == 0 ) || (nbrTable->size > 50) ){
+
+    if( ( nbrTable->head == NULL ) || ( nbrTable->size == 0 ) || ( nbrTable->size > 50 ) ) {
         nbrTable->size = 0;
         return ( FALSE );
     }    
-	
+
     for( ntCurrent = nbrTable->head;
-         ((ntCurrent != NULL) && (ntCurrent->nbrAddr <= nbrAddr));
+         ( ( ntCurrent != NULL ) && ( ntCurrent->nbrAddr <= nbrAddr ) );
          ntCurrent = ntCurrent->next ) {
         if( ntCurrent->nbrAddr == nbrAddr ) {
             nfrTable = &ntCurrent->nfrt;
@@ -5267,7 +5272,7 @@ BOOL OpspCheckNfrExist( GlomoNode* node, NODE_ADDR nbrAddr, NODE_ADDR destAddr )
     }
 
     //check nfr 
-    if(( nfrTable->head == NULL ) || ( nfrTable->size == 0 ) || (nfrTable->size > 50) ) {
+    if( ( nfrTable->head == NULL ) || ( nfrTable->size == 0 ) || ( nfrTable->size > 50 ) ) {
         return ( FALSE );
     }
 
@@ -5369,7 +5374,7 @@ void OpspDeleteNfrTable( GlomoNode* node, NODE_ADDR nbrAddr, NODE_ADDR destAddr 
     }
 
     //free dest compare to the nbr
-    if(( nfrTable->head == NULL ) || ( nfrTable->size == 0 ) || (nfrTable->size > 50) ) {
+    if( ( nfrTable->head == NULL ) || ( nfrTable->size == 0 ) || ( nfrTable->size > 50 ) ) {
         return;
     }else if( ( nfrTable->head->destAddr == destAddr ) &&
               ( nfrTable->head->lastOverhearRrep + ACTIVE_NFRT_TIMEOUT <= simclock() ) ) {
@@ -5673,10 +5678,7 @@ void OpspHandleRERR( GlomoNode* node, Message* msg, NODE_ADDR srcAddr )
 4. return forwarderlist
 */
 
-BOOL OpspLookupForwarder( GlomoNode* node,
-                          OPSP_FL* ForwarderList,
-                          NODE_ADDR destAddr,
-                          NODE_ADDR nextHop )
+BOOL OpspLookupForwarder( GlomoNode* node, OPSP_FL* ForwarderList, NODE_ADDR destAddr )
 {
     GlomoNetworkIp*     ipLayer     = ( GlomoNetworkIp* ) node->networkData.networkVar;
     GlomoRoutingAodv*   aodv        = ( GlomoRoutingAodv* ) ipLayer->routingProtocol;
@@ -5695,11 +5697,11 @@ BOOL OpspLookupForwarder( GlomoNode* node,
     OPSP_FL_Node*       OpspFlCurrent;
 
     OPSP_FL_Node*       toFree;
-	OPSP_FL_Node*       ForwarderListTail;
-	int i;
+    OPSP_FL_Node*       ForwarderListTail;
+    int                 i;
 
-	ForwarderList->head = NULL;
-    ForwarderList->size = 0;	
+    ForwarderList->head = NULL;
+    ForwarderList->size = 0;    
 
     //printf( "in OpspLookupForwarder\n" );
 
@@ -5746,29 +5748,29 @@ BOOL OpspLookupForwarder( GlomoNode* node,
         }
     }
 
-	//get the three nodes with the smallest etxNbrToDest and free others
-    if( (ForwarderList->size <= 0)||(ForwarderList->head == NULL) ) {
+    //get the three nodes with the smallest etxNbrToDest and free others
+    if( ( ForwarderList->size <= 0 ) || ( ForwarderList->head == NULL ) ) {
         return FALSE;
-    }	
-	i = 1;
-	ForwarderListTail = ForwarderList->head;
-	while((ForwarderListTail != NULL)&&(i<OPSP_FORWARDER_NUM)){
-		ForwarderListTail = ForwarderListTail->next;
-		i++;
-	}
-	if (ForwarderListTail != NULL){
-	//printf("ForwarderListTail->forwarder:%d \n",ForwarderListTail->forwarder);
-	//printf("to free\n");
-	toFree = ForwarderListTail->next;
-    while( toFree != NULL ) {
+    }   
+    i = 1;
+    ForwarderListTail = ForwarderList->head;
+    while( ( ForwarderListTail != NULL ) && ( i < OPSP_CANDIDATE_NUM ) ) {
+        ForwarderListTail = ForwarderListTail->next;
+        i++;
+    }
+    if( ForwarderListTail != NULL ) {
+        //printf("ForwarderListTail->forwarder:%d \n",ForwarderListTail->forwarder);
+        //printf("to free\n");
+        toFree = ForwarderListTail->next;
+        while( toFree != NULL ) {
             ForwarderListTail->next = toFree->next;
             pc_free( toFree );
             --( ForwarderList->size );
             toFree = ForwarderListTail->next;
+        }
     }
-	}
 
-	//return
+    //return
     if( ForwarderList->size <= 0 ) {
         return FALSE;
     }else {
@@ -5801,9 +5803,9 @@ void OpspDisplayForwarderTable( OPSP_FL* ForwarderList )
     printf( "in OpspDisplayForwarderTable\n" );
 #endif
 
-	if(( ForwarderList->size == 0 )|| (ForwarderList->head == NULL)) {
-		return;
-	}
+    if( ( ForwarderList->size == 0 ) || ( ForwarderList->head == NULL ) ) {
+        return;
+    }
     for( OpspFlCurrent = ForwarderList->head;
          OpspFlCurrent != NULL;
          OpspFlCurrent = OpspFlCurrent->next ) {
@@ -5815,15 +5817,111 @@ void OpspDisplayForwarderTable( OPSP_FL* ForwarderList )
     }
 }
 
+
 #if 0
-void OpspORForwardSetTimer(GlomoNode * node, long eventType, MsgOpspDestNbrAddr destNbrAddr, clocktype delay)
+void OpspORForwardSetTimer( GlomoNode* node, long eventType, clocktype delay )
 {
-	if(!RoutingAodvLookupBuffer()){
-		RoutingAodvTransmitData(GlomoNode * node, Message * msg, NODE_ADDR destAddr)
-	}else{
-		pc_free(data);
-		}
+    Message*newMsg;
+
+#ifdef OPSP_DEBUG
+    printf( "in OpspORForwardSetTimer \n" );
+#endif
+
+    newMsg = GLOMO_MsgAlloc( node, GLOMO_NETWORK_LAYER, ROUTING_PROTOCOL_AODV, eventType );
+    GLOMO_MsgInfoAlloc( node, newMsg, 0 );
+    GLOMO_MsgSend( node, newMsg, delay );
 }
 #endif
 
-//<-------------tianke on 2008-5-6 21:22 0.01------------
+
+void OpspORForward( GlomoNode* node, Message* msg, NODE_ADDR destAddr )
+{
+    GlomoNetworkIp*     ipLayer         = ( GlomoNetworkIp* ) node->networkData.networkVar;
+    GlomoRoutingAodv*   aodv            = ( GlomoRoutingAodv* ) ipLayer->routingProtocol;
+    IpHeaderType*       ipHeader        = ( IpHeaderType* ) GLOMO_MsgReturnPacket( msg );
+    AODV_BUFFER* buffer= &aodv->buffer;
+
+    clocktype           ORTransmitDelay;
+    int                 fNum;
+    int                 i = 0, j = 0, k = 0;
+
+    OPSP_FL             ForwarderList;
+    OPSP_FL_Node*        flCurrent;
+
+    
+#ifdef OPSP_DEBUG
+    printf( "in OpspORForward \n" );
+#endif
+
+    //--------------tianke on 2008-6-11 17:38 0.01------------>
+    /* if sourceAddress is not candidate and nodeAddress is one of candidates
+         * the node will delay. When the delay timeout, if receives a same packet, discard it.
+         * else transmit it with ANY_DEST.
+         */
+    //check the node's priority, i is the node's priority
+    while( ( i < OPSP_CANDIDATE_NUM ) && ( node->nodeAddr != ipHeader->candidate[i] ) ) {
+        i++;
+    }
+    if( i >= OPSP_CANDIDATE_NUM ) {
+        //node is not candidate
+        GLOMO_MsgFree( node, msg );        
+        return;
+    }
+
+    //if the packet from one of the candidates, discard it.
+    while( i < OPSP_CANDIDATE_NUM ) {
+        if( ipHeader->sender == ipHeader->candidate[j] ) {
+            GLOMO_MsgFree( node, msg );
+            return;
+        }else {
+            j++;
+        }
+    }       
+    ORTransmitDelay = i * ( MAX_PACKET_TIME );
+
+    if( i = 0 ) {
+        //select OpspORTransmitData or RoutingAodvTransmitData
+        OpspORTransmitData(node, msg, destAddr);
+    }else {
+        RoutingAodvSetTimer( node, MSG_OPSP_OR_FORWARD, destAddr, ORTransmitDelay );        
+        if( !RoutingAodvLookupBuffer( destAddr, buffer ) ) {
+            //select OpspORTransmitData or RoutingAodvTransmitData
+            OpspORTransmitData(node, msg, destAddr);
+        }
+    }
+
+}
+
+void OpspORTransmitData( GlomoNode* node, Message* msg, NODE_ADDR destAddr )
+{
+    GlomoNetworkIp*     ipLayer         = ( GlomoNetworkIp* ) node->networkData.networkVar;
+    GlomoRoutingAodv*   aodv            = ( GlomoRoutingAodv* ) ipLayer->routingProtocol;
+    IpHeaderType*       ipHeader        = ( IpHeaderType* ) GLOMO_MsgReturnPacket( msg );
+
+    int                 k = 0;
+
+    OPSP_FL             ForwarderList;
+    OPSP_FL_Node*        flCurrent;
+
+        
+#ifdef OPSP_DEBUG
+    printf( "in OpspORTransmitData \n" );
+#endif
+
+    //OR transmit the data packet
+    OpspLookupForwarder(  node, &ForwarderList, destAddr);
+    flCurrent = ForwarderList.head;
+    for( k = 0;((k < OPSP_CANDIDATE_NUM)&&(flCurrent!=NULL));k++ ) {
+        ipHeader->candidate[k] = flCurrent->forwarder;
+        flCurrent = flCurrent->next;
+    }
+    ipHeader->sender = node->nodeAddr;
+    ipHeader->ip_or = TRUE;
+    
+    aodv->lastpkt = simclock();
+
+    NetworkIpSendPacketToMacLayer( node, msg, DEFAULT_INTERFACE, ANY_DEST );
+    aodv->stats.numDataTxed++;
+}
+//<-------------tianke on 2008-5-6 21:22 0.01-----------
+

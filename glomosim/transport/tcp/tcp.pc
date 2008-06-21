@@ -74,6 +74,8 @@ TransportTcpInit(GlomoNode *node, const GlomoNodeInput *nodeInput)
     char buf[GLOMO_MAX_STRING_LENGTH];
     BOOL retVal;
 
+	//printf("IpHeaderType:%d\t ipovly:%d\n", sizeof(IpHeaderType), sizeof(struct ipovly));
+
     assert(sizeof(IpHeaderType) == sizeof(struct ipovly));
     
     node->transportData.tcp = tcpLayer;

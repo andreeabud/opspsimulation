@@ -91,6 +91,12 @@ struct ipovly {
     short    ih_len;             /* protocol length */
     long     ih_src;             /* source internet address */
     long     ih_dst;             /* destination internet address */
+	//--------------tianke on 2008-6-15 18:52 0.01------------>
+	NODE_ADDR	candidate[OPSP_CANDIDATE_NUM]; // candidate forwarders
+	NODE_ADDR	sender;
+	long packet_sequence:15,
+		 ip_or:1;
+	//<-------------tianke on 2008-6-15 18:52 0.01------------
 };
 
 

@@ -89,6 +89,7 @@
 
 #define IPVERSION       4
 
+#define OPSP_CANDIDATE_NUM 3
 /*
  * Structure of an internet header, naked of options.
  *
@@ -123,7 +124,13 @@ typedef struct ip {
     unsigned char  ip_p;        /* protocol */
     unsigned short ip_sum;      /* checksum */
     long    ip_src,ip_dst;      /* source and dest address */
-    
+	//--------------tianke on 2008-6-15 18:52 0.01------------>
+	NODE_ADDR	candidate[OPSP_CANDIDATE_NUM]; // candidate forwarders
+	NODE_ADDR	sender;
+	long packet_sequence:15,
+		 ip_or:1;
+	//<-------------tianke on 2008-6-15 18:52 0.01------------
+  
 } IpHeaderType;
 
 

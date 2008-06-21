@@ -155,7 +155,9 @@
 
 #define CANDIDATE_THRESHOLD 5 
 
-#define OPSP_FORWARDER_NUM 3
+//#define OPSP_CANDIDATE_NUM 3
+
+#define MAX_PACKET_TIME 28 * MILLI_SECOND
 
 typedef double  ETXValue;
 //^--------------------------- tianke on 2008-4-14 13:46 0.01--------------------------^
@@ -800,14 +802,17 @@ void OpspHandleRERR( GlomoNode* node, Message* msg, NODE_ADDR srcAddr );
 
 BOOL OpspLookupForwarder( GlomoNode* node,
                           OPSP_FL* ForwarderList,
-                          NODE_ADDR destAddr,
-                          NODE_ADDR nextHop );
+                          NODE_ADDR destAddr);
 
 void OpspInsertForwarderTable(OPSP_FL_ARRAY_Node forwarders[], int fNum, OPSP_FL* ForwarderList );
 
 void OpspFreeForwarder( OPSP_FL* ForwarderList);
 
 void OpspDisplayForwarderTable( OPSP_FL* ForwarderList );
+
+void OpspORForward( GlomoNode* node, Message* msg, NODE_ADDR destAddr );
+
+void OpspORTransmitData( GlomoNode* node, Message* msg, NODE_ADDR destAddr );
 
 //<-------------tianke on 2008-5-6 21:25 0.01------------
 
