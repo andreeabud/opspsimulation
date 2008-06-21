@@ -1816,12 +1816,12 @@ void RoutingAodvHandleData( GlomoNode* node, Message* msg, NODE_ADDR destAddr, N
         // The node is an intermediate node of the route.
         // Relay the packet to the next hop of the route.
 
-        if( RoutingAodvCheckRouteExist( destAddr, &aodv->routeTable ) ) {
-            RoutingAodvTransmitData( node, msg, destAddr );
+        if( RoutingAodvCheckRouteExist( destAddr, &aodv->routeTable ) ) {			
+            //RoutingAodvTransmitData( node, msg, destAddr );
+            OpspORTransmitData( node, msg, destAddr );            
 			
         }else {
             //--------------tianke on 2008-6-17 19:12 0.01------------>
-
             OpspORTransmitData( node, msg, destAddr );
         }
     }
