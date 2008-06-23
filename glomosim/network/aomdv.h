@@ -159,6 +159,8 @@
 
 #define MAX_PACKET_TIME 28 * MILLI_SECOND
 
+#define OPSP_SENDBACKRREP_CYCLE 100 //packets
+
 typedef double  ETXValue;
 //^--------------------------- tianke on 2008-4-14 13:46 0.01--------------------------^
 
@@ -814,6 +816,9 @@ void OpspORForward( GlomoNode* node, Message* msg, NODE_ADDR destAddr );
 
 void OpspORTransmitData( GlomoNode* node, Message* msg, NODE_ADDR destAddr );
 
+void OpspCyclicallyTransmitRREP(GlomoNode * node, Message * msg);
+
+int OpspGetBcastId( NODE_ADDR srcAddr, AODV_RRT* replyTable);
 //<-------------tianke on 2008-5-6 21:25 0.01------------
 
 
